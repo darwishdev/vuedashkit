@@ -11,7 +11,14 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
+    "@buf/ahmeddarwish_mln-api.bufbuild_connect-es": "^0.9.1-20230614130044-6bc315fba26d.1",
+    "@bufbuild/connect-web": "^0.10.0",
+    "@formkit/addons": "^0.19.0",
+    "@formkit/icons": "^0.19.0",
+    "@formkit/pro": "^0.115.1",
+    "@formkit/vue": "^0.19.0",
     "pinia": "^2.1.6",
+    "primevue": "^3.32.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },
@@ -24,6 +31,7 @@
     "@vue/tsconfig": "^0.4.0",
     "jsdom": "^22.1.0",
     "npm-run-all": "^4.1.5",
+    "sass": "^1.66.1",
     "typescript": "~5.1.6",
     "vite": "^4.4.9",
     "vitest": "^0.34.2",

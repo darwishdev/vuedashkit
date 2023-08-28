@@ -1,12 +1,22 @@
-<script setup lang="ts">
-import { useMenuStore } from "@/stores/menu"
+<script lang="ts">
 
-const store = useMenuStore()
+function roleDeleteRestore() {
+  return new Promise((resolve) => setTimeout(resolve, 3000));
+}
+</script>
+
+
+<script setup lang="ts">
+import { useThemeStore } from '@/stores/theme';
+const themeStore = useThemeStore()
+const r = await roleDeleteRestore()
+themeStore.stopProgressBar()
 </script>
 
 <template>
   <main>
-    {{ store.count }}
-    <button @click="store.increment">increment</button>
+
+
+    {{ r }}
   </main>
 </template>
