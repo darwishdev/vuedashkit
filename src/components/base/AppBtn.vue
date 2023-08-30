@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import type { AppBtnParams } from '@/types/types';
-import { h, inject } from 'vue';
+import { h   } from 'vue';
 import Button from 'primevue/button';
 const props = defineProps<AppBtnParams>();
 

@@ -28,8 +28,7 @@ const closeDialog = () => {
 <template>
     <div class="app-layout" :class="{ 'rtl': languageStore.isRtl, 'dark': themeStore.isDark }">
         <ProgressBar v-if="themeStore.isProgressBarVisible" mode="indeterminate"></ProgressBar>
-        <button @click="closeDialog">close dialog</button>
-
+        <app-logo iconOnly />
         <app-nav />
     </div>
 

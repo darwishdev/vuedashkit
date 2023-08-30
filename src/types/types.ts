@@ -237,10 +237,14 @@ export type UserLoginRequest = {
 
     userPassword: string;
 }
+
+export interface AppLogoParams {
+    disabled?: boolean
+    iconOnly?: boolean
+}
 export interface AppBtnParams {
     label?: string
     icon?: string
-
 }
 export interface LoginRequest {
     userName: string;

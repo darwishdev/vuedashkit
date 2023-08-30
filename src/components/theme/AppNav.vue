@@ -13,7 +13,7 @@ const dialogStore = useDialogStore()
     <nav class="app-nav">
         <div class="start">
             <button @click="menuStore.toggleSidebar">toggle sidebar</button>
-            <h1>logo</h1>
+            
         </div>
         <div class="end">
             <app-btn   @click="menuStore.toggleSidebar" label="menu" icon="bars"></app-btn >

@@ -1,18 +1,30 @@
 
 <script setup lang="ts">
-import type { AppBtnParams } from '@/types/types';
-import { h, inject } from 'vue';
-import Button from 'primevue/button';
-const props = defineProps<AppBtnParams>();
+import type { AppLogoParams } from '@/types/types';
+import { RouterLink } from 'vue-router' 
+import { h , resolveComponent } from 'vue';
+
+const props = defineProps<AppLogoParams>();
 
 const renderFunction = () => {
-    return h(Button  , {
-        label: props.label,
-        icon: `pi pi-${ props.icon}`,
-    })
+    // const logoComponentName = props.iconOnly ? 'LogoIcon' : 'Logo'
+    const logoComponent = resolveComponent('Logo')
+    console.log(logoComponent)
+    if(props.disabled ){
+        return h(logoComponent)
+    } 
+    return h(RouterLink ,{
+        to:"/",
+    } , "hello")
+    // return h(RouterLink , {
+    //     to: {
+    //         name : "home_view"
+    //     }
+    // } , [logoComponent])
+ 
 }
 
 </script>
 <template>
-   <component class="app-btn" :is="renderFunction"/>
+   <component class="logo-container" :is="renderFunction"/>
 </template>
