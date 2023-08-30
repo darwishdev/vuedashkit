@@ -1,15 +1,11 @@
 
 <script setup lang="ts">
 import type { AppBtnParams } from '@/types/types';
-import { h, inject } from 'vue';
-import Button from 'primevue/button';
+ import {h} from 'vue'
 const props = defineProps<AppBtnParams>();
 
 const renderFunction = () => {
-    return h(Button  , {
-        label: props.label,
-        icon: `pi pi-${ props.icon}`,
-    })
+    return h('div'  , null , {default :'menu'})
 }
 
 </script>

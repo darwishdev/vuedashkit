@@ -49,7 +49,7 @@ const closeDialog = () => {
             <app-logo class="all-logo" />
         </template> -->
         <KeepAlive>
-            menu
+            <app-menu/>
         </KeepAlive>
     </Sidebar>
     <DynamicDialog />

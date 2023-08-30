@@ -238,8 +238,8 @@ export type UserLoginRequest = {
     userPassword: string;
 }
 export interface AppBtnParams {
+    label?: string
     icon?: string
-    text?: string
 
 }
 export interface LoginRequest {

@@ -1,4 +1,4 @@
-body.rtl {
+.rtl {
   [data-type="toggle"] .formkit-wrapper label,
   .formkit-track {
     overflow: scroll;
@@ -37,6 +37,8 @@ body.rtl {
   }
   .p-sidebar {
     border-radius: 15px 0 0 15px !important;
+    border-radius: 20px 0px 0 20px !important;
+    display: none;
     &-right {
       direction: ltr !important;
     }

@@ -1,3 +1,15 @@
 @import "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Montserrat:wght@400;500;700&display=swap",
   "_variables", "@formkit/themes/genesis", "_base", "_form_variables", "_rtl",
-  "_overrides", "_login";
+  "_overrides", "_login", 'primeicons/primeicons.css';
+  
+
+.app-btn{
+  background: var(--color-card);
+border: none;
+color: var(--color-white);
+margin: 0 10px;
+}
+
+.p-button:enabled:hover {
+  background: var(--primary-color) !important;
+}

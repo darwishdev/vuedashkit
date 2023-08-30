@@ -16,11 +16,11 @@ const dialogStore = useDialogStore()
             <h1>logo</h1>
         </div>
         <div class="end">
-            <button @click="menuStore.toggleSidebar">logout</button>
-            <button @click="languageStore.toggleRtl">change language</button>
-            <button @click="themeStore.changeTheme">change theme</button>
-            <button @click="dialogStore.open">open dialog</button>
-            <button @click="dialogStore.close">close dialog</button>
+            <app-btn   @click="menuStore.toggleSidebar" label="menu" icon="bars"></app-btn >
+            <app-btn   @click="languageStore.toggleRtl" icon="globe"></app-btn >
+            <app-btn   @click="themeStore.changeTheme" icon="moon"></app-btn >
+            <app-btn   @click="dialogStore.open" icon="user"></app-btn >
+            <app-btn   @click="dialogStore.close" icon="user"></app-btn >
         </div>
     </nav>
 </template>
