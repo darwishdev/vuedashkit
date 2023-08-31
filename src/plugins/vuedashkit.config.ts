@@ -1,7 +1,8 @@
 import apiClient from '@/api/ApiClient'
 import formKitConfig from './formkit.config'
 import type { DashKitConfig, ErrorHandler, LoginHandler, UploadHandler } from '@/types/types'
-
+import en from '@/locales/en.json'
+import ar from '@/locales/ar.json'
 const loginErrorHandler: ErrorHandler = {
     globalErrors: {
         "pass_loginApiCall": 'pass_loginApiCall',
@@ -40,8 +41,8 @@ const config: DashKitConfig = {
     fallBackImageUrl: import.meta.env.VITE_FALLBACK_IMG,
     baseImageUrl: import.meta.env.VITE_BASE_IMG,
     translations: {
-        en: {},
-        ar: {},
+        en,
+        ar,
     },
 }
 export default config

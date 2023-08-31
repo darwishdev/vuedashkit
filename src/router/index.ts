@@ -11,7 +11,7 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: '/',
+          path: '/dashboard',
           name: 'home_view',
           component: HomeView
         },
@@ -21,12 +21,99 @@ const router = createRouter({
           component: () => import('../views/AboutView.vue')
         },
         {
-          path: '/login',
-          name: 'login',
-          component: () => import('../views/LoginView.vue')
+          path: '/profile',
+          name: 'profile_view',
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/roles',
+          name: 'roles_list',
+          meta: {
+            breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/users',
+          name: 'users_list',
+          meta: {
+            breadcrumbs: [{ label: "users", to: { name: 'users_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/units',
+          name: 'units_list',
+          meta: {
+            breadcrumbs: [{ label: "units", to: { name: 'units_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/categories',
+          name: 'categories_list',
+          meta: {
+            breadcrumbs: [{ label: "categories", to: { name: 'categories_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/ingredients',
+          name: 'ingredients_list',
+          meta: {
+            breadcrumbs: [{ label: "ingredients", to: { name: 'ingredients_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/modifiers',
+          name: 'modifiers_list',
+          meta: {
+            breadcrumbs: [{ label: "modifiers", to: { name: 'modifiers_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/products',
+          name: 'products_list',
+          meta: {
+            breadcrumbs: [{ label: "products", to: { name: 'products_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/branches',
+          name: 'branches_list',
+          meta: {
+            breadcrumbs: [{ label: "branches", to: { name: 'branches_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/halls',
+          name: 'halls_list',
+          meta: {
+            breadcrumbs: [{ label: "halls", to: { name: 'halls_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/tables',
+          name: 'tables_list',
+          meta: {
+            breadcrumbs: [{ label: "tables", to: { name: 'tables_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/ProfileView.vue')
         }
 
-      ]
+
+      ],
+
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue')
     },
   ]
 })
@@ -36,8 +123,8 @@ const router = createRouter({
 router.beforeEach((_, __, next) => {
   const themeStore = useThemeStore()
   themeStore.startProgressBar()
-  // themeStore.stopProgressBar();
   next()
+
 })
 // router.afterEach(() => {
 //   const themeStore = useThemeStore()

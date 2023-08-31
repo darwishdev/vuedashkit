@@ -1,0 +1,12 @@
+{
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل خروج",
+    "login": "تسجيل دخول",
+    "submit": "تاكيد",
+    "test": "تاكيد",
+    "profile": "الصفحة الشخصية",
+    "userNameLabel": "اسم المستخدم",
+    "userNamePlaceholder": "ادخل البريد الالكتروني او رقم الهاتف",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "ادخل كلمة المرور"
+}

@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import formKitConfigWrapper from "./plugins/formkit.custom.config"
 import { createPinia } from 'pinia'
 import { plugin, defaultConfig } from '@formkit/vue'
+import initI18n from '@/plugins/i18n'
 
 import ToastService from 'primevue/toastservice';
 import DialogService from 'primevue/dialogservice';
@@ -18,9 +19,11 @@ export default {
         Object.keys(baseComponents).forEach((key: string) => {
             app.component(key, baseComponents[key as keyof typeof baseComponents])
         });
+        const i18n = initI18n(config.translations)
         app.use(PrimeVue)
             .use(ToastService)
             .use(DialogService)
+            .use(i18n)
             .use(plugin, defaultConfig(formKitConfig))
             .use(createPinia())
 

@@ -1,26 +1,60 @@
 <script lang="ts" setup>
 import { useDialogStore } from '@/stores/dialog';
 import { useLanguageStore } from '@/stores/language';
+import Menu from 'primevue/menu';
+import { useBreadcrumbStore } from '@/stores/breadcrumb';
+import Breadcrumb from 'primevue/breadcrumb';
 import { useMenuStore } from '@/stores/menu';
+import { ref } from 'vue'
 import { useThemeStore } from '@/stores/theme';
+import { useAuthStore } from '@/stores/auth';
 const menuStore = useMenuStore()
 const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
 const dialogStore = useDialogStore()
+const authStore = useAuthStore()
+const breadcrumbStore = useBreadcrumbStore();
+const profileMenu = ref();
 
+
+const logout = () => {
+    authStore.logout()
+}
+const toggleProfileMenu = (event: Event) => {
+    profileMenu.value.toggle(event)
+}
 </script>
 <template>
     <nav class="app-nav">
         <div class="start">
-            <button @click="menuStore.toggleSidebar">toggle sidebar</button>
-            
+            <app-btn class="sidebar-toggler" @click="menuStore.toggleSidebar" icon="bars"></app-btn>
+            <app-logo iconOnly />
+            <Breadcrumb :home="breadcrumbStore.breadcrumbHome" :model="breadcrumbStore.breadcrumbs"
+                v-if="breadcrumbStore.breadcrumbs.length > 0" />
+
         </div>
         <div class="end">
-            <app-btn   @click="menuStore.toggleSidebar" label="menu" icon="bars"></app-btn >
-            <app-btn   @click="languageStore.toggleRtl" icon="globe"></app-btn >
-            <app-btn   @click="themeStore.changeTheme" icon="moon"></app-btn >
-            <app-btn   @click="dialogStore.open" icon="user"></app-btn >
-            <app-btn   @click="dialogStore.close" icon="user"></app-btn >
+            <app-btn @click="languageStore.toggleRtl" icon="globe"></app-btn>
+            <app-btn @click="themeStore.changeTheme" icon="moon"></app-btn>
+            <app-btn @click="toggleProfileMenu" icon="user"></app-btn>
+            <Menu v-if="!$slots['end']" ref="profileMenu" id="overlay-menu" :popup="true">
+                <template #start>
+                    <router-link :to="{ name: 'profile_view' }"
+                        class="w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
+
+                        <div class="flex flex-column align">
+                            <span class="text-sm">{{ $t('profile') }}</span>
+                        </div>
+                    </router-link>
+                </template>
+                <template #end>
+                    <button @click="logout" id="logout-btn"
+                        class="w-full p-link flex align-items-center p-2 pl-4 text-color hover:surface-200 border-noround">
+                        <i class="pi pi-sign-out" />
+                        <span class="ml-2">{{ $t('logout') }}</span>
+                    </button>
+                </template>
+            </Menu>
         </div>
     </nav>
 </template>

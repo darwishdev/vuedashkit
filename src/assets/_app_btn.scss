@@ -1,0 +1,10 @@
+.app-btn {
+  background: var(--color-card);
+  border: none;
+  color: var(--color-white);
+  margin: 0 0.2rem;
+}
+
+.p-button:enabled:hover {
+  background: var(--primary-color) !important;
+}

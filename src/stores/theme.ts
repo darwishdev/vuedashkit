@@ -6,6 +6,7 @@ import { usePrimeVue } from 'primevue/config';
 export const useThemeStore = defineStore('theme', () => {
   const primevue = usePrimeVue()
   const isProgressBarVisible = ref(false)
+  const isMenuOpened = ref(false)
   const isDark = ref(false)
   const themes = {
     dark: 'soho-dark',
@@ -16,12 +17,29 @@ export const useThemeStore = defineStore('theme', () => {
   const startProgressBar = () => {
     isProgressBarVisible.value = true
   }
+
+
+  const init = () => {
+    const isDarkMode = localStorage.getItem('dark');
+    const isMenuOpened = localStorage.getItem('menuOpened');
+    if (isDarkMode == 'true') {
+      changeTheme()
+    }
+    if (isMenuOpened == 'true') {
+      toggleDesktopMenu()
+    }
+  }
   const stopProgressBar = () => {
     isProgressBarVisible.value = false
   }
 
-  const changeTheme = () => {
 
+  const toggleDesktopMenu = () => {
+    isMenuOpened.value = !isMenuOpened.value
+    localStorage.setItem('menuOpened', isMenuOpened.value.toString());
+  }
+
+  const changeTheme = () => {
     document.querySelector("body")?.classList.toggle("dark")
     primevue.changeTheme(currentTheme.value, targetTheme.value, 'theme-link', () => {
       isDark.value = !isDark.value
@@ -29,6 +47,6 @@ export const useThemeStore = defineStore('theme', () => {
     });
   }
   return {
-    startProgressBar, stopProgressBar, changeTheme, isDark, isProgressBarVisible
+    startProgressBar, toggleDesktopMenu, isMenuOpened, init, stopProgressBar, changeTheme, isDark, isProgressBarVisible
   }
 })

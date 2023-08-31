@@ -3,15 +3,41 @@ import { defineStore } from 'pinia'
 import { useThemeStore } from './theme'
 import type { LoginHandler, LoginRequest, LoginResponse } from '@/types/types'
 import { ConnectError } from '@bufbuild/connect'
+import { useRouter } from 'vue-router'
 export const useAuthStore = defineStore('auth', () => {
   const loginHandler = ref<LoginHandler | null>(null)
   const user = ref()
+  const { push } = useRouter()
   const permissions = ref()
   const sidebar = ref()
   const accessToken = ref()
   const themeStore = useThemeStore()
   const init = (handler: LoginHandler) => {
     loginHandler.value = handler
+  }
+
+
+  const getParsedSideBar = () => {
+    const savedSidebar = JSON.parse(atob(localStorage.getItem('sideBar') as string))
+    savedSidebar.map((item: any) => {
+      if (item.items != '{}') {
+        item.items = JSON.parse(item.items)
+      } else {
+        delete item.items
+      }
+      return item
+    })
+
+    sidebar.value = savedSidebar
+  }
+  const loadSavedAuthData = () => {
+    getParsedSideBar()
+    const savedToken = localStorage.getItem('token') as string
+    const savePermissions = atob(localStorage.getItem('permissions') as string)
+    const savedUser = atob(localStorage.getItem('user') as string)
+    permissions.value = savePermissions
+    accessToken.value = savedToken
+    user.value = savedUser
   }
   const login = (request: LoginRequest) => {
     new Promise((resolve => {
@@ -25,10 +51,13 @@ export const useAuthStore = defineStore('auth', () => {
         accessToken.value = response.loginInfo.accessToken
         sidebar.value = atob(response.sidebar)
         permissions.value = atob(response.permissions)
+        localStorage.setItem('user', JSON.stringify(user.value))
         localStorage.setItem('token', response.loginInfo.accessToken)
         localStorage.setItem('permissions', response.permissions)
         localStorage.setItem('sideBar', response.sidebar)
         themeStore.stopProgressBar()
+        push({ name: 'home_view' })
+
         resolve(response)
       }).catch((e: ConnectError) => {
         console.log("errorerrorerrorerror")
@@ -41,6 +70,14 @@ export const useAuthStore = defineStore('auth', () => {
     }))
   }
 
+
+  const logout = () => {
+    themeStore.startProgressBar()
+    localStorage.removeItem('token')
+    localStorage.removeItem('permissions')
+    localStorage.removeItem('sideBar')
+    push({ name: 'login' })
+  }
   return {
     loginHandler,
     user,
@@ -48,6 +85,8 @@ export const useAuthStore = defineStore('auth', () => {
     sidebar,
     accessToken,
     login,
+    logout,
+    loadSavedAuthData,
     init,
   }
 })

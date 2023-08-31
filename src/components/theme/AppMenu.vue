@@ -1,3 +1,16 @@
+
+<script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+import PanelMenu from 'primevue/panelmenu';
+const authStore = useAuthStore()
+</script>
 <template>
-    <h2>app menu</h2>
+    <PanelMenu :model="authStore.sidebar">
+        <template #headericon="{ item }">
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+        </template>
+        <template #itemicon="{ item }">
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+        </template>
+    </PanelMenu>
 </template>

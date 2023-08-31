@@ -1,9 +1,9 @@
 
 import { createI18n } from 'vue-i18n'
 
-import { LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
+// import { type LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
 
-const initI18n = (messages: LocaleMessageObject) => createI18n({
+const initI18n = (messages: any) => createI18n({
     locale: 'en',
     fallbackLocale: 'en',
     useScope: 'global',
