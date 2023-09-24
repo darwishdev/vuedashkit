@@ -1,17 +1,53 @@
 {
-  "name": "vuedashkit",
-  "version": "0.0.0",
-  "private": true,
+  "name": "v-dashkit",
+  "version": "0.0.1",
+  "private": false,
+  "type": "module",
+  "module": "dist/vdashkit.js",
+  "types": "dist/vdashkit.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "update": "npm update @buf/ahmeddarwish_mln-rms-core.connectrpc_es",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
-  "dependencies": {
-    "@buf/ahmeddarwish_mln-api.bufbuild_connect-es": "^0.9.1-20230614130044-6bc315fba26d.1",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": "./dist/vdashkit.js",
+    "./style": "./dist/style.css",
+    "./types": "./dist/types/types.d.ts",
+    "./base": "./dist/components/base/base.js",
+    "./base.d.ts": "./dist/components/base/base.d.ts",
+    "./theme": "./dist/components/theme/theme.js",
+    "./theme.d.ts": "./dist/components/theme/theme.d.ts",
+    "./stores": "./dist/stores/stores.js",
+    "./stores.d.ts": "./dist/stores/stores.d.ts"
+  },
+  "keywords": [
+    "dashboard",
+    "vue",
+    "vite",
+    "formkit",
+    "primevue",
+    "npm",
+    "npm-package"
+  ],
+  "bugs": {
+    "url": "https://github.com/darwishdev/dashkit/issues"
+  },
+  "homepage": "https://dashkit.exploremelon.com",
+  "author": "Darwishdev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darwishdev/dash-kit"
+  },
+  "peerDependencies": {
+    "@buf/ahmeddarwish_mln-rms-core.connectrpc_es": "^0.13.2-20230916224445-cb562895d142.1",
     "@bufbuild/connect-web": "^0.10.0",
     "@formkit/addons": "^0.19.0",
     "@formkit/icons": "^0.19.0",
@@ -26,17 +62,23 @@
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.0",
+    "@types/argparse": "^2.0.10",
     "@types/jsdom": "^21.1.1",
     "@types/node": "^18.17.11",
     "@vitejs/plugin-vue": "^4.3.1",
+    "@vitest/coverage-v8": "^0.33.0",
     "@vue/test-utils": "^2.4.1",
     "@vue/tsconfig": "^0.4.0",
     "jsdom": "^22.1.0",
     "npm-run-all": "^4.1.5",
-    "sass": "^1.66.1",
-    "typescript": "~5.1.6",
-    "vite": "^4.4.9",
+    "sass": "^1.64.2",
+    "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.2.0",
+    "vite-svg-loader": "^4.0.0",
     "vitest": "^0.34.2",
     "vue-tsc": "^1.8.8"
+  },
+  "dependencies": {
+    "@tanstack/vue-query": "^4.35.3"
   }
 }

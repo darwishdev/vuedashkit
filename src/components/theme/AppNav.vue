@@ -33,6 +33,7 @@ const toggleProfileMenu = (event: Event) => {
                 v-if="breadcrumbStore.breadcrumbs.length > 0" />
 
         </div>
+
         <div class="end">
             <app-btn @click="languageStore.toggleRtl" icon="globe"></app-btn>
             <app-btn @click="themeStore.changeTheme" icon="moon"></app-btn>

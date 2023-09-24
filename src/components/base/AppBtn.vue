@@ -1,18 +1,19 @@
 
 <script setup lang="ts">
 import type { AppBtnParams } from '@/types/types';
-import { h   } from 'vue';
+import { h } from 'vue';
 import Button from 'primevue/button';
 const props = defineProps<AppBtnParams>();
 
 const renderFunction = () => {
-    return h(Button  , {
+    return h(Button, {
         label: props.label,
-        icon: `pi pi-${ props.icon}`,
+        disabled: props.disabled,
+        icon: `pi pi-${props.icon}`,
     })
 }
 
 </script>
 <template>
-   <component class="app-btn" :is="renderFunction"/>
+    <component class="app-btn" :is="renderFunction" />
 </template>

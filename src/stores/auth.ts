@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useThemeStore } from './theme'
 import type { LoginHandler, LoginRequest, LoginResponse } from '@/types/types'
-import { ConnectError } from '@bufbuild/connect'
+
 import { useRouter } from 'vue-router'
 export const useAuthStore = defineStore('auth', () => {
   const loginHandler = ref<LoginHandler | null>(null)
@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
         push({ name: 'home_view' })
 
         resolve(response)
-      }).catch((e: ConnectError) => {
+      }).catch((e: any) => {
         console.log("errorerrorerrorerror")
         console.log("code", e.code)
         console.log("message", e.message)

@@ -1,12 +1,19 @@
 
 import { createApp } from 'vue'
 import dashkitConfig from '@/plugins/vuedashkit.config'
-import "@/assets/app.scss"
 import App from './App.vue'
 import router from './router'
-import VueDashkit from './VueDashkit'
+import VueDashkit from './vdashkit'
+import { VueQueryPlugin, type VueQueryPluginOptions } from "@tanstack/vue-query";
 const app = createApp(App)
-
-app.use(router).use(VueDashkit, dashkitConfig)
-
-app.mount('#app')
+const vueQueryPluginOptions: VueQueryPluginOptions = {
+    queryClientConfig: {
+        defaultOptions: {
+            queries: {
+                refetchOnWindowFocus: false,
+            },
+        },
+    },
+}
+app.use(router).use(VueDashkit, dashkitConfig).use(VueQueryPlugin, vueQueryPluginOptions)
+    .mount('#app')

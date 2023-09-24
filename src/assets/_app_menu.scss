@@ -4,10 +4,15 @@
   .p-panelmenu-header-action {
   color: var(--color-white);
 }
-
+.p-panelmenu .p-toggleable-content {
+  background-color: var(--color-card);
+}
 .p-panelmenu .p-panelmenu-content {
-  background: var(--color-card);
   border: none !important;
+  background: none;
+}
+.p-panelmenu .p-menuitem-link {
+  color: var(--color-secondary);
 }
 
 .p-panelmenu

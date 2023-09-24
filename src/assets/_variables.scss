@@ -9,41 +9,53 @@
   --menu-width-closed: 6.571em;
   --menu-width: var(--menu-width-closed);
   --primary-color: var(--color-primary);
+  --color-card: rgba(145, 142, 142, 0.03);
+  --secondary-color: #44486d;
   --text-color: var(--color-text);
   --surface-card: var(--color-card);
   --shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
   --app-logo: "https://static.exploremelon.com/dashkit/logo.svg";
   --app-logo-icon: "https://static.exploremelon.com/dashkit/logo-icon.svg";
-  --menu-border-color: rgba(22, 22, 22, 0.85);
+  --menu-border-color: rgba(225, 223, 223, 0.85);
   --color-border: rgba(255, 255, 255, 0.15);
   --color-input-border: 1px solid transparent;
   --color-input: rgba(0, 0, 0, 0.05);
-  --color-card: rgba(0, 0, 0, 0.05);
+  --font-family: "Montserrat";
   --color-icon-btn: rgba(0, 0, 0, 0.05);
   --color-hover: rgba(255, 255, 255, 0.07);
   --color-hover-darken: rgba(255, 255, 255, 0.09);
   --color-head: #fff;
+  --color-border: rgba(0, 0, 0, 0.1);
+
   --color-white: #000;
   --color-text: #868c9b;
+  --color-secondary: #44486d;
   --color-deleted: #8b8a8b;
   --color-dialog: #252636;
-  --color-success: #0c7040;
-  --color-warning: #fc8621;
-  --color-danger: rgb(199, 44, 65);
+  --color-success: #0ab979;
+  --color-warning: #ec4dbc;
+  --color-info: #0f8bfd;
+  --color-danger: #fc6161;
+  --fk-margin-outer: 0;
+  --fk-border-box-shadow-focus: transparent !important;
+  --fk-bg-input: rgba(230, 17, 17, 0.02) !important;
+  --fk-bg-decorator: rgba(0, 0, 0, 0.05);
   --color-error: rgba(199, 44, 65, 0.3);
 }
 
 .dark {
   --color-background: var(--color-background-dark);
-  --effect-image: url(/assets/effect-ondark-41a28009.png);
   --color-input: rgba(255, 255, 255, 0.05);
   --color-card: rgba(255, 255, 255, 0.05);
   --color-icon-btn: rgba(255, 255, 255, 0.05);
   --color-hover: rgba(255, 255, 255, 0.07);
   --menu-border-color: rgba(22, 22, 22, 0.85);
+  --fk-bg-input: rgba(0, 0, 0, 0.126) !important;
+  --color-border: var(--color-card);
   --color-white: #fff;
   --color-hover-darken: rgba(255, 255, 255, 0.09);
   --color-head: #fff;
+  --fk-color-input: var(--color-text);
   --color-text: #868c9b;
   color-scheme: dark;
 }

@@ -1,6 +1,6 @@
 .desktop-menu {
   background: var(--color-background);
-  z-index: 100;
+  z-index: 3;
   transition: width 0.2s;
   top: 0;
   left: 0;
@@ -64,7 +64,6 @@
   }
   & .desktop-menu-header {
     margin: 20px 0;
-    padding: 0 20px;
     @include flex-between;
     & .all-logo {
       display: none !important;
@@ -83,12 +82,15 @@
 }
 .app-layout {
   //handle global style
-  padding-left: var(--menu-width);
+  padding-inline-start: var(--menu-width);
   & .desktop-menu:hover,
   &.active-menu {
     --menu-width: var(--menu-width-opened);
     & .all-logo {
       display: flex !important;
+    }
+    & .desktop-menu-header {
+      padding: 0 20px;
     }
 
     & .icon-logo {

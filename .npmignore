@@ -1,0 +1,5 @@
+# .npmignore
+# Include only the dist folder
+!dist
+# Exclude everything else
+*

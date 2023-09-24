@@ -38,6 +38,7 @@ const config: DashKitConfig = {
     formKitConfig,
     loginHandler,
     uploadHandler,
+    baseImportDataUrl: import.meta.env.VITE_BASE_IMPORT_URL,
     fallBackImageUrl: import.meta.env.VITE_FALLBACK_IMG,
     baseImageUrl: import.meta.env.VITE_BASE_IMG,
     translations: {

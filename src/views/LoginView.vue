@@ -9,8 +9,8 @@ const submitHandler = async (req: any) => {
 </script>
 
 <template>
-    <FormKit type="form" id="registration-example" :form-class="submitted ? 'hide' : 'show'" submit-label="Register"
-        @submit="submitHandler" :actions="false" #default="{ value }">
+    <FormKit type="form" id="registration-example" submit-label="Register" @submit="submitHandler" :actions="false"
+        #default="{ value }">
 
         <FormKit type="text" name="userName" label="Your email" placeholder="jane@example.com"
             validation="required|email" />

@@ -3,6 +3,7 @@
   "include": [
     "env.d.ts",
     "src/**/*",
+    "src/vuedashkit.ts",
     "src/**/*.vue",
     "src/**/**/*.ts",
     "src/locales/*.json"
@@ -12,7 +13,8 @@
   ],
   "compilerOptions": {
     "composite": true,
-    "baseUrl": ".",
+    "noImplicitAny": false,
+    "module": "ESNext",
     "paths": {
       "@/*": [
         "./src/*"

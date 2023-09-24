@@ -31,24 +31,12 @@ body {
     text-decoration: none;
   }
   & main.page-content {
-    padding: 10px;
+    padding: 20px;
   }
   & .card {
     background-color: var(--color-card);
     padding: 16px;
     border-radius: 6px;
-  }
-
-  & .loading-page {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    background: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 
@@ -72,7 +60,7 @@ body {
 }
 hr {
   background: var(--color-card);
-  color: var(--color-card);
+  color: rgba(255, 255, 255, 0.1);
 }
 
 nav {
@@ -129,4 +117,19 @@ nav {
 
 .justiy-content-between {
   justify-content: space-between;
+}
+
+.flex-column {
+  @include flex-center-column;
+}
+
+.absolute {
+  position: absolute;
+}
+.flex {
+  display: flex;
+}
+
+.pa-4 {
+  padding: 10px 20px;
 }

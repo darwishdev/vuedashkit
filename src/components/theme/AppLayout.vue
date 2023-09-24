@@ -7,26 +7,18 @@ import ProgressBar from 'primevue/progressbar';
 import Sidebar from 'primevue/sidebar';
 import AppMenu from './AppMenu.vue';
 import DynamicDialog from 'primevue/dynamicdialog';
-import { inject } from 'vue'
-import { useDialogStore } from '@/stores/dialog';
-import type { Ref } from 'vue';
 
 
 const menuStore = useMenuStore()
 const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
-const dialogStore = useDialogStore()
-const dialogRef = inject('dialogRef') as unknown as Ref
-
-dialogStore.init(dialogRef)
 languageStore.init()
 themeStore.init()
+
 const routeResolved = () => {
     themeStore.stopProgressBar()
 }
-
 const toggleDesktopMenu = () => {
-    console.log("heloo")
     themeStore.toggleDesktopMenu()
 }
 
@@ -47,17 +39,22 @@ const toggleDesktopMenu = () => {
                 <app-menu />
             </KeepAlive>
         </aside>
-        <app-nav />
-        <RouterView v-slot="{ Component }">
-            <Suspense @resolve="routeResolved" timeout="0">
-                <template #default>
-                    <component :is="Component" />
-                </template>
-                <template #fallback>
-                    <h2>loading from layout</h2>
-                </template>
-            </Suspense>
-        </RouterView>
+        <div class="pa-4">
+            <app-nav />
+        </div>
+        <main class="page-content">
+
+            <RouterView v-slot="{ Component }">
+                <Suspense @resolve="routeResolved" timeout="0">
+                    <template #default>
+                        <component :is="Component" />
+                    </template>
+                    <template #fallback>
+                        <h2>loading from layout</h2>
+                    </template>
+                </Suspense>
+            </RouterView>
+        </main>
         <Sidebar class="p-sidebar-sm" v-model:visible="menuStore.sideBarVisible" :position="menuStore.sidebarPosition">
             <template #header>
                 <app-logo />

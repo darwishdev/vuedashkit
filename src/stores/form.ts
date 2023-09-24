@@ -1,12 +1,25 @@
-import { ref, computed } from 'vue'
+// import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import type { FormKitSchemaNode } from '@formkit/core'
+import { useI18n } from 'vue-i18n'
+import type { FormSeciton } from '@/types/types'
 export const useFormStore = defineStore('form', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+  const schemas: Record<string, FormKitSchemaNode> = {}
+  const { t } = useI18n()
+
+
+  const withWrapperClass = (elements: FormKitSchemaNode[], className: string) => {
+    return {
+      $el: 'div',
+      attrs: {
+        class: className
+      },
+      children: elements
+    } as FormKitSchemaNode
   }
 
-  return { count, doubleCount, increment }
+  const generateSchemaFromSections = (sections: FormSeciton[]) => {
+
+  }
+  return {}
 })

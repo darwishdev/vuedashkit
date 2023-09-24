@@ -1,10 +1,13 @@
 .app-btn {
   background: var(--color-card);
   border: none;
+  padding: 0 50px;
+  // min-width: 150px;
   color: var(--color-white);
   margin: 0 0.2rem;
 }
 
 .p-button:enabled:hover {
-  background: var(--primary-color) !important;
+  background: var(--secondary-color) !important;
+  color: #fff;
 }

@@ -1,32 +1,27 @@
-import { createPromiseClient } from "@bufbuild/connect";
 import { createConnectTransport } from "@bufbuild/connect-web";
 
-import { RmsService } from "@buf/ahmeddarwish_mln-api.bufbuild_connect-es/rms/v1/rms_service_connect.js";
-import { type Interceptor } from "@bufbuild/connect";
-// import router from "../../router";
-
-import { errorHandler } from './ApiErrors'
-// const authorizationInterceptor: Interceptor = (next) => async (req) => {
-//     const token = localStorage.getItem("token") as string
-//     req.header.append("Authorization", `bearer ${token}`)
-//     return await next(req);
-// };
+import { createPromiseClient } from "@connectrpc/connect";
+import type { PromiseClient, Transport } from "@connectrpc/connect";
+import { RmsCoreService } from "@buf/ahmeddarwish_mln-rms-core.connectrpc_es/rms/v1/rms_core_service_connect"
+import { type Interceptor } from "@connectrpc/connect";
 
 
-// const errorHandlerInterceptor: Interceptor = (next) => async (req) => {
-//     try {
-//         const response = await next(req);
-//         return response
-//     } catch (error: any) {
-//         errorHandler[error.code || 503](error)
-//         throw new Error('unhandeldError');
 
-//     }
-// };
+const authorizationInterceptor: Interceptor = (next) => async (req) => {
+    const token = localStorage.getItem("token") as string
+    req.header.append("Authorization", `bearer ${token}`)
+    return await next(req);
+};
+
+
 const transport = createConnectTransport({
     baseUrl: import.meta.env.VITE_API_URL,
-    // interceptors: [authorizationInterceptor, errorHandlerInterceptor]
+    useHttpGet: true,
+    interceptors: [authorizationInterceptor]
 });
 
-const apiClient = createPromiseClient(RmsService, transport);
+const apiClient: PromiseClient<typeof RmsCoreService> = createPromiseClient(RmsCoreService, transport as Transport);
+
+
+
 export default apiClient

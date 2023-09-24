@@ -1,19 +1,25 @@
-import { LoginRequest, LoginResponse } from '@/api/ApiTypes'
-import { FormKitSchemaNode } from '@formkit/core'
+import { type FormKitSchemaNode } from '@formkit/core'
 import type { ErrorMessages } from "@formkit/core"
 import type { DefaultConfigOptions } from '@formkit/vue'
-import { ColumnProps } from 'primevue/column'
-import { ImageProps } from 'primevue/image'
-import { VNode } from 'vue'
-import { LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
+import type { FilterMatchModeOptions, FilterOperatorOptions } from 'primevue/api'
+import type { ColumnProps } from 'primevue/column'
+import type { DataTableFilterMeta } from 'primevue/datatable'
+import type { ImageProps } from 'primevue/image'
+import type { VNode } from 'vue'
+import type { LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
 export interface DashKitConfig {
     formKitConfig: DefaultConfigOptions
     translations: LocaleMessageObject
     uploadHandler?: UploadHandler
     baseImageUrl?: string
+    baseImportDataUrl?: string
     fallBackImageUrl?: string
     loginHandler?: LoginHandler
 }
+
+
+
+
 export interface AppImageParams {
     src: string
     imageProps?: ImageProps
@@ -28,18 +34,45 @@ export interface TableOptions {
     showActions?: boolean
 }
 
+
+
+interface ApiListOptions {
+    title: string;
+    description: string;
+    createHandler: CreateHandler;
+    updateHandler: UpdateHandler;
+    deleteRestoreHandler: DeleteRestoreHandler;
+    importHandler: ImportHandler;
+}
+
+
+export interface ApiResponseList {
+    records: any[]
+    deletedRecords: any[]
+    options: ApiListOptions
+}
+
+
 export interface AppTableParams {
-    options: TableOptions
     dataKey: string
-    data: any[];
-    dialogUpdate?: { openDialog: (recordId: number) => void },
-    dialogDeleteRestore?: { openDialog: (ids: number[]) => void },
+    apiResponse: ApiResponseList
     headers: Record<string, ITableHeader>;
 }
 export interface ITableHeader {
     columnProps?: ColumnProps;
+    filter?: any;
+    tableRouter?: TableRouter;
     renderHtml?: (value: any) => VNode;
 }
+
+// export type FilterMatchModeKey = keyof FilterMatchModeOptions;
+export interface ITableHeaderParams {
+    sortable: boolean,
+    filter?: TableHeaderFilter;
+    router?: TableRouter;
+}
+
+export type TableHeaderFilter = { mode: string; input: FormKitSchemaNode; } | undefined
 export interface ToastHandler {
     hideToast?: boolean
     title?: String
@@ -66,7 +99,7 @@ export interface DialogCreateParms {
 }
 export interface DialogDeleteRestoreParms {
     onConfirmed?: Function,
-    deleteRestoreHandler: DeleteRestoreHandler<any>,
+    deleteRestoreHandler: DeleteRestoreHandler,
     dialog: any,
     config?: {
         width?: string
@@ -87,7 +120,7 @@ export interface filterFunctionParams {
 export interface FilterInput {
     getDisplayValue(input: DisplayValueParams): string;
     filterFunction(parms: filterFunctionParams): boolean
-    getEventType(input: { name, oldValue: string, newValue: string }): 'applyFilter' | "applyAllFilters"
+    getEventType(input: { name: string, oldValue: string, newValue: string }): 'applyFilter' | "applyAllFilters"
 }
 
 export interface FindHandler<Request, Response, TargetResponse> {
@@ -115,21 +148,8 @@ export interface FormCreateParams {
     sections: Array<FormSeciton>
     options: FormOptions
     submitHandler: SubmitHandler<any, any, any>
-    toastHandler: ToastHandler
 }
 
-export type AppCrudParams = {
-    options: CrudOptions,
-    createPermissionName?: string,
-    dialogDeleteRestore?: { openDialog: (ids: number[]) => void },
-    deleteRestorePermissionName?: string,
-    dialogCreate?: { openDialog: () => void },
-    modelSelection?: any,
-    listFunction?: (req: any) => Promise<any>,
-    data?: any[],
-    importHandler?: ImportHandler<any, any>
-    filterForm?: FormFilterParams,
-}
 export type CrudOptions = {
     title: string
     feature: string
@@ -140,13 +160,13 @@ export type CrudOptions = {
     showDeletedFilter: boolean
 }
 
-export interface DeleteRestoreHandler<Req> {
-    deleteRestore: (req: Req) => Promise<any>
-    callBack?: () => any;
-    requestPropertyName?: string;
-    errorHandler?: Record<string, string>
-    toastHandler?: ToastHandler
-}
+// export interface DeleteRestoreHandler<Req> {
+//     deleteRestore: (req: Req) => Promise<any>
+//     callBack?: () => any;
+//     requestPropertyName?: string;
+//     errorHandler?: Record<string, string>
+//     toastHandler?: ToastHandler
+// }
 
 export interface Permission {
     permissionId: number
@@ -174,21 +194,13 @@ export type ToastError = {
     summary?: string
     detail?: string
 }
-export type ImportHandler<Request, Response> = {
-    submit: (req: Request) => Promise<Response>
-    submitCallBack?: (response: Response) => any
-    importTemplateLink: string
-    errorHandler?: Record<string, ToastError>
-    toastHandler?: ToastHandler
-
-}
 export interface SubmitHandler<Request, TargetRequest, Response> {
     submit: (req: TargetRequest) => Promise<Response>
     submitCallBack?: (response: Response) => any
-    requestPropertyName?: string
-    errorHandler: ErrorHandler
     mapFunction?: (req: Request) => TargetRequest
     redirectRoute?: string
+    requestPropertyName?: string
+    errorHandler: ErrorHandler
 }
 export interface FormFilterOptions {
     showActiveFilters?: boolean
@@ -231,12 +243,6 @@ export type UploadHandler = {
     fileRestore: (reuest: FileRestoreRequest) => Promise<FileRestoreResponse>
     baseImageUrl: string
 }
-export type UserLoginRequest = {
-
-    userName: string;
-
-    userPassword: string;
-}
 
 export interface AppLogoParams {
     disabled?: boolean
@@ -245,6 +251,7 @@ export interface AppLogoParams {
 export interface AppBtnParams {
     label?: string
     icon?: string
+    disabled?: boolean
 }
 export interface LoginRequest {
     userName: string;
@@ -265,15 +272,43 @@ export interface LoginResponse {
     sidebar: string;
 }
 
-export type UserLoginResponse = {
 
-    userName: string;
-
-    userPassword: string;
-}
 export type LoginHandler = {
-    submit: (req: LoginRequest) => Promise<LoginResponse>
+    submit: (req: any) => Promise<any>
     authorize: (req: any) => Promise<any>
     errorHandler: ErrorHandler
     redirectRoute: string
 }
+
+
+
+
+
+// mock the client definitions
+interface CreateHandler {
+    title: string;
+    redirectRoute: string;
+    routeName: string;
+    endpoint: string;
+}
+
+interface UpdateHandler {
+    title: string;
+    redirect_route: string;
+    route_name: string;
+    endpoint: string;
+    find_endpoint: string;
+    find_request_property: string;
+}
+
+interface DeleteRestoreHandler {
+    endpoint: string;
+    request_property: string;
+}
+
+interface ImportHandler {
+    endpoint: string;
+    import_template_link: string;
+}
+
+

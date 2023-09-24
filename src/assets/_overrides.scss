@@ -149,10 +149,6 @@
   overflow: hidden;
 }
 
-.p-dialog {
-  background: var(--color-dialog) !important;
-}
-
 .p-panelmenu
   .p-panelmenu-header
   .p-panelmenu-header-content
@@ -253,4 +249,33 @@
 }
 .p-breadcrumb .p-breadcrumb-list li:last-child .p-menuitem-icon {
   color: rgba(255, 255, 255, 0.6);
+}
+
+.formkit-outer .formkit-icon.formkit-prefix-icon {
+  background: var(--color-background);
+}
+
+.p-panel .p-panel-header .p-panel-header-icon {
+  border-radius: 6px;
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.p-button:focus {
+  box-shadow: none;
+}
+.formkit-panel-wrapper {
+  background: var(--color-background);
+}
+
+.formkit-open-button {
+  background: var(--color-background);
+}
+
+.p-menu-end {
+  @include border-top;
+  label {
+    margin-inline-start: 15px;
+  }
 }

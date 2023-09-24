@@ -1,13 +1,14 @@
 
 import type { App } from "vue"
 import { type DefaultConfigOptions } from '@formkit/vue'
-import * as baseComponents from "@/components/base"
+import * as baseComponents from "@/components/base/base"
 import type { DashKitConfig } from "@/types/types"
 import PrimeVue from 'primevue/config'
 import formKitConfigWrapper from "./plugins/formkit.custom.config"
 import { createPinia } from 'pinia'
 import { plugin, defaultConfig } from '@formkit/vue'
 import initI18n from '@/plugins/i18n'
+import "@/assets/app.scss"
 
 import ToastService from 'primevue/toastservice';
 import DialogService from 'primevue/dialogservice';

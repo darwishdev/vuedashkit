@@ -1,21 +1,21 @@
-import { ref, type Ref } from 'vue'
+import { h, inject, type Ref } from 'vue'
 import { defineStore } from 'pinia'
-import AppLayoutVue from '@/components/theme/AppLayout.vue'
 import { useDialog } from "primevue/usedialog";
+import DeleteRestoreDialog from '@/components/dialogs/DeleteRestoreDialog.vue'
 export const useDialogStore = defineStore('dialog', () => {
   const dialog = useDialog()
-  let dialogRef
-
-  const init = (dialog: Ref) => {
-    dialogRef = dialog
-  }
-  const open = () => {
-    dialog.open(AppLayoutVue, {})
-  }
-
-  const close = () => {
-    dialogRef!.value.close()
+  const openDeleteRestore = () => {
+    dialog.open(DeleteRestoreDialog, {
+      props: {
+        dismissableMask: true,
+        closable: false,
+        modal: true,
+      },
+    })
   }
 
-  return { open, dialogRef, close, init }
+
+
+
+  return { openDeleteRestore }
 })

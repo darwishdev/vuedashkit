@@ -16,6 +16,7 @@
   & aside.desktop-menu {
     left: auto !important;
     right: 0 !important;
+    border-radius: 15px 0 0 15px;
   }
   .right-0 {
     left: 0px !important;
@@ -60,6 +61,28 @@
     }
   }
 
+  .desktop-menu
+    .p-panelmenu
+    .p-panelmenu-panel
+    .p-panelmenu-header
+    .p-panelmenu-header-content
+    .p-panelmenu-header-action
+    .p-menuitem-text,
+  .desktop-menu
+    .p-panelmenu
+    .p-panelmenu-panel
+    .p-panelmenu-header
+    .p-panelmenu-header-content
+    .p-panelmenu-header-action
+    .p-submenu-icon {
+    margin-right: 0;
+    margin-left: 20px;
+  }
+
+  .p-button .p-button-icon-left {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
   .layout-sidebar-active {
     .p-panelmenu .p-menuitem .material-symbols-outlined {
       margin-inline-end: 0px;
@@ -69,5 +92,17 @@
       margin-inline-end: 0px;
       margin-inline-start: 20px;
     }
+  }
+
+  .app-table .p-panel-icons {
+    transform: translateX(20px) !important;
+  }
+  .p-datatable .p-datatable-tbody > tr > td {
+    text-align: right;
+  }
+  .formkit-label,
+  .formkit-value-label {
+    margin-right: 0.5em;
+    margin-left: 0;
   }
 }
