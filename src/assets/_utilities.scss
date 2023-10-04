@@ -1,25 +1,27 @@
 .success {
   background-color: var(--color-success) !important;
-  color: #fff;
+  color: #fff !important;
 }
 .danger {
   background-color: var(--color-danger) !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .warning {
   background-color: var(--color-warning) !important;
-  color: #fff;
+  color: #fff !important;
 }
 .info {
   background-color: var(--color-info) !important;
-  color: #fff;
+  color: #fff !important;
 }
 
 .no-margin {
   margin: 0 !important;
 }
-
+.p-3 {
+  padding: 5px !important;
+}
 .no-padding {
   padding: 0 !important;
 }

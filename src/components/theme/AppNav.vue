@@ -59,3 +59,45 @@ const toggleProfileMenu = (event: Event) => {
         </div>
     </nav>
 </template>
+
+<style lang="scss" scoped deep>
+.app-nav {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+
+
+
+    & .start {
+        margin-inline-start: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    & .end {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        min-width: 200px;
+        text-align: end;
+        margin-inline-end: 20px;
+    }
+
+
+
+    @media (min-width: 992px) {
+        & .sidebar-toggler {
+            display: none;
+        }
+
+        & .logo-container {
+            display: none !important;
+        }
+    }
+}
+</style>

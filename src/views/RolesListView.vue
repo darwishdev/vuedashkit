@@ -1,33 +1,35 @@
  
 
 <script setup lang="ts">
-import type { ApiResponseList, ITableHeader } from '@/types/types';
-import AppTable from '@/components/data/AppTable.vue';
+import type { ITableHeader } from '@/types/types';
+import AppTableNew from '@/components/data/AppTableNew.vue';
+import type { RolesListResponse, RolesListRow } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import apiClient from '@/api/ApiClient';
-import { TableHeaderText, TableHeaderTag, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
-import { useInfiniteQuery } from "@tanstack/vue-query";
+import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
+import type { AppTableProps, TableRouter } from '@/types/newtypes';
+import { useThemeStore } from '@/stores/theme';
+const themeStore = useThemeStore()
 const { t } = useI18n()
-const { data, suspense } = useInfiniteQuery({
-    queryKey: ['rolesList'],
-    queryFn: () => apiClient.rolesList({})
-});
-await suspense();
+
+const dataKey = "roleId"
+const viewRouter: TableRouter = {
+    name: "roles_find",
+    paramName: "id",
+    paramColumnName: dataKey
+}
 const headers: Record<string, ITableHeader> = {
     'roleId': new TableHeaderLink('roleId', {
         sortable: true,
-        router: {
-            name: "roles_find",
-            paramName: "id",
-            paramColumnName: "roleId",
-        }
-
+        isGlobalFilter: true,
+        router: viewRouter
     }),
     'roleName': new TableHeaderText('roleName', {
         sortable: true,
+        isGlobalFilter: true,
         filter: {
-            mode: FilterMatchMode.CONTAINS,
+            matchMode: FilterMatchMode.CONTAINS,
             input: {
                 $formkit: 'text',
                 prefixIcon: "tools",
@@ -37,23 +39,26 @@ const headers: Record<string, ITableHeader> = {
             }
         }
     }),
-    'permissionsCount': new TableHeaderTag('permissionsCount', {
+    'permissionsCount': new TableHeaderCount('permissionsCount', {
         sortable: true,
+        isGlobalFilter: true,
         filter: {
-            mode: FilterMatchMode.BETWEEN,
+            matchMode: FilterMatchMode.GREATER_THAN,
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
                 outerClass: "col-3",
+                number: true,
                 name: "permissionsCount",
+                validationVisibility: "live",
                 placeholder: t("permissionsCountMoreThan")
             }
         }
     }),
-    'usersCount': new TableHeaderTag('usersCount', {
+    'usersCount': new TableHeaderCount('usersCount', {
         sortable: true,
         filter: {
-            mode: FilterMatchMode.BETWEEN,
+            matchMode: FilterMatchMode.GREATER_THAN,
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
@@ -66,7 +71,7 @@ const headers: Record<string, ITableHeader> = {
     'createdAt': new TableHeaderDate('createdAt', {
         sortable: true,
         filter: {
-            mode: FilterMatchMode.DATE_AFTER,
+            matchMode: FilterMatchMode.DATE_AFTER,
             input: {
                 $formkit: 'datepicker',
                 outerClass: "col-3",
@@ -75,14 +80,32 @@ const headers: Record<string, ITableHeader> = {
             }
         }
     }),
+}
+themeStore.startProgressBar()
+const { records, deletedRecords, options } = await apiClient.rolesList({})
+themeStore.stopProgressBar()
 
-} 
+
+const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
+    title: "roles",
+    dataKey,
+    records: records,
+    deletedRecords: deletedRecords,
+    viewRouter: viewRouter,
+    fetchFn: apiClient.rolesList,
+    options: options!,
+    headers
+}
+
+
 </script>
 <template>
     <Suspense timeout="0">
         <template #default>
-            <AppTable data-key="roleId" :apiResponse="(data!.pages[0].toJson() as any)" :headers="headers">
-            </AppTable>
+
+            <AppTableNew :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
+                :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
+                :deletedRecords="deletedRecords" :headers="tableProps.headers" />
         </template>
         <template #fallback>
             <h2>loading table component</h2>

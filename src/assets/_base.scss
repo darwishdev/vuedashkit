@@ -17,6 +17,10 @@ body {
   text-rendering: optimizeLegibility;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
+  .p-component {
+    font-family: var(--font-family);
+  }
   & h1,
   h2,
   h3 {
@@ -65,14 +69,16 @@ hr {
 
 nav {
   display: flex;
-  color: var(--color-white);
+  // color: var(--color-white);
   font-size: 20px;
   justify-content: center;
 
   align-items: center;
   & a {
     margin-right: 20px;
-    color: var(--color-white);
+    & span {
+      color: var(--color-text) !important;
+    }
   }
 }
 

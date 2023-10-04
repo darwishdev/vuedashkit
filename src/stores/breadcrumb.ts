@@ -2,9 +2,11 @@ import { ref, computed, type ComputedRef } from 'vue'
 import { defineStore } from 'pinia'
 import { useRoute } from 'vue-router'
 import type { MenuItem } from 'primevue/menuitem'
+import { useI18n } from 'vue-i18n'
 export const useBreadcrumbStore = defineStore('breadcrumb', () => {
   const breadcrumbsLoading = ref(false)
   const route = useRoute()
+  const { t } = useI18n()
   const breadcrumbHome = {
     icon: 'pi pi-home',
     to: { name: "home_view" },
@@ -12,7 +14,13 @@ export const useBreadcrumbStore = defineStore('breadcrumb', () => {
   const breadcrumbs = computed(() => {
     if (!route.meta) return []
     if (!route.meta.breadcrumbs) return []
-    return route.meta.breadcrumbs
+
+    const breacrumbs = route.meta.breadcrumbs as MenuItem[]
+    return breacrumbs.map((item) => {
+      item.label = t(item.label)
+      return item
+    })
+
   }) as ComputedRef<MenuItem[]>;
 
   // const breadcrumbs = ref<MenuItem[]>(route.meta.breadcrumbs);

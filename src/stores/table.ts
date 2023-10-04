@@ -1,4 +1,4 @@
-import { ref, h, type VNode, computed } from 'vue'
+import { ref, type Ref, h, type VNode, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { ApiResponseList, AppTableParams, ITableHeader } from '@/types/types'
 import { type FormKitSchemaNode } from '@formkit/core'
@@ -7,34 +7,40 @@ import type { ColumnProps } from 'primevue/column'
 import { convertApiDate } from '@/utils/date/date'
 import type { FilterMatchModeOptions } from 'primevue/api'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 export const useTableStore = defineStore('table', () => {
   const filters = ref({})
-  const showDeletedData = ref(false)
   const modelSelection = ref([])
   const { t } = useI18n()
+  const router = useRouter()
+  const showDeletedData = ref(router.currentRoute.value.query.deleted == "true")
   const filtersForm = ref<FormKitSchemaNode[]>([])
   const columns = ref<VNode[]>([])
-  let apiResponse: ApiResponseList | undefined
+  const showDeletedRef = ref<Boolean>(false)
+  let apiResponse: Ref<ApiResponseList | undefined> = ref()
   const data = computed(() => {
-    if (!apiResponse) return []
-    if (showDeletedData.value) return apiResponse.deletedRecords
-    return apiResponse.records
+    if (!apiResponse.value) return []
+    if (showDeletedData.value) return apiResponse.value.deletedRecords
+    return apiResponse.value.records
   })
-  const deleteRestoreBtn = computed(() => {
+  const deleteRestoreVaraints = computed(() => {
     if (showDeletedData.value) return { icon: 'replay', label: 'restore', empty: "empty_records_deleted" }
     return { icon: 'trash', label: 'delete', empty: "empty_records" }
   })
   const activeFilters = computed(() => {
     const active: Record<string, { input: string, value: any }> = {}
+    const params: Record<string, string> = {}
     for (const key of Object.keys(filters.value)) {
       const value = filters.value[key].value
       if (value != null && value != "") {
         active[key] = { input: key, value }
+        params[key] = value
       } else {
         delete active[key]
       }
     }
+    // addParamsToLocation(params)
     return active
   })
   const selectedIds = computed(() => {
@@ -44,8 +50,9 @@ export const useTableStore = defineStore('table', () => {
     filters.value = {}
     filtersForm.value = []
     columns.value = []
-    apiResponse = undefined
+    apiResponse.value = undefined
   }
+
 
   const generateColumns = (headers: Record<string, ITableHeader>) => {
     const columns: VNode[] = []
@@ -85,26 +92,31 @@ export const useTableStore = defineStore('table', () => {
   const initTable: (params: AppTableParams) => Promise<boolean> = (params: AppTableParams) => {
     reset()
     return new Promise<boolean>((resolve: Function) => {
+      apiResponse.value = params.apiResponse
       columns.value = generateColumns(params.headers)
-      apiResponse = params.apiResponse
-
-      // data.value = params.data.map((row: any) => {
-      //   for (const key of Object.keys(params.headers)) {
-      //     const d = row[key]
-      //     if (row[key].nanos) {
-      //       row[key] = convertApiDate(row[key])
-      //     }
-      //   }
-
-      //   return row
-      // })
       resolve(true)
-      // setTimeout(() => {
-      // }, 4000)
+
     })
   }
 
+  const deleteSelectedRows = () => {
+    if (!apiResponse.value) return
 
+
+    if (!apiResponse.value.records) apiResponse.value.records = []
+    if (!apiResponse.value.deletedRecords) apiResponse.value.deletedRecords = []
+
+    if (showDeletedData.value) {
+      apiResponse.value.records = apiResponse.value.records.concat(modelSelection.value)
+      apiResponse.value.deletedRecords = apiResponse.value.deletedRecords.filter(r => !modelSelection.value.includes(r as never))
+      modelSelection.value = []
+      return
+    }
+    apiResponse.value.deletedRecords = apiResponse.value.deletedRecords.concat(modelSelection.value)
+    apiResponse.value.records = apiResponse.value.records.filter(r => !modelSelection.value.includes(r as never))
+    modelSelection.value = []
+    return
+  }
   const appendFilter = (name: string, mode: FilterMatchModeOptions) => {
     filters.value[name] = { value: null, matchMode: mode }
   }
@@ -118,18 +130,15 @@ export const useTableStore = defineStore('table', () => {
       filters.value[key].value = null
     }
   }
-
   const bindFilterValue = (name: string, value: any) => {
     const date = new Date(value)
-    console.log("data", date.getTime())
-    // let timestamp = Date.parse('foo');
-
     if (typeof date.getTime != 'undefined') {
       if (!isNaN(date.getTime())) {
         filters.value[name].value = date
         return
       }
     }
+
     filters.value[name].value = value
   }
 
@@ -141,10 +150,12 @@ export const useTableStore = defineStore('table', () => {
     selectedIds,
     apiResponse,
     clearFilters,
+    // addParamsToLocation,
+    deleteSelectedRows,
     modelSelection,
     filtersForm,
     columns,
-    deleteRestoreBtn,
+    deleteRestoreVaraints,
     showDeletedData,
     activeFilters,
     bindFilterValue,

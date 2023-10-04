@@ -1,6 +1,6 @@
 .app-card {
   & .start {
-    background-color: var(--color-primary);
+    background: var(--color-primary);
     border-start-start-radius: var(--border-radius) !important;
     border-end-start-radius: var(--border-radius) !important;
   }

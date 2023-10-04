@@ -29,7 +29,7 @@ const router = createRouter({
           path: '/roles',
           name: 'roles_list',
           meta: {
-            breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "view" }],
+            breadcrumbs: [{ label: "roles_list", to: { name: 'roles_list' } }],
             menuKey: "1.0"
           },
           component: () => import('../views/RolesListView.vue')
@@ -38,7 +38,7 @@ const router = createRouter({
           path: '/roles/create',
           name: 'role_create',
           meta: {
-            breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "create" }],
+            breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "role_create" }],
             menuKey: "1.0"
           },
           component: () => import('../views/RoleCreateView.vue')
@@ -48,6 +48,14 @@ const router = createRouter({
           name: 'roles_find',
           meta: {
             breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "view" }]
+          },
+          component: () => import('../views/UsersView.vue')
+        },
+        {
+          path: '/roles/:id/update',
+          name: 'role_update',
+          meta: {
+            breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "update" }]
           },
           component: () => import('../views/UsersView.vue')
         },

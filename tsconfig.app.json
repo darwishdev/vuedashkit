@@ -6,6 +6,7 @@
     "src/vuedashkit.ts",
     "src/**/*.vue",
     "src/**/**/*.ts",
+    "src/**/**/**.ts",
     "src/locales/*.json"
   ],
   "exclude": [

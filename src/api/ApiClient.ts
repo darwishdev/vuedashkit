@@ -14,10 +14,36 @@ const authorizationInterceptor: Interceptor = (next) => async (req) => {
 };
 
 
+const dateParserInterceptor: Interceptor = (next) => async (req) => {
+    try {
+        const response = await next(req);
+        const message = response.message as any
+        const responseKeys = Object.keys(message)
+        if (responseKeys.includes("records")) {
+            message.records = message.records.map(r => {
+                r.createdAt = r.createdAt?.toDate ? r.createdAt?.toDate() : r.createdAt
+                r.deletedAt = r.deletedAt?.toDate ? r.deletedAt?.toDate() : r.deletedAt
+                return r
+            })
+        }
+        if (responseKeys.includes("deletedRecords")) {
+            message.deletedRecords = message.deletedRecords.map(r => {
+                r.createdAt = r.createdAt?.toDate ? r.createdAt?.toDate() : r.createdAt
+                r.deletedAt = r.deletedAt?.toDate ? r.deletedAt?.toDate() : r.deletedAt
+                return r
+            })
+        }
+        return response
+    } catch (error: any) {
+        console.log(error)
+        throw new Error('unhandeldError');
+    }
+};
+
 const transport = createConnectTransport({
     baseUrl: import.meta.env.VITE_API_URL,
     useHttpGet: true,
-    interceptors: [authorizationInterceptor]
+    interceptors: [authorizationInterceptor, dateParserInterceptor]
 });
 
 const apiClient: PromiseClient<typeof RmsCoreService> = createPromiseClient(RmsCoreService, transport as Transport);

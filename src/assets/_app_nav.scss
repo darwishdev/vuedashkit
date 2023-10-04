@@ -7,15 +7,23 @@
   border: 2px solid var(--color-border);
   border-radius: 10px;
   & .start {
-    align-items: center;
-    display: flex;
     margin-inline-start: 20px;
+    @include flex-center;
   }
   & .end {
+    @include flex-center;
     min-width: 200px;
     text-align: end;
     margin-inline-end: 20px;
   }
+
+  // & .p-breadcrumb {
+  //   & ol li:last-child {
+  //     & a {
+  //       color: red !important;
+  //     }
+  //   }
+  // }
 
   @media (min-width: 992px) {
     & .sidebar-toggler {

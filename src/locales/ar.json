@@ -8,9 +8,12 @@
     "import": "استيراد",
     "search": "بحث",
     "roles_list": "قائمة الأدوار",
-    "filters": "فلاتر",
+    "filters": "تصفية البيانات",
     "roleName": "الاسم",
     "dashboard": "لوحة التحكم",
+    "showing": "عرض",
+    "to": "إلى",
+    "of": "من",
     "show_filters": "انقر هنا لتصفية البيانات",
     "clear_filters": "انقر هنا لمسح جميع الفلاتر",
     "wrong_password": "كلمة المرور غير صحيحة",
@@ -29,5 +32,10 @@
     "userNamePlaceholder": "أدخل بريدك الإلكتروني أو رقم هاتفك",
     "passwordLabel": "كلمة المرور",
     "passwordPlaceholder": "أدخل كلمة المرور الخاصة بك",
-    "profile": "الملف الشخصي"
+    "profile": "الملف الشخصي",
+    "delete_dialog_title": "هل أنت متأكد؟",
+    "delete_dialog_breif": "هل تريد حقًا حذف العناصر المحددة؟",
+    "permissionsCountMoreThan": "عدد الأذونات أكثر من",
+    "usersCountMoreThan": "عدد المستخدمين أكثر من",
+    "usersCount": "عدد المستخدمين"
 }

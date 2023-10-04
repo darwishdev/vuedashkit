@@ -1,6 +1,7 @@
 import { type FormKitSchemaNode } from '@formkit/core'
 import type { ErrorMessages } from "@formkit/core"
 import type { DefaultConfigOptions } from '@formkit/vue'
+import { ListDataOptions } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/client_definitions_pb'
 import type { FilterMatchModeOptions, FilterOperatorOptions } from 'primevue/api'
 import type { ColumnProps } from 'primevue/column'
 import type { DataTableFilterMeta } from 'primevue/datatable'
@@ -36,22 +37,56 @@ export interface TableOptions {
 
 
 
-interface ApiListOptions {
+type CreateHandler = {
+    title: string;
+    redirectRoute: string;
+    routeName: string;
+    endpoint: string;
+}
+
+
+
+type UpdateHandler = {
+    title: string;
+    redirectRoute: string;
+    routeName: string;
+    endpoint: string;
+    findEndpoint: string;
+    findRequestProperty: string;
+}
+
+type DeleteRestoreHandler = {
+    endpoint: string;
+    requestProperty: string;
+}
+
+type ImportHandler = {
+    endpoint: string;
+    importTemplateLink: string;
+}
+
+
+export type ApiListOptions = {
     title: string;
     description: string;
-    createHandler: CreateHandler;
-    updateHandler: UpdateHandler;
-    deleteRestoreHandler: DeleteRestoreHandler;
-    importHandler: ImportHandler;
+    createHandler?: CreateHandler;
+    updateHandler?: UpdateHandler;
+    deleteRestoreHandler?: DeleteRestoreHandler;
+    importHandler?: ImportHandler;
 }
 
+// export type ApiResponseList<TData, TRow, TOption> = TData extends {
+//     records: TRow[]
+//     deletedRecords: TRow[]
+//     options?: TOption extends ApiListOptions ? TOption : never
+// } ? TData : never
 
-export interface ApiResponseList {
+
+export type ApiResponseList = {
     records: any[]
     deletedRecords: any[]
-    options: ApiListOptions
+    options?: ApiListOptions
 }
-
 
 export interface AppTableParams {
     dataKey: string
@@ -66,12 +101,15 @@ export interface ITableHeader {
 }
 
 // export type FilterMatchModeKey = keyof FilterMatchModeOptions;
-export interface ITableHeaderParams {
+export interface ITableHeaderProps {
     sortable: boolean,
     filter?: TableHeaderFilter;
     router?: TableRouter;
 }
 
+export type TableFilterProps<TSchema> = {
+    mode: string; input: FormKitSchemaNode;
+}
 export type TableHeaderFilter = { mode: string; input: FormKitSchemaNode; } | undefined
 export interface ToastHandler {
     hideToast?: boolean
@@ -285,30 +323,4 @@ export type LoginHandler = {
 
 
 // mock the client definitions
-interface CreateHandler {
-    title: string;
-    redirectRoute: string;
-    routeName: string;
-    endpoint: string;
-}
-
-interface UpdateHandler {
-    title: string;
-    redirect_route: string;
-    route_name: string;
-    endpoint: string;
-    find_endpoint: string;
-    find_request_property: string;
-}
-
-interface DeleteRestoreHandler {
-    endpoint: string;
-    request_property: string;
-}
-
-interface ImportHandler {
-    endpoint: string;
-    import_template_link: string;
-}
-
 

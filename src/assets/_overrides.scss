@@ -118,7 +118,7 @@
 [data-type="submit"] .formkit-input,
 .app-btn {
   width: 100%;
-  background-color: var(--color-primary);
+  background: var(--color-primary);
 
   &:hover {
     background-color: var(--color-primary-darken);
@@ -189,6 +189,11 @@
 .p-panelmenu .p-menuitem .material-symbols-outlined {
   margin-inline-end: 15px;
 }
+.p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon,
+.p-breadcrumb .p-breadcrumb-list li.p-menuitem-separator,
+.p-breadcrumb .p-breadcrumb-list li:last-child .p-menuitem-text {
+  color: var(--color-text) !important;
+}
 
 .layout-wrapper .desktop-menu:hover .desktop-menu-header {
   // display: none !important;
@@ -212,7 +217,8 @@
 }
 .p-progressbar-indeterminate .p-progressbar-value::before {
   height: 3px;
-  background-color: var(--color-primary) !important;
+  display: block !important;
+  background: var(--color-primary) !important;
 }
 
 .p-breadcrumb-list .p-menuitem-link.router-link-active {
@@ -278,4 +284,8 @@
   label {
     margin-inline-start: 15px;
   }
+}
+
+.p-paginator {
+  direction: ltr;
 }

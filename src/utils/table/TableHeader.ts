@@ -1,4 +1,4 @@
-import type { TableRouter, ITableHeaderParams, TableHeaderFilter, ITableHeader } from '@/types/types'
+import type { TableRouter, ITableHeaderProps, AppTableFilter, ITableHeader } from '@/types/newtypes'
 import { h, resolveComponent, type VNode } from 'vue'
 import Tag from 'primevue/tag';
 import { type FormKitSchemaNode } from '@formkit/core'
@@ -11,11 +11,13 @@ export class TableHeaderText implements ITableHeader {
     columnProps: ColumnProps = {}
     columnName: string
     tableRouter?: TableRouter
-    filter?: TableHeaderFilter
-    constructor(name: string, params: ITableHeaderParams) {
+    isGlobalFilter: boolean
+    filter?: AppTableFilter
+    constructor(name: string, params: ITableHeaderProps) {
         this.columnName = name
         this.filter = params.filter
         this.columnProps.sortable = params.sortable
+        this.isGlobalFilter = typeof params.isGlobalFilter == 'undefined' ? false : params.isGlobalFilter
         if (params.filter) {
             this.filter = params.filter
         }
@@ -25,48 +27,31 @@ export class TableHeaderText implements ITableHeader {
     }
 }
 
-// export class TableHeaderPrice implements ITableHeader {
-//     columnProps: ColumnProps = {}
-//     columnName: string
-//     filter: TableHeaderFilter
+export class TableHeaderCount extends TableHeaderText implements ITableHeader {
 
-//     constructor(name: string, params: ITableHeaderParams) {
-//         this.columnProps.sortable = params.sortable
-//         this.columnName = name
-//         if (params.filterOption) {
-//             this.filter = this.generateFilterInput(params.filterOption)
-//         }
-//     }
-//     generateFilterInput(mode: FilterOperatorOptions): TableHeaderFilter {
-//         return {
-//             mode,
-//             node: {
-//                 $formkit: 'number',
-//                 outerClass: "col-4",
-//                 prefixIcon: "dollar",
-//                 name: this.columnName,
-//                 placeholder: this.columnName
-//             },
-//         }
-//     }
-
-//     renderHtml(value: any) {
-//         return h('span', FormatCurrency(value[this.columnName]))
-//     }
-// }
+    renderHtml = (value: any) => {
+        const data = value[this.columnName]
+        const displayValue = !data || data == "" ? 0 : data
+        return h(Tag, {
+            value: displayValue
+        })
+    }
+}
 
 export class TableHeaderTag extends TableHeaderText implements ITableHeader {
-    renderHtml(value: any) {
+    renderHtml = (value: any) => {
         return h(Tag, {
             value: value[this.columnName]
         })
     }
 }
 
+
+
+
 export class TableHeaderLink extends TableHeaderText implements ITableHeader {
-    renderHtml(value: any) {
+    renderHtml = (value: any) => {
         if (!this.tableRouter || !this.tableRouter) {
-            return h("span", value[this.columnName])
         }
         const ruterLink = resolveComponent('router-link')
         const params = {} as any
@@ -77,7 +62,7 @@ export class TableHeaderLink extends TableHeaderText implements ITableHeader {
 
 
 export class TableHeaderImage extends TableHeaderText implements ITableHeader {
-    renderHtml(value: any) {
+    renderHtml = (value: any) => {
         const appImage = resolveComponent('app-image')
         return h(appImage, { src: value[this.columnName] })
     }
@@ -85,10 +70,10 @@ export class TableHeaderImage extends TableHeaderText implements ITableHeader {
 
 
 export class TableHeaderDate extends TableHeaderText implements ITableHeader {
-    renderHtml(value: any) {
+    renderHtml = (value: any) => {
         const data = value[this.columnName]
-        const date = convertApiDate(data)
-        return h('div', convertDateRedable(date))
+
+        return h('div', convertDateRedable(data))
     }
 }
 // export class TableHeaderImage implements ITableHeader {
@@ -99,7 +84,7 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 //         this.columnName = name
 //     }
 
-//     renderHtml(value: any) {
+//     renderHtml = (value: any) => {
 //         const appImage = resolveComponent('app-image')
 //         return h(appImage, { src: value[this.columnName] })
 //     }
@@ -110,7 +95,7 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 //     columnProps: ColumnProps = {}
 //     columnName: string
 //     filter: TableHeaderFilter
-//     constructor(name: string, params: ITableHeaderParams) {
+//     constructor(name: string, params: ITableHeaderProps) {
 //         this.columnName = name
 //         if (params.filterOption) {
 //             this.filter = this.generateFilterInput(params.filterOption)
@@ -130,7 +115,7 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 //         }
 //     }
 
-//     renderHtml(value: any) {
+//     renderHtml = (value: any) => {
 //         // const appImage = resolveComponent('app-image')
 //         const data = value[this.columnName]
 //         return h('div', convertDateRedable(data))
