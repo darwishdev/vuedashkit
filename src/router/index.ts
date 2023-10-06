@@ -52,6 +52,38 @@ const router = createRouter({
           component: () => import('../views/UsersView.vue')
         },
         {
+          path: '/appTable',
+          name: 'app_table',
+          meta: {
+            breadcrumbs: [{ label: "AppTable Docs", to: { name: 'app_table' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/appTableDocs.vue')
+        },
+        {
+          path: '/products/:id',
+          name: 'products_find',
+          meta: {
+            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "view" }]
+          },
+          component: () => import('../views/productsView.vue')
+        },
+        {
+          path: '/products/:id/update',
+          name: 'products_update',
+          meta: {
+            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "update" }]
+          },
+          component: () => import('../views/productsUpdate.vue')
+        },
+        {
+          path: '/products/create',
+          name: 'products_create',
+          meta: {
+            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "Create" }],
+          },
+          component: () => import('../views/productCreate.vue')
+        },
+        {
           path: '/roles/:id/update',
           name: 'role_update',
           meta: {
