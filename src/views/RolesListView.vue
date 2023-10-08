@@ -12,7 +12,10 @@ import type { AppTableProps, TableRouter } from '@/types/newtypes';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 const { t } = useI18n()
+themeStore.startProgressBar()
 
+const { records, deletedRecords, options } = await apiClient.rolesList({})
+themeStore.stopProgressBar()
 const dataKey = "roleId"
 const viewRouter: TableRouter = {
     name: "roles_find",
@@ -41,14 +44,13 @@ const headers: Record<string, ITableHeader> = {
     }),
     'permissionsCount': new TableHeaderCount('permissionsCount', {
         sortable: true,
-        isGlobalFilter: true,
         filter: {
             matchMode: FilterMatchMode.GREATER_THAN,
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
                 outerClass: "col-3",
-                number: true,
+                numbmper: true,
                 name: "permissionsCount",
                 validationVisibility: "live",
                 placeholder: t("permissionsCountMoreThan")
@@ -63,6 +65,7 @@ const headers: Record<string, ITableHeader> = {
                 $formkit: 'number',
                 prefixIcon: "number",
                 outerClass: "col-3",
+                number: true,
                 name: "usersCount",
                 placeholder: t("usersCountMoreThan")
             }
@@ -81,14 +84,11 @@ const headers: Record<string, ITableHeader> = {
         }
     }),
 }
-themeStore.startProgressBar()
-const { records, deletedRecords, options } = await apiClient.rolesList({})
-themeStore.stopProgressBar()
 
 
 const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
     title: "roles",
-    dataKey,
+    dataKey: "roleId",
     records: records,
     deletedRecords: deletedRecords,
     viewRouter: viewRouter,
@@ -102,13 +102,20 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
 <template>
     <Suspense timeout="0">
         <template #default>
-
-            <AppTableNew :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
-                :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
-                :deletedRecords="deletedRecords" :headers="tableProps.headers" />
+            <AppTableNew :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
+                :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
+                :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
+                :headers="tableProps.headers">
+                <template #start="{ data }">
+                    {{ data.roleName }}
+                </template>
+                <template #end="{ data }">
+                    {{ data.roleName }}
+                </template>
+            </AppTableNew>
         </template>
         <template #fallback>
-            <h2>loading table component</h2>
+            <h2>loading table component from roles list</h2>
         </template>
     </Suspense>
 </template>

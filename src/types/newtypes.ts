@@ -113,9 +113,10 @@ export interface AppTableProps<RolesListResponse, TRecord> {
     dataKey: keyof TRecord
     fetchFn: tableFetchFn<RolesListResponse, TRecord>
     records: TRecord[]
-    viewRouter?: TableRouter
     deletedRecords: TRecord[]
+    viewRouter?: TableRouter
     options: ApiListOptions
+    displayType?: 'card' | 'table'
     headers: Record<string, ITableHeader>;
 }
 export type TableHeaderFilter = { mode: string; input: FormKitSchemaNode; } | undefined

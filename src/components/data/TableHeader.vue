@@ -100,7 +100,7 @@ const renderHeader = () => {
         align-items: center;
 
         & .deleted-toggle {
-            margin-right: 30px !important;
+            margin-inline-end: 30px !important;
         }
 
     }

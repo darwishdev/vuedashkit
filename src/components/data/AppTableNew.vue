@@ -81,6 +81,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
                 value: null
             }
         }
+
         resolve({
             inputsSchema,
             filterFormValue,
@@ -115,7 +116,10 @@ const { t } = useI18n()
 const route = useRoute()
 const tableRefElement = ref()
 
-
+const slots = defineSlots<{
+    start(props: { data: any }): any
+    end(props: { data: any }): any
+}>()
 const props = defineProps<AppTableProps<any, any>>();
 
 const { inputsSchema,
@@ -184,7 +188,20 @@ const renderDeleteRestoreBtn = (data: any) => {
 }
 
 
+const renderCardColumns = () => {
+    const startColumn = h(Column, {}, { body: (props) => slots.start(props) })
+    const endColumn = h(Column, {}, { body: (props) => slots.end(props) })
+    const columns: VNode[] = [
+        startColumn,
+        endColumn
+    ]
+
+    return columns
+}
+
+
 const renderColumns = () => {
+    if (props.displayType == 'card') return renderCardColumns()
     const selectAllColumn: VNode = h(Column, {
         selectionMode: 'multiple',
         headerStyle: {
@@ -199,7 +216,7 @@ const renderColumns = () => {
         columns.push(columnNode)
     })
 
-    if (props.options.updateHandler) {
+    if (props.options.updateHandler || props.options.deleteRestoreHandler || props.viewRouter) {
         const actionsColumn = h(Column, {
             header: 'actions',
             headerStyle: {
@@ -280,12 +297,23 @@ const renderTable = () => {
 </script>
 
 <template>
-    <component class="app-table" :is="renderTable()" />
+    <component class="app-table" :class="{ 'card': props.displayType == 'card' }" :is="renderTable()" />
 </template>
 
 
 <style   lang="scss">
 .app-table {
+    &.card {
+        & thead {
+            display: none;
+        }
+
+        & tbody {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
     & .p-paginator-bottom {
         background-color: var(--color-card);
         border-radius: 0 0 20px 20px;
@@ -328,6 +356,8 @@ const renderTable = () => {
             border-radius: 20px 20px 0 0;
             border: none;
         }
+
+
     }
 
     & .empty-table {

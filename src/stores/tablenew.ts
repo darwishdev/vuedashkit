@@ -1,7 +1,6 @@
 
 import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault } from '@/types/newtypes'
 import { defineStore } from 'pinia'
-import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
 
 export const useTableNewStore = defineStore('tablenew', () => {

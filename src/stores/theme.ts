@@ -16,7 +16,7 @@ export const useThemeStore = defineStore('theme', () => {
   const targetTheme = computed(() => isDark.value ? themes.light : themes.dark)
   const startProgressBar = () => {
     isProgressBarVisible.value = true
-    setTimeout(stopProgressBar, 2000)
+    setTimeout(stopProgressBar, 20000)
   }
 
 

@@ -72,6 +72,8 @@ const importDataFromFile = (value: any) => {
 
         } else {
             // Handle error
+
+            notificationStore.showError("imported_error_summary", "imported_error_detail")
             console.error('File upload failed:', xhr.status, xhr.statusText);
         }
     };

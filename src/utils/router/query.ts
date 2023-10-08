@@ -31,6 +31,5 @@ export const RouteQueryRemove = (paramName: string) => {
     // if (!currentQueryParams.has(paramName)) return
     currentQueryParams.delete(paramName);
     pushState(currentPath, currentQueryParams)
-
     return currentQueryParams
 };

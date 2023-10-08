@@ -43,7 +43,6 @@ const toggleDesktopMenu = () => {
             <app-nav />
         </div>
         <main class="page-content">
-
             <RouterView v-slot="{ Component }">
                 <Suspense @resolve="routeResolved" timeout="0">
                     <template #default>

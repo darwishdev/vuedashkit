@@ -30,7 +30,7 @@ const router = createRouter({
           name: 'roles_list',
           meta: {
             breadcrumbs: [{ label: "roles_list", to: { name: 'roles_list' } }],
-            menuKey: "1.0"
+            
           },
           component: () => import('../views/RolesListView.vue')
         },
@@ -39,7 +39,6 @@ const router = createRouter({
           name: 'role_create',
           meta: {
             breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "role_create" }],
-            menuKey: "1.0"
           },
           component: () => import('../views/RoleCreateView.vue')
         },
