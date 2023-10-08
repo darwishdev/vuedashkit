@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import type { ITableHeader } from '@/types/types';
-import AppTableNew from '@/components/data/AppTableNew.vue';
+import DataList from '@/components/data/DataList.vue';
 import type { RolesListResponse, RolesListRow } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import apiClient from '@/api/ApiClient';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
@@ -103,7 +103,7 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
 <template>
     <Suspense timeout="0">
         <template #default>
-            <AppTableNew class="sm-column" :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
+            <DataList class="sm-column" :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
                 :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
                 :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
                 :headers="tableProps.headers">
@@ -121,7 +121,7 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
                 <template #end="{ data }">
                     <h1>{{ data.roleName }} </h1>
                 </template>
-            </AppTableNew>
+            </DataList>
         </template>
         <template #fallback>
             <h2>loading table component from roles list</h2>
