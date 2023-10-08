@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { ITableHeader } from '@/types/types';
-import AppTableNew from '@/components/data/AppTableNew.vue';
-import apiClient from '@/api/ApiMock';
-import type {ProductListResponse , productsListRow} from '@/api/ApiTypes';
-import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
+import type { ITableHeader } from '../types/types';
+import AppTableNew from '../components/data/AppTableNew.vue';
+import apiClient from '../api/ApiMock';
+import type {ProductListResponse , productsListRow} from '../api/ApiTypes';
+import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderImage } from '../utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
-import type { AppTableProps, TableRouter } from '@/types/newtypes';
-import { useThemeStore } from '@/stores/theme';
+import type { AppTableProps, TableRouter } from '../types/newtypes';
+import { useThemeStore } from '../stores/theme';
 const themeStore = useThemeStore()
 const { t } = useI18n()
 
@@ -36,6 +36,9 @@ const headers: Record<string, ITableHeader> = {
                 placeholder: t("Product Name")
             }
         }
+    }),
+    'productImage': new TableHeaderImage('productImage', {
+        sortable: true,
     }),
     'ingredientsCount': new TableHeaderCount('ingredientsCount', {
         sortable: true,
@@ -133,6 +136,7 @@ const { records, deletedRecords, options } = await apiClient.productsList()
 themeStore.stopProgressBar()
 
 
+
 const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     title: "roles",
     dataKey,
@@ -141,7 +145,8 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     viewRouter: viewRouter,
     fetchFn: apiClient.productsList as any,
     options: options! as any,
-    headers
+    headers ,
+    displayType : 'card'
 }
 
 </script>
@@ -152,7 +157,6 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
             It provides flexibility by allowing you to control its behavior through various props. This documentation will
              guide you on how to use the component and the props you need to pass to customize its functionality.
         </p>
-
         <h2>Props</h2>
         <p>The AppTable component accepts the following props:</p>
         <div class="border-round p-5" style="background-color: var(--color-card);">
@@ -208,6 +212,14 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
                     <div class="border-round p-4" style="background-color: var(--color-card);">
                         <li><h3 class="flex">Description: <p class="mx-2">Additional options that was returned as a response from the api function to customize the table's behavior depending on the role and the permissions of the logged in user.</p></h3></li>
                         <li><h3 class="flex">Example usage:- <p class="mx-2">const { records, deletedRecords, options } = await apiClient.productsList({})</p></h3></li>
+                    </div>
+                </ul>
+                <li class="font-bold mt-4"><h2>displayType ( 'card' or 'table' , default : 'table' ) :</h2></li>
+                <ul class="my-2">
+                    <div class="border-round p-4" style="background-color: var(--color-card);">
+                        <li><h3 class="flex">Description: <p class="mx-2">This prop is used to define the type that the component will be displayed in. The displayType prop has two options : 'card' or 'table'
+                        <br>if you set the displayType to 'card' the data will be displayed in cards instead of being displayed in a table.</p></h3></li>
+                        <li><h3 class="flex">Example usage:- <p class="mx-2">displayType : 'card' .. we will show an example on using the card displayType </p></h3></li>
                     </div>
                 </ul>
                 <li class="font-bold mt-4"><h2>headers (Object, required) :</h2></li>
@@ -355,6 +367,29 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
     :deletedRecords="deletedRecords" :headers="headers2" />
 
+    <h2 class="my-5">Here's an example for using the appTable component with setting the displayType property to 'card' :
+    </h2>
+
+    <AppTableNew :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
+    :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
+    :deletedRecords="deletedRecords" :headers="headers2" :displayType="tableProps.displayType">
+        <template #start="{ data }">
+            <div>
+                <h4>ingredients</h4>
+                <h3>{{ data.ingredientsCount }}</h3>
+                <h4>modifiers</h4>
+                <h3 class="">{{ data.modifiersCount }}</h3>
+            </div>
+        </template>
+        <template #end="{ data }">
+            <div >
+                <h3 class="my-1 text-center"> {{ data.productName }}</h3>
+                <h5 class="text-center"> {{ data.productCategory }}</h5>
+            </div>
+        </template>
+
+    </AppTableNew>
+
     <h2 class="my-3">BreadCrumbs</h2>
     <div class="border-round p-4" style="background-color: var(--color-card);">
         <h3>Defining Breadcrumbs in the Router File :</h3>
@@ -384,3 +419,27 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
         </p></h3>
     </div>
 </template>
+
+<style   lang="scss">
+.p-image img{
+    max-width: 140px !important;
+}
+.card-start,
+.card-end,
+.card-start>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-start {
+    background: var(--color-primary);
+    gap: 5px;
+
+    & h2 {
+        font-weight: 800;
+        font-size: 32px;
+    }
+}
+</style>

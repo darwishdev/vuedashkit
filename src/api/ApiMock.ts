@@ -5,6 +5,7 @@ export const productListResponse: ProductListResponse = {
         {
             productId : 1,
             productName : "Cheese burger",
+            productImage : "items/beef/Whopper.webp",
             productCategory : "beef",
             ingredientsCount : 6,
             modifiersCount : 5 ,
@@ -14,6 +15,7 @@ export const productListResponse: ProductListResponse = {
         {
             productId : 2,
             productName : "whopper tripple burger",
+            productImage : "items/beef/BBQ Bacon Whopper Jr..webp",
             productCategory : "burger",
             ingredientsCount : 8,
             modifiersCount : 4,

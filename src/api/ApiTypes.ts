@@ -2,6 +2,7 @@
 export interface productsListRow {
     productId : number;
     productName: string;
+    productImage: string;
     productDescription : string;
     productCategory : string;
     ingredientsCount : number;
