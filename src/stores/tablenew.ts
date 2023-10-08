@@ -22,6 +22,14 @@ export const useTableNewStore = defineStore('tablenew', () => {
       return row[dataKey]
     })
   })
+  const isAllRecordsSelected = computed<boolean>(() => {
+    if (modelSelectionRef.value.length == 0) return false
+    if (showDeletedRef.value) {
+      return modelSelectionRef.value === deletedRecords.value
+    }
+    return modelSelectionRef.value.length === records.value.length
+
+  })
   const deleteRestoreVaraints = computed(() => {
     if (showDeletedRef.value) return { icon: 'replay', label: 'restore', empty: "empty_records_deleted" }
     return { icon: 'trash', label: 'delete', empty: "empty_records" }
@@ -74,6 +82,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     selectedIds,
     deleteSelectedRows,
     refetchData,
+    isAllRecordsSelected,
     modelSelectionRef,
     fetchFn,
     deleteRestoreVaraints,

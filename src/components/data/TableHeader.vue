@@ -4,7 +4,6 @@ import type { TableHeaderProps } from '@/types/newtypes'
 import { useI18n } from 'vue-i18n'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import { Debounce } from '@/utils/debounce/debounce'
-import type { DataTableFilterMetaData } from 'primevue/datatable';
 import { useTableNewStore } from '@/stores/tablenew';
 const tableStore = useTableNewStore()
 
@@ -59,6 +58,25 @@ const renderDeletedFilter = () => {
 
     })
 }
+
+
+const renderSelectAll = () => {
+    if (tableStore.data.length == 0 || props.displayType != 'card') return
+    return h(formkitComp, {
+        type: "toggle",
+        modelValue: tableStore.isAllRecordsSelected,
+        outerClass: "deleted-toggle",
+        onInput: (v: boolean) => {
+            if (v) {
+                tableStore.modelSelectionRef = tableStore.records
+                return
+            }
+            tableStore.modelSelectionRef = []
+        },
+        label: t("select_all"),
+
+    })
+}
 const renderHeader = () => {
     return h('div', {
         class: "table-header"
@@ -73,6 +91,7 @@ const renderHeader = () => {
             class: 'end'
         }, [
             renderDeletedFilter(),
+            renderSelectAll(),
             renderGlobalSearchFilter(),
         ])
     ])
@@ -81,6 +100,7 @@ const renderHeader = () => {
 
 </script>
 <template>
+    {{ tableStore.isAllRecordsSelected }}
     <component :is="renderHeader()" />
 </template>
 

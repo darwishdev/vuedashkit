@@ -97,6 +97,7 @@ export type TableActionsProps = {
 
 export type TableHeaderProps = {
     deletedFilter: boolean,
+    displayType?: 'card' | 'table'
     searchKey: string,
     title: string,
     showGlobalSearchFilter: boolean

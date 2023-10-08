@@ -92,6 +92,7 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
     records: records,
     deletedRecords: deletedRecords,
     viewRouter: viewRouter,
+    displayType: "card",
     fetchFn: apiClient.rolesList,
     options: options!,
     headers
@@ -107,10 +108,18 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
                 :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
                 :headers="tableProps.headers">
                 <template #start="{ data }">
-                    {{ data.roleName }}
+                    <div class="permissions">
+                        <h3>{{ $t('permissions') }}</h3>
+                        <h2>{{ data.permissionsCount }}</h2>
+                    </div>
+                    <div class="users">
+                        <h3>{{ $t('users') }}</h3>
+                        <h2>{{ data.usersCount }} </h2>
+
+                    </div>
                 </template>
                 <template #end="{ data }">
-                    {{ data.roleName }}
+                    <h1>{{ data.roleName }}asdasdasdsadaassdasasdasdasdd</h1>
                 </template>
             </AppTableNew>
         </template>
@@ -119,3 +128,25 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
         </template>
     </Suspense>
 </template>
+
+
+<style   lang="scss">
+.card-start,
+.card-end,
+.card-start>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-start {
+    background: var(--color-primary);
+    gap: 5px;
+
+    & h2 {
+        font-weight: 800;
+        font-size: 32px;
+    }
+}
+</style>

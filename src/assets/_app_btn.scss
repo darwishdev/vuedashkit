@@ -5,6 +5,12 @@
   // min-width: 150px;
   color: var(--color-white);
   margin: 0 0.2rem;
+
+  &.p-button.p-button-icon-only {
+    width: 2rem;
+    padding: 0;
+    height: 1.5rem;
+  }
 }
 
 .p-button:enabled:hover {

@@ -189,25 +189,34 @@ const renderDeleteRestoreBtn = (data: any) => {
 
 
 const renderCardColumns = () => {
-    const startColumn = h(Column, {}, { body: (props) => slots.start(props) })
-    const endColumn = h(Column, {}, { body: (props) => slots.end(props) })
+    const selectAllColumn = renderSelectAllColumn()
+    const startColumn = h(Column, { class: 'card-start' }, { body: (props) => slots.start(props) })
+    const endColumn = h(Column, { class: 'card-end' }, { body: (props) => slots.end(props) })
     const columns: VNode[] = [
         startColumn,
-        endColumn
+        endColumn,
+        selectAllColumn
     ]
+    const actionsColumn = renderActionsColumn()
+    if (actionsColumn) columns.push(actionsColumn)
 
     return columns
 }
 
 
-const renderColumns = () => {
-    if (props.displayType == 'card') return renderCardColumns()
-    const selectAllColumn: VNode = h(Column, {
+const renderSelectAllColumn = () => {
+    return h(Column, {
         selectionMode: 'multiple',
         headerStyle: {
             width: "3rem"
         }
     })
+
+}
+
+const renderColumns = () => {
+    if (props.displayType == 'card') return renderCardColumns()
+    const selectAllColumn = renderSelectAllColumn()
     const columns: VNode[] = [
         selectAllColumn
     ]
@@ -215,36 +224,39 @@ const renderColumns = () => {
         const columnNode = h(Column, columnObj.props, columnObj.slots ? { body: columnObj.slots.body } : {})
         columns.push(columnNode)
     })
+    const actionsColumn = renderActionsColumn()
+    if (actionsColumn) columns.push(actionsColumn)
 
-    if (props.options.updateHandler || props.options.deleteRestoreHandler || props.viewRouter) {
-        const actionsColumn = h(Column, {
-            header: 'actions',
-            headerStyle: {
-                width: "3rem"
-            },
-        }, {
-            body: ({ data }) => h('div', {
-                class: "flex"
-            }, [
-                renderViewBtn(data),
-                renderUpdateBtn(data),
-                renderDeleteRestoreBtn(data)
-            ])
-        })
-
-        columns.push(actionsColumn)
-    }
     return columns
 }
 
+const renderActionsColumn = () => {
+    if (!props.options.updateHandler && !props.options.deleteRestoreHandler && !props.viewRouter) return
 
+    const actionsColumn = h(Column, {
+        header: 'actions',
+        class: "actions-btns",
+        headerStyle: {
+            width: "3rem"
+        },
+    }, {
+        body: ({ data }) => h('div', {
+            class: "flex "
+        }, [
+            renderViewBtn(data),
+            renderUpdateBtn(data),
+            renderDeleteRestoreBtn(data)
+        ])
+    })
+    return actionsColumn
+}
 const renderTable = () => {
     return h(DataTable, {
         value: tableStore.data,
         rows: 10,
         maxHeight: 200,
         ref: "tableRefElement",
-        scrollable: true,
+        // scrollable: false,
         paginator: true,
         selection: tableStore.modelSelectionRef,
         globalFilterFields: globalFilters,
@@ -270,6 +282,7 @@ const renderTable = () => {
                 deletedFilter,
                 searchKey,
                 title: props.options.title,
+                displayType: props.displayType,
                 showGlobalSearchFilter: globalFilters.length > 0,
                 "onUpdate:globalSearch": (val: any) => {
                     tableFiltersRef.value['global'].value = val ? val : null
@@ -297,23 +310,12 @@ const renderTable = () => {
 </script>
 
 <template>
-    <component class="app-table" :class="{ 'card': props.displayType == 'card' }" :is="renderTable()" />
+    <component class="app-table" :class="{ 'table-card': props.displayType == 'card' }" :is="renderTable()" />
 </template>
 
 
 <style   lang="scss">
 .app-table {
-    &.card {
-        & thead {
-            display: none;
-        }
-
-        & tbody {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
     & .p-paginator-bottom {
         background-color: var(--color-card);
         border-radius: 0 0 20px 20px;
@@ -337,19 +339,19 @@ const renderTable = () => {
 
         & .p-datatable-tbody>tr {
             padding: 0 20px;
-            background-color: transparent !important;
+            background-color: transparent;
         }
 
         & .p-datatable-thead {
-            background-color: transparent !important;
+            background-color: transparent;
         }
 
         & .p-datatable-thead>tr {
-            background-color: transparent !important;
+            background-color: transparent;
         }
 
         & .p-datatable-thead>tr>th {
-            background-color: transparent !important;
+            background-color: transparent;
         }
 
         & .p-datatable-header {
@@ -380,5 +382,94 @@ const renderTable = () => {
             border-radius: 6px;
         }
     }
+
+
+    &.table-card {
+
+        width: 100%;
+
+        & thead {
+            display: none;
+        }
+
+        & table {
+            display: flex;
+            width: 100%;
+        }
+
+        & tbody {
+            display: flex;
+            width: 100% !important;
+            flex-wrap: wrap;
+            gap: 20px;
+
+            & tr.p-datatable-emptymessage {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+
+            }
+
+            & tr:not(.p-datatable-emptymessage) {
+                background: var(--color-card) !important;
+                border-radius: 6px;
+                display: flex;
+                padding: 0 !important;
+                width: calc(100% / 3 - 15px);
+
+
+
+
+
+                & td {
+                    position: relative;
+                    border: none;
+
+                    &.p-selection-column {
+                        position: absolute !important;
+                        top: 10px;
+                        left: calc(30% + 10px);
+                        padding: 0 !important;
+                    }
+
+                    &.actions-btns {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                    }
+
+                    &.card-start {
+                        height: 100%;
+                        width: 30%;
+                        border-radius: 6px 0 0 6px;
+                    }
+
+                    &.card-end {
+                        height: 100%;
+                        padding-top: 3rem;
+                        width: 70%;
+                        border-radius: 0 6px 6px 0;
+
+                        & h1 {
+                            max-width: 80%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+
+
+
+
+                }
+
+            }
+        }
+    }
+}
+
+.p-datatable-table {
+    width: 100%;
 }
 </style>
+
+
