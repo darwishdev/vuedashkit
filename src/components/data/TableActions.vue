@@ -168,19 +168,34 @@ const renderTableActions = () => {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+
 
     & .app-btn {
-        margin: 0 10px;
         color: #fff;
+        width: 120px;
     }
 
     & .start {
+        flex-wrap: wrap;
         display: flex;
+        gap: 10px;
+
+        @media (max-width : 676px) {
+            flex: 1;
+            justify-content: center;
+        }
     }
 
     & .end {
         display: flex;
-        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+
+
+
 
         .import-wrapper {
             max-width: 120px;

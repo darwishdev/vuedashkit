@@ -70,7 +70,20 @@ const toggleProfileMenu = (event: Event) => {
     border: 2px solid var(--color-border);
     border-radius: 10px;
 
+    @media (max-width: 676px) {
 
+        & .p-breadcrumb {
+            display: none;
+        }
+
+        & .logo-container {
+            margin: 0;
+        }
+
+        & .end {
+            min-width: auto;
+        }
+    }
 
     & .start {
         margin-inline-start: 20px;
@@ -83,9 +96,13 @@ const toggleProfileMenu = (event: Event) => {
         display: flex;
         justify-content: end;
         align-items: center;
-        min-width: 200px;
         text-align: end;
         margin-inline-end: 20px;
+
+        @media (min-width: 676px) {
+
+            min-width: 200px;
+        }
     }
 
 
