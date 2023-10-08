@@ -31,7 +31,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'text',
                 prefixIcon: "tools",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "productName",
                 placeholder: t("Product Name")
             }
@@ -48,7 +48,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 number: true,
                 name: "ingredientsCount",
                 validationVisibility: "live",
@@ -63,7 +63,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "modifiersCount",
                 placeholder: t("modifiers Count More Than")
             }
@@ -90,7 +90,7 @@ const headers2: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'text',
                 prefixIcon: "tools",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "productName",
                 placeholder: t("Product Name")
             }
@@ -104,7 +104,7 @@ const headers2: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 number: true,
                 name: "ingredientsCount",
                 validationVisibility: "live",
@@ -119,7 +119,7 @@ const headers2: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "modifiersCount",
                 placeholder: t("modifiers Count More Than")
             }
@@ -370,15 +370,19 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     <h2 class="my-5">Here's an example for using the appTable component with setting the displayType property to 'card' :
     </h2>
 
-    <AppTableNew :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
+    <AppTableNew class="sm-column" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
     :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
     :deletedRecords="deletedRecords" :headers="headers2" :displayType="tableProps.displayType">
         <template #start="{ data }">
-            <div>
-                <h4>ingredients</h4>
-                <h3>{{ data.ingredientsCount }}</h3>
-                <h4>modifiers</h4>
-                <h3 class="">{{ data.modifiersCount }}</h3>
+            <div class="flex-row md:flex-column">
+                <div class="mx-3">
+                    <h4>ingredients</h4>
+                    <h3>{{ data.ingredientsCount }}</h3>
+                </div>
+                <div class="mx-3">
+                    <h4>modifiers</h4>
+                    <h3 class="">{{ data.modifiersCount }}</h3>
+                </div>
             </div>
         </template>
         <template #end="{ data }">
@@ -387,8 +391,10 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
                 <h5 class="text-center"> {{ data.productCategory }}</h5>
             </div>
         </template>
-
     </AppTableNew>
+
+    <h2 class="mt-4">Note :</h2>
+    <h3 class="mt-2 mb-5"><p>we have toggled the <span class="text-xl font-bold">'sm-column'</span> class when using the appTable component displayed as cards to handle designing responsive cards</p></h3>
 
     <h2 class="my-3">BreadCrumbs</h2>
     <div class="border-round p-4" style="background-color: var(--color-card);">
@@ -420,7 +426,7 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     </div>
 </template>
 
-<style   lang="scss">
+<style lang="scss">
 .p-image img{
     max-width: 140px !important;
 }
@@ -428,7 +434,6 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
 .card-end,
 .card-start>div {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
