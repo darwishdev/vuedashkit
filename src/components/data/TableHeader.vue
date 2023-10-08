@@ -100,7 +100,6 @@ const renderHeader = () => {
 
 </script>
 <template>
-    {{ tableStore.isAllRecordsSelected }}
     <component :is="renderHeader()" />
 </template>
 
@@ -113,11 +112,24 @@ const renderHeader = () => {
     align-items: center;
     padding: 20px;
     border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+
+    @media (max-width : 676px) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    & .start {
+        flex: 1;
+    }
 
     & .end {
         display: flex;
         justify-content: center;
         align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
 
         & .deleted-toggle {
             margin-inline-end: 30px !important;

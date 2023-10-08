@@ -386,6 +386,8 @@ const renderTable = () => {
 
     &.table-card {
 
+
+
         width: 100%;
 
         & thead {
@@ -411,11 +413,23 @@ const renderTable = () => {
             }
 
             & tr:not(.p-datatable-emptymessage) {
-                background: var(--color-card) !important;
+                background: var(--color-card);
                 border-radius: 6px;
                 display: flex;
                 padding: 0 !important;
-                width: calc(100% / 3 - 15px);
+                width: 100%;
+
+                @media (min-width :767px) {
+                    width: calc(100% / 2 - 15px);
+                }
+
+                @media (min-width :1200px) {
+                    width: calc(100% /3 - 15px);
+                }
+
+
+
+
 
 
 
@@ -442,6 +456,22 @@ const renderTable = () => {
                         height: 100%;
                         width: 30%;
                         border-radius: 6px 0 0 6px;
+
+                        &>div {
+                            width: 100%;
+                            text-align: center;
+                        }
+
+                        & h3 {
+                            font-size: .9rem;
+                            width: 100%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        & h2 {
+                            font-size: 1.2rem;
+                        }
                     }
 
                     &.card-end {
@@ -469,6 +499,88 @@ const renderTable = () => {
 
 .p-datatable-table {
     width: 100%;
+}
+
+
+.sm-column {
+    @media (max-width : 576px) {
+
+        &.table-card {
+
+
+            & tbody {
+
+
+                & tr:not(.p-datatable-emptymessage) {
+                    flex-direction: column;
+
+                    & td {
+                        position: relative;
+                        border: none;
+
+                        &.p-selection-column {
+                            top: calc(30% + 20px);
+                            left: 10px;
+                        }
+
+                        &.actions-btns {
+                            position: absolute;
+                            top: 30%;
+                            right: 0;
+                        }
+
+                        &.card-start {
+                            height: 30%;
+                            width: 100%;
+                            border-radius: 6px 6px 0 0;
+                            justify-content: space-around;
+                            flex-direction: row;
+
+                            &>div {
+                                width: auto;
+                                text-align: center;
+                            }
+
+                            & h3 {
+                                width: auto;
+                            }
+
+                            & h2 {
+                                font-size: 1.2rem;
+                            }
+                        }
+
+                        &.card-end {
+                            height: 70%;
+                            padding-top: 3rem;
+                            width: 100%;
+                            border-radius: 0 6px 6px 0;
+
+                            & h1 {
+                                max-width: 80%;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+
+
+
+
+                    }
+
+                }
+            }
+        }
+    }
+
+}
+
+
+.app-layout:not(.dark) {
+
+    .app-table.table-card tbody tr:not(.p-datatable-emptymessage) {
+        background-color: rgba(242, 242, 242, 0.9) !important;
+    }
 }
 </style>
 

@@ -36,7 +36,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'text',
                 prefixIcon: "tools",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "roleName",
                 placeholder: t("roleName")
             }
@@ -49,7 +49,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 numbmper: true,
                 name: "permissionsCount",
                 validationVisibility: "live",
@@ -64,7 +64,7 @@ const headers: Record<string, ITableHeader> = {
             input: {
                 $formkit: 'number',
                 prefixIcon: "number",
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 number: true,
                 name: "usersCount",
                 placeholder: t("usersCountMoreThan")
@@ -77,7 +77,7 @@ const headers: Record<string, ITableHeader> = {
             matchMode: FilterMatchMode.DATE_AFTER,
             input: {
                 $formkit: 'datepicker',
-                outerClass: "col-3",
+                outerClass: "col-12 sm:col-6 md:col-3",
                 name: "createdAt",
                 placeholder: t("createdAt")
             }
@@ -103,7 +103,7 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
 <template>
     <Suspense timeout="0">
         <template #default>
-            <AppTableNew :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
+            <AppTableNew class="sm-column" :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
                 :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
                 :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
                 :headers="tableProps.headers">
@@ -119,7 +119,7 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
                     </div>
                 </template>
                 <template #end="{ data }">
-                    <h1>{{ data.roleName }}asdasdasdsadaassdasasdasdasdd</h1>
+                    <h1>{{ data.roleName }} </h1>
                 </template>
             </AppTableNew>
         </template>
@@ -143,6 +143,12 @@ const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
 .card-start {
     background: var(--color-primary);
     gap: 5px;
+
+    & h2,
+    h3 {
+        color: #fff !important;
+
+    }
 
     & h2 {
         font-weight: 800;
