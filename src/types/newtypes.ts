@@ -1,6 +1,6 @@
 import { FilterMatchMode, type FilterMatchModeOptions } from "primevue/api"
 import type { ColumnProps } from 'primevue/column'
-import { type FormKitSchemaNode } from '@formkit/core'
+import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
 
@@ -24,7 +24,7 @@ export type TRecordDefault = Record<string, unknown[]>
 
 export type ApiResponseList<TRecord> = {
     records: TRecord[]
-    deletedRecords: TRecord[]
+    deletedRecords?: TRecord[]
     options?: ApiListOptions
 }
 export type AppTableFilterInputs = Record<string, FormKitSchemaNode>
@@ -103,16 +103,16 @@ export type TableHeaderProps = {
     showGlobalSearchFilter: boolean
 }
 
-export type tableFetchFn<RolesListResponse, TRecord> =
+export type tableFetchFn<TResp, TRecord> =
     (req: any, options?: any) => Promise<
-        RolesListResponse extends ApiResponseList<TRecord>
-        ? RolesListResponse
+        TResp extends ApiResponseList<TRecord>
+        ? TResp
         : undefined>
 
-export interface AppTableProps<RolesListResponse, TRecord> {
+export interface DataListProps<TResp, TRecord> {
     title: string
     dataKey: keyof TRecord
-    fetchFn: tableFetchFn<RolesListResponse, TRecord>
+    fetchFn?: tableFetchFn<TResp, TRecord>
     records: TRecord[]
     deletedRecords: TRecord[]
     viewRouter?: TableRouter
@@ -131,11 +131,41 @@ export interface ITableHeaderProps {
 
 
 
-export type InitTableParams<RolesListResponse, TRecord> = {
+export type InitTableParams<TResp, TRecord> = {
     records: Record<string, any>[]
     deletedRecords: Record<string, any>[]
     dataKey: string
     deletedFilter: boolean
-    fetchFn: tableFetchFn<RolesListResponse, TRecord>
+    fetchFn?: tableFetchFn<TResp, TRecord>
 }
 
+
+export type SubmitHandler<TReq, TResp> = {
+    endpoint: (req: TReq) => any
+    mapFunction?: (formReq: any) => TReq
+    callback?: (formResp: TResp) => any
+    redirectRoute?: string
+}
+export type AppFormProps<TReq, TResp> = {
+    title: string
+    submitHandler: SubmitHandler<TReq, TResp>,
+    sections: Record<string, FormKitSchemaNode[]>
+}
+
+
+export type Permission = {
+    permissionName: string,
+    permissionFunction: string,
+    permissionId: number
+    permissionDescription: string
+}
+export type PermissionGroup = {
+    permissionGroup: string,
+    permissions: Permission[]
+}
+export type InputPermissionsProps = {
+    context: {
+        node: FormKitNode
+    },
+    // permissions: any
+}

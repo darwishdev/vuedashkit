@@ -37,6 +37,12 @@ export class TableHeaderCount extends TableHeaderText implements ITableHeader {
         })
     }
 }
+export class TableHeaderHidden extends TableHeaderText implements ITableHeader {
+    renderHtml = (value: any) => {
+
+        return h('div', null)
+    }
+}
 
 export class TableHeaderTag extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {

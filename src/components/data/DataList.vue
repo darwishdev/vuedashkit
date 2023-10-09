@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { AppTableFilter, ITableHeader } from '@/types/newtypes'
+import type { ITableHeader } from '@/types/newtypes'
 import { ObjectKeys } from '@/utils/object/object';
 import type { FormKitSchemaNode } from '@formkit/core';
 import router from '@/router';
@@ -104,13 +104,15 @@ import TableFilter from './TableFilter.vue';
 import { useDialogStore } from '@/stores/dialog';
 import { useTableNewStore } from '@/stores/tablenew';
 import Column from 'primevue/column';
-import type { TRecordDefault, AppTableProps, ApiResponseList, InitTableParams } from '@/types/newtypes';
+import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/newtypes';
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router';
 import { h, resolveComponent, ref } from 'vue'
 const appBtnComponent = resolveComponent('app-btn')
-
+const emit = defineEmits<{
+    (e: 'update:selection', value: any[]): void
+}>();
 const dialogStore = useDialogStore()
 const { t } = useI18n()
 const route = useRoute()
@@ -119,8 +121,9 @@ const tableRefElement = ref()
 const slots = defineSlots<{
     start(props: { data: any }): any
     end(props: { data: any }): any
+    expansion(props: { data: any }): any
 }>()
-const props = defineProps<AppTableProps<any, any>>();
+const props = defineProps<DataListProps<any, any>>();
 
 const { inputsSchema,
     filterFormValue,
@@ -214,18 +217,29 @@ const renderSelectAllColumn = () => {
 
 }
 
+const renderExpander = () => {
+    if (!slots.expansion) return
+    return h(Column, {
+        expander: true,
+        style: "width: 3rem",
+
+    })
+}
 const renderColumns = () => {
     if (props.displayType == 'card') return renderCardColumns()
     const selectAllColumn = renderSelectAllColumn()
+    const expanderColumn = renderExpander()
     const columns: VNode[] = [
-        selectAllColumn
+        selectAllColumn,
     ]
+
     tableColumns.forEach((columnObj) => {
         const columnNode = h(Column, columnObj.props, columnObj.slots ? { body: columnObj.slots.body } : {})
         columns.push(columnNode)
     })
     const actionsColumn = renderActionsColumn()
     if (actionsColumn) columns.push(actionsColumn)
+    if (expanderColumn) columns.push(expanderColumn)
 
     return columns
 }
@@ -250,7 +264,11 @@ const renderActionsColumn = () => {
     })
     return actionsColumn
 }
+
+const modelExpansionRef = ref([])
 const renderTable = () => {
+
+
     return h(DataTable, {
         value: tableStore.data,
         rows: 10,
@@ -261,8 +279,14 @@ const renderTable = () => {
         selection: tableStore.modelSelectionRef,
         globalFilterFields: globalFilters,
         filters: tableFiltersRef.value,
+        expandedRows: modelExpansionRef.value,
         "onUpdate:selection": (e: any) => {
             tableStore.modelSelectionRef = e
+            emit('update:selection', e)
+        },
+        "onUpdate:expandedRows": (e: any) => {
+            console.log(e)
+            modelExpansionRef.value = e
         },
         "onUpdate:filters": (e: Event) => {
             console.log(e)
@@ -272,6 +296,7 @@ const renderTable = () => {
         currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
     }, {
         default: () => renderColumns(),
+        expansion: slots.expansion,
         header: () => h('div', null, [
             h(TableActions, {
                 options: props.options, onExport: () => {
@@ -303,8 +328,7 @@ const renderTable = () => {
         }, [
             h("h3", t(tableStore.deleteRestoreVaraints.empty)),
             h("p", t(`breif_${route.name as string}`)),
-        ])
-
+        ]),
     })
 }
 </script>
@@ -581,6 +605,10 @@ const renderTable = () => {
     .app-table.table-card tbody tr:not(.p-datatable-emptymessage) {
         background-color: rgba(242, 242, 242, 0.9) !important;
     }
+}
+
+.expander {
+    width: 3rem;
 }
 </style>
 

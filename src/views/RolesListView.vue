@@ -8,7 +8,7 @@ import apiClient from '@/api/ApiClient';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
-import type { AppTableProps, TableRouter } from '@/types/newtypes';
+import type { DataListProps, TableRouter } from '@/types/newtypes';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 const { t } = useI18n()
@@ -86,7 +86,7 @@ const headers: Record<string, ITableHeader> = {
 }
 
 
-const tableProps: AppTableProps<RolesListResponse, RolesListRow> = {
+const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
     title: "roles",
     dataKey: "roleId",
     records: records,

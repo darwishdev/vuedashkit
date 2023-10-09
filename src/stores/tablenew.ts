@@ -47,7 +47,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     if (!fetchFn) return
     fetchFn({}).then((response) => {
       records.value = response.records
-      deletedRecords.value = response.deletedRecords
+      deletedRecords.value = response.deletedRecords || []
     })
 
 
@@ -63,6 +63,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
 
 
   const deleteSelectedRows = () => {
+    console.log("Deleelel")
     if (showDeletedRef.value) {
       records.value = records.value.concat(modelSelectionRef.value)
       deletedRecords.value = deletedRecords.value.filter(r => !modelSelectionRef.value.includes(r))

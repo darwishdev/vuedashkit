@@ -50,9 +50,10 @@ const renderDeletedFilter = () => {
         value: deletedFilter,
         outerClass: "deleted-toggle",
         onInput: (v: boolean) => {
-            RouteQueryAppend('showDeleted', v)
-            tableStore.showDeletedRef = v
-            tableStore.modelSelectionRef = []
+            console.log("updated", v)
+            // RouteQueryAppend('showDeleted', v)
+            // tableStore.showDeletedRef = v
+            // tableStore.modelSelectionRef = []
         },
         label: t("show_deleted_data"),
 
