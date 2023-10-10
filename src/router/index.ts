@@ -59,6 +59,14 @@ const router = createRouter({
           component: () => import('../views/RoleUpdateView.vue')
         },
         {
+          path: '/appForm',
+          name: 'app_form',
+          meta: {
+            breadcrumbs: [{ label: "AppForm Docs", to: { name: 'app_form' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/appFormDocs.vue')
+        },
+        {
           path: '/dataList',
           name: 'data_list',
           meta: {
