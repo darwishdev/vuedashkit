@@ -60,12 +60,14 @@ export const useTableNewStore = defineStore('tablenew', () => {
   }
   const initTable = (params: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault>) => {
     reset()
+    if (params.initiallySelectedItems) modelSelectionRef.value = params.initiallySelectedItems
     records.value = params.records
     deletedRecords.value = params.deletedRecords
     tableFiltersRef.value = params.tableFiltersRef
     showDeletedRef.value = params.deletedFilter
     fetchFn = params.fetchFn
     dataKey = params.dataKey
+    console.log("init", params.initiallySelectedItems)
   }
 
   const deleteSelectedRows = () => {

@@ -5,7 +5,7 @@ import customPlugins from './formkitPlugins'
 
 const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions, options: { activateFileUpload: boolean }) => {
     const permissionsInput = createInput(InputPermissions, {
-        props: ['permissions', 'toggleable'],
+        props: ['permissions', 'toggleable', 'groupCollapsed', 'inputCollapsed'],
     })
     // const typedNumberInput = createInput(InputNumberTyped, {
     //     props: ['isFloat'],

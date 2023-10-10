@@ -18,7 +18,10 @@ export type AppTableFilter = {
     input: FormKitSchemaNode
 }
 
-
+export type ApiFormError = {
+    globalErrors: string[]
+    fieldErrors: Record<string, string>
+}
 
 export type TRecordDefault = Record<string, unknown[]>
 
@@ -37,7 +40,7 @@ export type TableFilterProps = {
 }
 
 export type AppPanelProps = {
-    toggleable: boolean
+    toggleable?: boolean
     collapsed?: boolean,
     header?: string,
     icon?: string
@@ -121,6 +124,7 @@ export interface DataListProps<TResp, TRecord> {
     title: string
     dataKey: keyof TRecord
     exportable?: boolean
+    initiallySelectedItems?: any[],
     fetchFn?: tableFetchFn<TResp, TRecord>
     records: TRecord[]
     deletedRecords?: TRecord[]
@@ -144,6 +148,7 @@ export type InitTableParams<TResp, TRecord> = {
     records: Record<string, any>[]
     deletedRecords?: Record<string, any>[]
     dataKey: string
+    initiallySelectedItems?: any[]
     tableFiltersRef?: Record<string, DataTableFilterMetaData>
     deletedFilter: boolean
     fetchFn?: tableFetchFn<TResp, TRecord>
@@ -160,6 +165,8 @@ export type SubmitHandler<TReq, TResp> = {
 export type FindHandler<TReq, TResp> = {
     endpoint: (req: TReq) => any
     mapFunction?: (formReq: any) => TReq
+    requestPropertyName?: keyof TReq,
+    paramName?: string | 'id',
     callback?: (formResp: TResp) => any
 }
 
@@ -171,7 +178,7 @@ export type AppFormSection = {
 export type AppFormProps<TReq, TResp> = {
     title: string
     submitHandler: SubmitHandler<TReq, TResp>,
-    findHandler?: FindHandler<TReq, TResp>,
+    findHandler?: FindHandler<any, TReq>,
     sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
 }
 
@@ -189,7 +196,11 @@ export type PermissionGroup = {
 export type InputPermissionsProps = {
     context: {
         node: FormKitNode
-        toggleable: boolean
+        toggleable?: boolean
+        groupCollapsed?: boolean
+        inputCollapsed?: boolean
+
+
     },
     // permissions: any
 }

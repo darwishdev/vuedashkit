@@ -6,17 +6,22 @@ function mockLoad() {
 
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
-import type { RoleUpdateRequest, RoleUpdateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import type { AppFormProps } from '@/types/newtypes';
+import type { RoleUpdateResponse, RoleFindForUpdateRequest, RoleUpdateRequest } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
+import type { AppFormProps, FindHandler } from '@/types/newtypes';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
 const { t } = useI18n()
 await mockLoad()
 
+const findHandler: FindHandler<RoleFindForUpdateRequest, RoleUpdateRequest> = {
+    endpoint: apiClient.roleFindForUpdate,
+    requestPropertyName: 'roleId'
+}
 
 const formProps: AppFormProps<RoleUpdateRequest, RoleUpdateResponse> = {
     title: "role_update",
+    findHandler: findHandler,
     submitHandler: {
         endpoint: apiClient.roleUpdate,
         redirectRoute: "roles_list"
@@ -53,7 +58,6 @@ const formProps: AppFormProps<RoleUpdateRequest, RoleUpdateResponse> = {
                         onInput: (req: any) => {
                             console.log('any', ObjectKeys(req), req, req[0])
                         },
-                        toggleable: false,
                     }
                 }
             ]
@@ -64,7 +68,8 @@ const formProps: AppFormProps<RoleUpdateRequest, RoleUpdateResponse> = {
 <template>
     <Suspense timeout="0">
         <template #default>
-            <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
+            <app-form :findHandler="formProps.findHandler" :title="formProps.title" :sections="formProps.sections"
+                :submitHandler="formProps.submitHandler" />
         </template>
         <template #fallback>
             loading from role update

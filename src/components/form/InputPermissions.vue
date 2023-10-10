@@ -8,12 +8,13 @@ type searchablePermission = {
     permissionGroup: string,
     permissions: Permission[]
 }
-const loadElemetns = (groups: PermissionGroup[]): Promise<{ schema: Record<string, FormKitSchemaNode[]>, modelValues: Record<string, (number | undefined)[]>, searchablePermission: searchablePermission[] }> => {
+const loadElemetns = (groups: PermissionGroup[], value: any): Promise<{ schema: Record<string, FormKitSchemaNode[]>, modelValues: Record<string, (number | undefined)[]>, searchablePermission: searchablePermission[], initiallySelectedItems: any[] }> => {
     return new Promise(async (resolve) => {
 
 
         const schema: Record<string, FormKitSchemaNode[]> = {}
         const modelValues: Record<string, (number | undefined)[]> = {}
+        const initiallySelectedItems: any[] = []
         const searchablePermission: searchablePermission[] = []
         groups.forEach((group: PermissionGroup) => {
             const permissionsInputs: FormKitSchemaNode[] = []
@@ -25,15 +26,28 @@ const loadElemetns = (groups: PermissionGroup[]): Promise<{ schema: Record<strin
                     label: permission.permissionName,
                     trueValue: permission.permissionId
                 })
-
-                modelValue.push(undefined)
+                if (value) {
+                    if (value.includes(permission.permissionId)) {
+                        modelValue.push(permission.permissionId)
+                    } else {
+                        modelValue.push(undefined)
+                    }
+                } else {
+                    modelValue.push(undefined)
+                }
             }
-            searchablePermission.push({
+            const searchbleGroup = {
                 permissionGroup: group.permissionGroup,
                 permissions: group.permissions,
                 searchPermissions: JSON.stringify(group.permissions)
 
-            })
+            }
+            const selectedItems = modelValue.filter(v => v)
+            if (selectedItems.length == group.permissions.length) {
+                // modelSelection.value = data
+                initiallySelectedItems.push(searchbleGroup)
+            }
+            searchablePermission.push(searchbleGroup)
 
             schema[group.permissionGroup] = [
                 {
@@ -54,7 +68,8 @@ const loadElemetns = (groups: PermissionGroup[]): Promise<{ schema: Record<strin
 
 
         })
-        resolve({ schema, modelValues, searchablePermission })
+
+        resolve({ schema, modelValues, searchablePermission, initiallySelectedItems })
     })
 }
 </script>
@@ -81,7 +96,7 @@ const isModelSelectionBlocing = ref(false)
 const isInputsFormBlocing = ref(false)
 
 const { records } = await apiClient.permissionsList({})
-const { modelValues, searchablePermission } = await loadElemetns(records)
+const { modelValues, initiallySelectedItems, searchablePermission } = await loadElemetns(records, props.context.node._value)
 const modelValuesRef = ref(modelValues)
 
 themeStore.stopProgressBar()
@@ -104,6 +119,7 @@ const tableProps: DataListProps<PermissionsListResponse, searchablePermission> =
     title: "permissions",
     dataKey: "permissionGroup",
     records: searchablePermission,
+    initiallySelectedItems: initiallySelectedItems,
     displayType: "table",
     options: {
         title: "permissions",
@@ -208,22 +224,24 @@ const onGlobalSearch = (v: any) => {
 </script>
 <template>
     <AppPanel class="input-permissions" header="Permissions" icon="shield"
-        :toggleable="(props.context.toggleable as boolean)">
+        :toggleable="(props.context.toggleable as boolean)"
+        :collapsed="props.context.toggleable && props.context.inputCollapsed">
         <template #headerEnd>
             <FormKit type="text" :placeholder="$t('search')" outerClass="global-search" :value="searchKey"
                 prefixIcon="search" @input="onGlobalSearch" />
 
         </template>
-        <DataList ref="dataListElementRef" @update:selection="onUpdateModelSelection" class="sm-column "
-            :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter"
-            :title="tableProps.title" :dataKey="tableProps.dataKey" :records="tableProps.records"
-            :options="tableProps.options" :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
+        <DataList :initiallySelectedItems="tableProps.initiallySelectedItems" ref="dataListElementRef"
+            @update:selection="onUpdateModelSelection" class="sm-column " :displayType="tableProps.displayType"
+            :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
+            :dataKey="tableProps.dataKey" :records="tableProps.records" :options="tableProps.options"
+            :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
             <template #default>
                 <Column style="width:100%;" header="permissionGroup" field="permissionGroup">
 
                     <template #body="{ data }">
-                        <AppPanel :collapsed="true" class="permission-group-panel" :header="data.permissionGroup"
-                            toggleable>
+                        <AppPanel :collapsed="props.context.groupCollapsed" class="permission-group-panel"
+                            :header="data.permissionGroup" toggleable>
                             <div class=" permission-group grid">
                                 <form-kit :id="data.permissionGroup" v-model="modelValuesRef[data.permissionGroup]"
                                     @input="(v) => permissionGroupUpdated(v, data)" type="list"

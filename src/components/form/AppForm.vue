@@ -78,6 +78,38 @@ const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitS
         resolve(schema)
     })
 }
+
+
+
+const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Promise<Record<string, any> | null> => {
+    return new Promise((resolve, reject) => {
+
+        if (!findHandler) {
+            resolve(null)
+            return
+        }
+        const request: any = {}
+        const requestValue = params[findHandler.paramName || 'id'] as string
+
+        console.log("requestValue", isNaN(parseInt('asd')))
+
+
+        if (!requestValue) {
+            resolve(null)
+            return
+        }
+
+        if (isNaN(parseInt(requestValue))) {
+            resolve(null)
+            return
+        }
+        request[findHandler.requestPropertyName || 'rcordId'] = parseInt(requestValue as string)
+        findHandler.endpoint(request)
+            .then((resp: any) => resolve(resp)).catch((e: any) => {
+                reject(e)
+            })
+    })
+}
 </script>
 
 
@@ -86,13 +118,13 @@ const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitS
 
 <script setup lang="ts">
 import { h, ref, resolveComponent } from 'vue';
-import type { AppFormProps, AppFormSection } from '@/types/newtypes';
-import { useI18n } from 'vue-i18n';
+import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/newtypes';
+import { n, useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
-import { useRouter } from 'vue-router';
+import { useRouter, type RouteParams } from 'vue-router';
 
 
-const { push } = useRouter()
+const { push, currentRoute } = useRouter()
 const { t } = useI18n()
 const props = defineProps<AppFormProps<any, any>>();
 // global components
@@ -104,6 +136,8 @@ const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
 
 const schema = await loadElemetnsPromise(props.sections, t)
+
+const value = await loadValue(currentRoute.value.params, props.findHandler)
 const renderFormSchema = () => {
     return h(formkitComp, {
         ref: "formScehmaNodeRef",
@@ -111,13 +145,14 @@ const renderFormSchema = () => {
         outerClass: "card",
         id: 'app-form',
         onSubmit: submitHandler,
+        value: value,
         actions: true,
     },
         () => h(formkitSchemaComp, {
             schema: {
                 $el: "div",
                 attrs: {
-                    // class: "card",
+                    class: "schema-wrapper",
                 },
                 children: schema
             }
@@ -164,10 +199,9 @@ const submitHandler = async (req: any, node: FormKitNode) => {
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
+
     await new Promise((resolve, reject) => {
-        // console.log(ObjectKeys(req), req.permissions)
-        // resolve(null)
-        // return
+
         handler.endpoint(req)
             .then(async (res: any) => {
                 console.log(res)
@@ -184,12 +218,15 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                 } catch (e: any) {
                     console.log("reset form has error", e)
                 }
-
                 resolve(null)
             }).catch((error: any) => {
-                notificationStore.showError("error", error)
-                console.log(error)
-                reject(null)
+                const errorObject: ApiFormError = JSON.parse(error.rawMessage)
+                node.setErrors(
+                    errorObject.globalErrors,
+                    errorObject.fieldErrors
+                )
+                console.log(errorObject)
+                resolve(null)
             })
     })
 }
@@ -210,6 +247,34 @@ const renderForm = () => {
 
 <style lang="scss">
 .app-form {
+
+    & .formkit-form {
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .formkit-messages {
+        order: 1;
+
+        & li {
+            padding: 10px;
+            background-color: var(--color-danger);
+            color: #fff;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+        }
+    }
+
+    .schema-wrapper {
+        order: 2;
+    }
+
+    .formkit-actions {
+        order: 3;
+    }
+
     & .form-title {
         display: flex;
         justify-content: space-between;
