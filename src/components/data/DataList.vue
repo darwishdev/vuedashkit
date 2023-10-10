@@ -144,6 +144,7 @@ const exportCSV = () => {
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: props.records,
     deletedRecords: props.deletedRecords,
+    initiallySelectedItems: props.initiallySelectedItems,
     tableFiltersRef: tableFilters,
     dataKey: props.dataKey as string,
     fetchFn: props.fetchFn,

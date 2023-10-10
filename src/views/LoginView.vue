@@ -1,28 +1,48 @@
 
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-const authStore = useAuthStore()
-const submitHandler = async (req: any) => {
-    authStore.login(req)
+// import { useAuthStore } from '@/stores/auth';
+import { createClient } from '@supabase/supabase-js'
+import { ref } from 'vue'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// const authStore = useAuthStore()
+
+const loading = ref(false)
+const email = ref('')
+
+const handleLogin = async () => {
+    try {
+        loading.value = true
+        const { error } = await supabase.auth.signInWithOtp({
+            email: email.value,
+        })
+        if (error) throw error
+        alert('Check your email for the login link!')
+    } catch (error) {
+        if (error instanceof Error) {
+            alert(error.message)
+        }
+    } finally {
+        loading.value = false
+    }
 }
 </script>
 
 <template>
-    <FormKit type="form" id="registration-example" submit-label="Register" @submit="submitHandler" :actions="false"
-        #default="{ value }">
-
-        <FormKit type="text" name="userName" label="Your email" placeholder="jane@example.com"
-            validation="required|email" />
-        <div class="double">
-            <FormKit type="password" name="userPassword" label="Password" validation="required|length:6|matches:/[^a-zA-Z]/"
-                :validation-messages="{
-                    matches: 'Please include at least one symbol',
-                }" placeholder="Your password" />
-
+    <form class="row flex-center flex" @submit.prevent="handleLogin">
+        <div class="col-6 form-widget">
+            <h1 class="header">Supabase + Vue 3</h1>
+            <p class="description">Sign in via magic link with your email below</p>
+            <div>
+                <input class="inputField" required type="email" placeholder="Your email" v-model="email" />
+            </div>
+            <div>
+                <input type="submit" class="button block" :value="loading ? 'Loading' : 'Send magic link'"
+                    :disabled="loading" />
+            </div>
         </div>
-
-        <FormKit type="submit" :label="$t('login')" />
-        <pre wrap>{{ value }}</pre>
-    </FormKit>
+    </form>
 </template>
