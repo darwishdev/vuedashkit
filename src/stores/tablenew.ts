@@ -1,23 +1,29 @@
 
 import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault } from '@/types/newtypes'
 import { defineStore } from 'pinia'
+import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
 
 export const useTableNewStore = defineStore('tablenew', () => {
   const showDeletedRef = ref<Boolean>(false)
   const modelSelectionRef = ref<any[]>([])
   const records = ref<unknown[]>([])
-  const deletedRecords = ref<unknown[]>([])
+  const deletedRecords = ref<unknown[] | undefined>([])
   let fetchFn: tableFetchFn<ApiResponseList<TRecordDefault>, TRecordDefault> | undefined
   let dataKey: string = ""
+  const tableFiltersRef = ref<Record<string, DataTableFilterMetaData> | undefined>()
 
   const data = computed(() => {
     if (showDeletedRef.value) return deletedRecords.value
     return records.value
   })
   const selectedIds = computed(() => {
-    if (modelSelectionRef.value.length == 0 || !dataKey) return []
-    if (!(dataKey in modelSelectionRef.value[0])) return []
+
+    console.log("helooo")
+    // console.log("first cgec", modelSelectionRef.value.length == 0 || !dataKey)
+    // console.log("seeeeeee seond", !(dataKey in modelSelectionRef.value[0]))
+    // if (modelSelectionRef.value.length == 0 || !dataKey) return []
+    // if (!(dataKey in modelSelectionRef.value[0])) return []
     return modelSelectionRef.value.map((row: any) => {
       return row[dataKey]
     })
@@ -39,7 +45,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     showDeletedRef.value = false
     modelSelectionRef.value = []
     records.value = []
-    deletedRecords.value = []
+    deletedRecords.value = undefined
     fetchFn = undefined
   }
 
@@ -47,7 +53,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     if (!fetchFn) return
     fetchFn({}).then((response) => {
       records.value = response.records
-      deletedRecords.value = response.deletedRecords || []
+      deletedRecords.value = response.deletedRecords
     })
 
 
@@ -56,14 +62,14 @@ export const useTableNewStore = defineStore('tablenew', () => {
     reset()
     records.value = params.records
     deletedRecords.value = params.deletedRecords
+    tableFiltersRef.value = params.tableFiltersRef
     showDeletedRef.value = params.deletedFilter
     fetchFn = params.fetchFn
-    dataKey = dataKey
+    dataKey = params.dataKey
   }
 
-
   const deleteSelectedRows = () => {
-    console.log("Deleelel")
+    if (!deletedRecords.value) return
     if (showDeletedRef.value) {
       records.value = records.value.concat(modelSelectionRef.value)
       deletedRecords.value = deletedRecords.value.filter(r => !modelSelectionRef.value.includes(r))
@@ -86,6 +92,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     isAllRecordsSelected,
     modelSelectionRef,
     fetchFn,
+    tableFiltersRef,
     deleteRestoreVaraints,
     showDeletedRef,
   }

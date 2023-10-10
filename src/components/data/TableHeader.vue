@@ -45,15 +45,16 @@ const renderGlobalSearchFilter = () => {
 
 }
 const renderDeletedFilter = () => {
+    if (!tableStore.deletedRecords) return
     return h(formkitComp, {
         type: "toggle",
         value: deletedFilter,
         outerClass: "deleted-toggle",
         onInput: (v: boolean) => {
             console.log("updated", v)
-            // RouteQueryAppend('showDeleted', v)
-            // tableStore.showDeletedRef = v
-            // tableStore.modelSelectionRef = []
+            RouteQueryAppend('showDeleted', v)
+            tableStore.showDeletedRef = v
+            tableStore.modelSelectionRef = []
         },
         label: t("show_deleted_data"),
 
@@ -62,6 +63,7 @@ const renderDeletedFilter = () => {
 
 
 const renderSelectAll = () => {
+    if (!tableStore.data) return
     if (tableStore.data.length == 0 || props.displayType != 'card') return
     return h(formkitComp, {
         type: "toggle",
@@ -72,7 +74,10 @@ const renderSelectAll = () => {
                 tableStore.modelSelectionRef = tableStore.records
                 return
             }
-            tableStore.modelSelectionRef = []
+            if (tableStore.modelSelectionRef.length == tableStore.data?.length) {
+                tableStore.modelSelectionRef = []
+
+            }
         },
         label: t("select_all"),
 

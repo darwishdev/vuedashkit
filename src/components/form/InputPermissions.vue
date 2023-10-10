@@ -1,10 +1,8 @@
 
 <script lang="ts">
-import { type FormKitSchemaNode, type FormKitNode } from '@formkit/core'
+import { type FormKitSchemaNode } from '@formkit/core'
 import type { PermissionGroup } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import { ObjectKeys } from '@/utils/object/object';
-
-
 type searchablePermission = {
     searchPermissions: string
     permissionGroup: string,
@@ -68,24 +66,22 @@ import type { ITableHeader } from '@/types/types';
 import DataList from '@/components/data/DataList.vue';
 import type { PermissionsListResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import apiClient from '@/api/ApiClient';
-import { resolveComponent, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
+import AppPanel from '../base/AppPanel.vue';
 import { TableHeaderText, TableHeaderHidden } from '@/utils/table/TableHeader'
 import { useTableNewStore } from '@/stores/tablenew';
-import { useI18n } from 'vue-i18n'
+import Column from 'primevue/column';
 import type { DataListProps, InputPermissionsProps, Permission } from '@/types/newtypes';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 const tableStore = useTableNewStore()
-const formkitSchemaComp = resolveComponent('FormKitSchema')
-const formkitComp = resolveComponent('FormKit')
-const { t } = useI18n()
 themeStore.startProgressBar()
 const props = defineProps<InputPermissionsProps>();
 const isModelSelectionBlocing = ref(false)
 const isInputsFormBlocing = ref(false)
 
 const { records } = await apiClient.permissionsList({})
-const { schema, modelValues, searchablePermission } = await loadElemetns(records)
+const { modelValues, searchablePermission } = await loadElemetns(records)
 const modelValuesRef = ref(modelValues)
 
 themeStore.stopProgressBar()
@@ -105,10 +101,9 @@ const headers: Record<string, ITableHeader> = {
 
 
 const tableProps: DataListProps<PermissionsListResponse, searchablePermission> = {
-    title: "roles",
+    title: "permissions",
     dataKey: "permissionGroup",
     records: searchablePermission,
-    deletedRecords: [],
     displayType: "table",
     options: {
         title: "permissions",
@@ -116,7 +111,21 @@ const tableProps: DataListProps<PermissionsListResponse, searchablePermission> =
     },
     headers
 }
+const emitEvent = () => {
+    const keys = ObjectKeys(modelValuesRef.value)
 
+    const permissions: number[] = []
+    for (const key of keys) {
+        const group = modelValuesRef.value[key]
+        group.forEach(permission => {
+            if (permission) permissions.push(permission)
+            console.log('permission', permission)
+
+        })
+    }
+    console.log("ana", modelValuesRef.value)
+    props.context.node.input(permissions)
+}
 const permissionGroupUpdated = (v: any, data: any) => {
     if (isModelSelectionBlocing.value) return
 
@@ -140,6 +149,8 @@ const permissionGroupUpdated = (v: any, data: any) => {
 
     }
 
+    // const filtered = modelValuesRef.value!.filter((v )=> v)
+    emitEvent()
     setTimeout(() => isInputsFormBlocing.value = false, 100)
 
     console.log("updated group", selectedItems.length, data.permissions.length)
@@ -147,6 +158,17 @@ const permissionGroupUpdated = (v: any, data: any) => {
 const modelSelectionRef = ref([])
 
 watch(modelSelectionRef, async (newValue, oldValue) => {
+    if (tableStore.isAllRecordsSelected) {
+        newValue.forEach((group: any) => {
+            const permissions: any[] = []
+            group.permissions.forEach((permission: any) => {
+                permissions.push(permission.permissionId)
+            });
+            modelValuesRef.value[group.permissionGroup] = permissions
+        });
+        emitEvent()
+        return
+    }
     if (newValue.length > oldValue.length) {
         console.log("attaching pemissions")
         newValue.forEach((group: any) => {
@@ -163,10 +185,9 @@ watch(modelSelectionRef, async (newValue, oldValue) => {
             modelValuesRef.value[group.permissionGroup] = [];
         });
     }
+    emitEvent()
 })
-// const permissionFormElementRef = ref({})
-
-
+const dataListElementRef = ref()
 const onUpdateModelSelection = (v: any) => {
     if (isInputsFormBlocing.value) return
 
@@ -174,68 +195,165 @@ const onUpdateModelSelection = (v: any) => {
     console.log("selection val", v)
     modelSelectionRef.value = v
     setTimeout(() => isModelSelectionBlocing.value = false, 100)
+}
 
-    // if (oldModelSelectionRef.value.length > v.length) {
-    //     console.log("removing items")
-    // } else {
-    //     console.log("adding items")
-    // }
-    // oldModelSelectionRef.value = 
-    // v.forEach((group: any) => {
-    //     const permissions: any[] = []
-    //     group.permissions.forEach((permission: any) => {
-    //         permissions.push(permission.permissionId)
-    //     });
-    //     modelValuesRef.value[group.permissionGroup] = permissions
-    // });
-    // console.log("selection", ObjectKeys(v[0].permissions))
-    // v.forEach((element: any) => {
-    //     const ids: any[] = []
-    //     element.permissions.forEach(permission => {
-    //         ids.push(permission.permissionId)
-    //     });
+const searchKey = ""
+const onGlobalSearch = (v: any) => {
+    console.log(Object.keys(dataListElementRef.value))
+    if (!tableStore.tableFiltersRef) return
+    tableStore.tableFiltersRef['global'].value = v ? v : null
 
-    //     console.log("element ", element)
-
-    //     permissionFormElementRef.value[element.permissionGroup] = ids
-    // });
+    console.log("global search", v)
 }
 </script>
 <template>
-    <Suspense timeout="0">
-        <template #default>
-
-            <DataList @update:selection="onUpdateModelSelection" class="sm-column" :displayType="tableProps.displayType"
-                :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
-                :dataKey="tableProps.dataKey" :records="tableProps.records" :options="tableProps.options"
-                :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
-                <template #expansion="{ data }">
-                    <div class="p-3 grid">
-                        <form-kit :id="data.permissionGroup" v-model="modelValuesRef[data.permissionGroup]"
-                            @input="(v) => permissionGroupUpdated(v, data)" type="list" :name="data.permissionGroup">
-
-                            <form-kit v-for="(permission, index) in data.permissions" :label="permission.permissionName"
-                                :onValue="permission.permissionId" :key="index" type="toggle" @input="null"></form-kit>
-                        </form-kit>
-
-                    </div>
-                </template>
-            </DataList>
-
+    <AppPanel class="input-permissions" header="Permissions" icon="shield"
+        :toggleable="(props.context.toggleable as boolean)">
+        <template #headerEnd>
+            <FormKit type="text" :placeholder="$t('search')" outerClass="global-search" :value="searchKey"
+                prefixIcon="search" @input="onGlobalSearch" />
 
         </template>
-        <template #fallback>
-            <h2>loading table component from roles list</h2>
-        </template>
-    </Suspense>
+        <DataList ref="dataListElementRef" @update:selection="onUpdateModelSelection" class="sm-column "
+            :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter"
+            :title="tableProps.title" :dataKey="tableProps.dataKey" :records="tableProps.records"
+            :options="tableProps.options" :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
+            <template #default>
+                <Column style="width:100%;" header="permissionGroup" field="permissionGroup">
+
+                    <template #body="{ data }">
+                        <AppPanel :collapsed="true" class="permission-group-panel" :header="data.permissionGroup"
+                            toggleable>
+                            <div class=" permission-group grid">
+                                <form-kit :id="data.permissionGroup" v-model="modelValuesRef[data.permissionGroup]"
+                                    @input="(v) => permissionGroupUpdated(v, data)" type="list"
+                                    :name="data.permissionGroup">
+
+                                    <form-kit v-for="(permission, index) in data.permissions"
+                                        :label="permission.permissionName" :onValue="permission.permissionId" :key="index"
+                                        type="toggle" @input="null"></form-kit>
+                                </form-kit>
+
+                            </div>
+                        </AppPanel>
+                    </template>
+                </Column>
+                <Column :colspan="0" selectionMode="multiple" class="select-all">
+
+                </Column>
+
+            </template>
+
+        </DataList>
+    </AppPanel>
 </template>
 
 
 <style   lang="scss">
+.input-permissions {
+    width: 100%;
+
+    &>.p-toggleable-content {
+        & .p-panel-content {
+            padding: 0;
+            background-color: var(--color-card);
+        }
+    }
+
+
+    & .permission-group-panel {
+        & .p-panel-content {
+            padding: 0;
+            background-color: transparent !important;
+        }
+    }
+
+    & .p-paginator-bottom {
+        display: none;
+    }
+
+    & .p-datatable-header {
+        display: none;
+    }
+
+    & .permission-group {
+        gap: 20px;
+        align-items: center;
+        padding: 20px;
+    }
+
+    & .app-table.p-datatable .p-datatable-wrapper {
+        padding: 0 !important;
+    }
+
+    .global-search {
+        position: absolute;
+        right: 100px;
+        z-index: 2;
+    }
+
+
+    & .p-datatable-wrapper {
+        background: transparent !important;
+    }
+
+    & .p-datatable-tbody td {
+        border: none !important;
+    }
+
+    & .select-all {
+        border: none !important;
+
+        &.p-selection-column {
+            padding: 0;
+            width: 0;
+            z-index: 3;
+            position: absolute;
+            right: 80px;
+            top: 35px;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            align-items: center;
+        }
+
+    }
+
+    & .p-datatable-thead tr {
+        & td {
+            border: none !important;
+        }
+
+        & th:first-child {
+            display: none;
+        }
+
+        & th:last-child {
+
+            width: 100%;
+            position: relative;
+
+            & .p-column-header-content {
+                position: absolute;
+                right: 70px;
+            }
+
+            & .select-all {
+                text-align: right;
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+    }
+
+}
+
 .p-datatable,
 .formkit-form {
     width: 100%;
 }
+
 
 .app-card .start {
     background-color: transparent !important;

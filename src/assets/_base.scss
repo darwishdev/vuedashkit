@@ -43,7 +43,13 @@ body {
     border-radius: 6px;
   }
 }
-
+.dark {
+  & .card-dark {
+    background-color: var(--color-card);
+    padding: 16px;
+    border-radius: 6px;
+  }
+}
 .slide-fade-enter-active {
   transition: all 0.2s ease-out;
 }

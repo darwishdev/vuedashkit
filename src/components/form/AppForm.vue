@@ -2,17 +2,51 @@
 <script lang="ts">
 import { type FormKitSchemaNode, type FormKitNode } from '@formkit/core'
 import { ObjectKeys } from '@/utils/object/object';
-const loadElemetnsPromise = (sections: Record<string, FormKitSchemaNode[]>, t: Function) => {
+
+
+const isAppFormSection = (input: any): input is AppFormSection => {
+    return (
+        typeof input === 'object' &&
+        Array.isArray(input.inputs)
+    );
+}
+const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitSchemaNode[])>, t: Function) => {
     return new Promise((resolve) => {
 
         const keys = ObjectKeys(sections)
         const schema: FormKitSchemaNode[] = []
+
         for (const key of keys) {
             const currentSection = sections[key]
-
+            console.log(isAppFormSection(currentSection))
             const title = {
                 $el: 'h2',
                 children: t(key)
+            }
+
+
+            if (isAppFormSection(currentSection)) {
+                const className = `form-section ${currentSection.isTransparent ? '' : 'card'}`
+                const titleComponent = currentSection.isTitleHidden ? { $el: 'div' } : title
+                schema.push({
+                    $el: 'div',
+                    attrs: {
+                        class: className,
+
+                    },
+
+                    children: [
+                        titleComponent,
+                        {
+                            $el: 'div',
+                            attrs: {
+                                class: 'grid'
+                            },
+                            children: currentSection.inputs
+                        }
+                    ]
+                })
+                continue
             }
 
             const inpustsWrapper = {
@@ -22,6 +56,10 @@ const loadElemetnsPromise = (sections: Record<string, FormKitSchemaNode[]>, t: F
                 },
                 children: currentSection
             }
+            if (isAppFormSection(currentSection)) {
+                continue
+            }
+
             schema.push({
                 $el: 'div',
                 attrs: {
@@ -48,7 +86,7 @@ const loadElemetnsPromise = (sections: Record<string, FormKitSchemaNode[]>, t: F
 
 <script setup lang="ts">
 import { h, ref, resolveComponent } from 'vue';
-import type { AppFormProps } from '@/types/newtypes';
+import type { AppFormProps, AppFormSection } from '@/types/newtypes';
 import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
 import { useRouter } from 'vue-router';
@@ -122,10 +160,14 @@ const renderTitle = () => {
 
 const submitHandler = async (req: any, node: FormKitNode) => {
     const handler = props.submitHandler
+
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
     await new Promise((resolve, reject) => {
+        // console.log(ObjectKeys(req), req.permissions)
+        // resolve(null)
+        // return
         handler.endpoint(req)
             .then(async (res: any) => {
                 console.log(res)
@@ -153,7 +195,7 @@ const submitHandler = async (req: any, node: FormKitNode) => {
 }
 const renderForm = () => {
     return h("div", {
-        class: "card"
+        class: "card-dark"
     }, [
         renderTitle(),
         renderFormSchema()
@@ -162,7 +204,7 @@ const renderForm = () => {
 </script>
 
 <template>
-    <component class="app-form app-card" :is="renderForm()" />
+    <component class="app-form " :is="renderForm()" />
 </template>
 
 
@@ -184,10 +226,11 @@ const renderForm = () => {
 
     & .form-section {
         margin: 20px 0;
+        padding: 0 10px;
 
         & h2 {
             border-bottom: 1px solid var(--color-border);
-            padding-bottom: 20px;
+            padding: 20px 10px;
             margin-bottom: 20px;
         }
     }

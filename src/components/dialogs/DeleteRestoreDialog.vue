@@ -14,6 +14,8 @@ const close = (e: any) => {
 };
 const confirm = () => {
     const func = apiClient['roleDeleteRestore']
+
+
     func({ roleIds: tableStore.selectedIds }).then((_) => {
         tableStore.deleteSelectedRows()
         dialogRef.value.close()
