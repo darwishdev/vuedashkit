@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type { ITableHeader } from '../types/types';
-import AppTableNew from '../components/data/AppTableNew.vue';
+import Skeleton from 'primevue/skeleton';
+
+import DataList from '../components/data/DataList.vue';
+import dataListCardLoading from '../components/Loading/dataListCardLoading.vue';
+import dataListTableLoading from '../components/Loading/dataListTableLoading.vue';
 import apiClient from '../api/ApiMock';
 import type { ProductListResponse, productsListRow } from '../api/ApiTypes';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderImage } from '../utils/table/TableHeader'
@@ -148,9 +152,10 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     headers,
     displayType: 'card'
 }
-
 </script>
 <template>
+    <!-- <dataListCardLoading></dataListCardLoading>
+    <dataListTableLoading></dataListTableLoading> -->
     <div>
         <h1 class="text-center">AppTable Component</h1>
         <p class="w-9 m-auto my-4 text-center">The DataList component is designed to display data in a table or cards view.
@@ -399,7 +404,7 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     <h2 class="my-5">Filtering Feature</h2>
     <div class="border-round p-4" style="background-color: var(--color-card);">
         <h3>
-            <p>The App Table component in Vue.js provides a powerful filtering feature that allows you to filter data based
+            <p>The DataList component in Vue.js provides a powerful filtering feature that allows you to filter data based
                 on the
                 fields you specify in the headers prop. This feature enables users to search and narrow down the displayed
                 data according
@@ -504,7 +509,7 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     <h2 class="my-5">Here's an example for using the appTable component with setting the displayType property to 'card' :
     </h2>
 
-    <AppTableNew class="sm-column" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter"
+    <DataList class="sm-column" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter"
         :title="tableProps.title" :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
         :deletedRecords="deletedRecords" :headers="headers2" :displayType="tableProps.displayType">
         <template #start="{ data }">
@@ -525,7 +530,7 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
                 <h5 class="text-center"> {{ data.productCategory }}</h5>
             </div>
         </template>
-    </AppTableNew>
+    </DataList>
 
     <h2 class="mt-4">Note :</h2>
     <h3 class="mt-2 mb-5">
@@ -558,6 +563,7 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
             component: () => import('../views/appTableDocs.vue')<br>
             },
         </div>
+    </div>
 </template>
 
 <style lang="scss">

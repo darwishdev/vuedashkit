@@ -51,18 +51,18 @@ const router = createRouter({
           component: () => import('../views/UsersView.vue')
         },
         {
-          path: '/appTable',
+          path: '/dataList',
           name: 'app_table',
           meta: {
-            breadcrumbs: [{ label: "AppTable Docs", to: { name: 'app_table' } }, { label: "Docs" }]
+            breadcrumbs: [{ label: "DataList Docs", to: { name: 'data_list' } }, { label: "Docs" }]
           },
-          component: () => import('../views/appTableDocs.vue')
+          component: () => import('../views/dataListDocs.vue')
         },
         {
           path: '/products/:id',
           name: 'products_find',
           meta: {
-            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "view" }]
+            breadcrumbs: [{ label: "products", to: { name: 'data_list' } }, { label: "view" }]
           },
           component: () => import('../views/productsView.vue')
         },
@@ -70,7 +70,7 @@ const router = createRouter({
           path: '/products/:id/update',
           name: 'products_update',
           meta: {
-            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "update" }]
+            breadcrumbs: [{ label: "products", to: { name: 'data_list' } }, { label: "update" }]
           },
           component: () => import('../views/productsUpdate.vue')
         },
@@ -78,7 +78,7 @@ const router = createRouter({
           path: '/products/create',
           name: 'products_create',
           meta: {
-            breadcrumbs: [{ label: "products", to: { name: 'app_table' } }, { label: "Create" }],
+            breadcrumbs: [{ label: "products", to: { name: 'data_list' } }, { label: "Create" }],
           },
           component: () => import('../views/productCreate.vue')
         },
