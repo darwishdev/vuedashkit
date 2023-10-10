@@ -36,6 +36,13 @@ export type TableFilterProps = {
     filterFormValue: Record<string, (string | number | undefined)>
 }
 
+export type AppPanelProps = {
+    toggleable: boolean
+    collapsed?: boolean,
+    header?: string,
+    icon?: string
+}
+
 
 
 export interface ITableHeader {
@@ -92,6 +99,7 @@ export type ApiListOptions = {
 
 export type TableActionsProps = {
     options: ApiListOptions
+    exportable?: boolean
 }
 
 
@@ -112,9 +120,10 @@ export type tableFetchFn<TResp, TRecord> =
 export interface DataListProps<TResp, TRecord> {
     title: string
     dataKey: keyof TRecord
+    exportable?: boolean
     fetchFn?: tableFetchFn<TResp, TRecord>
     records: TRecord[]
-    deletedRecords: TRecord[]
+    deletedRecords?: TRecord[]
     viewRouter?: TableRouter
     options: ApiListOptions
     displayType?: 'card' | 'table'
@@ -133,8 +142,9 @@ export interface ITableHeaderProps {
 
 export type InitTableParams<TResp, TRecord> = {
     records: Record<string, any>[]
-    deletedRecords: Record<string, any>[]
+    deletedRecords?: Record<string, any>[]
     dataKey: string
+    tableFiltersRef?: Record<string, DataTableFilterMetaData>
     deletedFilter: boolean
     fetchFn?: tableFetchFn<TResp, TRecord>
 }
@@ -146,10 +156,23 @@ export type SubmitHandler<TReq, TResp> = {
     callback?: (formResp: TResp) => any
     redirectRoute?: string
 }
+
+export type FindHandler<TReq, TResp> = {
+    endpoint: (req: TReq) => any
+    mapFunction?: (formReq: any) => TReq
+    callback?: (formResp: TResp) => any
+}
+
+export type AppFormSection = {
+    inputs: FormKitSchemaNode[]
+    isTitleHidden?: boolean
+    isTransparent?: boolean
+}
 export type AppFormProps<TReq, TResp> = {
     title: string
     submitHandler: SubmitHandler<TReq, TResp>,
-    sections: Record<string, FormKitSchemaNode[]>
+    findHandler?: FindHandler<TReq, TResp>,
+    sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
 }
 
 
@@ -166,6 +189,7 @@ export type PermissionGroup = {
 export type InputPermissionsProps = {
     context: {
         node: FormKitNode
+        toggleable: boolean
     },
     // permissions: any
 }

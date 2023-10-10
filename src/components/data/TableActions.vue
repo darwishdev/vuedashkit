@@ -122,7 +122,20 @@ const renderImportMenu = () => {
     ])
 }
 
-
+const renderExportBtn = () => {
+    console.log("Asdasd", props.exportable)
+    if (typeof props.exportable != 'undefined' && props.exportable == false) return
+    return h(appBtnComponent, {
+        icon: "download",
+        class: "info",
+        onClick: (e: Event) => {
+            // tableRef.value.exportCSV()
+            console.log(e)
+            emit('export')
+        },
+        label: t("export")
+    })
+}
 const renderTableActions = () => {
     return h('div', {
         class: "table-actions"
@@ -137,16 +150,7 @@ const renderTableActions = () => {
             class: 'end'
         }, [
 
-            h(appBtnComponent, {
-                icon: "download",
-                class: "info",
-                onClick: (e: Event) => {
-                    // tableRef.value.exportCSV()
-                    console.log(e)
-                    emit('export')
-                },
-                label: t("export")
-            }),
+            renderExportBtn(),
 
             renderImportMenu(),
         ])

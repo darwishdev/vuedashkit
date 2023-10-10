@@ -1,21 +1,27 @@
 
 <script setup lang="ts">
 import { h, computed, resolveComponent, ref } from 'vue';
-import type { TableFilterProps } from '@/types/newtypes'
+import type { TableFilterProps, AppPanelProps } from '@/types/newtypes'
 import { useI18n } from 'vue-i18n'
 import { Debounce } from '@/utils/debounce/debounce'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query'
 import { ObjectKeys } from '@/utils/object/object';
-import Panel from 'primevue/panel';
+import AppPanel from '../base/AppPanel.vue';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { VNode } from 'vue';
 import { useTableNewStore } from '@/stores/tablenew';
-const tableStore = useTableNewStore()
 const props = defineProps<TableFilterProps>();
 const emit = defineEmits<{
     (e: 'update:tableFilters', value: Record<string, DataTableFilterMetaData>): void
 }>();
 
+
+
+const appPanelProps: AppPanelProps = {
+    toggleable: true,
+    header: "filtes",
+    icon: "filter"
+}
 // global components
 const formkitComp = resolveComponent('FormKit')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
@@ -58,24 +64,19 @@ const removeFilter = (filter: string) => {
 }
 // the entry point for the component while we render the panel
 const renderFiltersPanel = () => {
-    return h(Panel, {
+    if (inputsSchema.length == 0) return
+    return h(AppPanel, {
         class: "table-filters",
-        toggleable: true,
+        toggleable: appPanelProps.toggleable,
+        header: appPanelProps.header,
+        icon: appPanelProps.icon,
     }, {
-        header: () => h('div', {
-            class: 'filters-header'
-        }, [
-            h('i', { class: 'pi pi-filter' }),
-            h("span", t("filters")),
-            renderActiveFilters()
-        ]),
-        icons: () => hasActiveFilters.value ? h("a", {
+        headerStart: renderActiveFilters,
+        headerEnd: () => hasActiveFilters.value ? h("a", {
             class: "pi pi-filter-slash",
             title: "clear filters",
             onClick: () => clearFilters()
-        }) : h('div'),
-
-        togglericon: ({ collapsed }) => h('i', { class: collapsed ? 'pi pi-chevron-down' : 'pi pi-chevron-up' }),
+        }) : undefined,
         default: () => renderFiltersFormSchema()
     })
 }
@@ -170,23 +171,13 @@ const onFormInput = async (formValue: Record<string, any>) => {
 .table-filters {
     margin-top: 20px;
 
-    & .p-panel-header,
-    .p-panel-content {
-        background-color: transparent;
-        border: none;
-    }
+
 
     & .p-panel-header {
 
 
-        & span {
-            font-size: 1.4rem;
-        }
 
-        & .filters-header {
-            display: flex;
-            align-items: center;
-            z-index: 2;
+        & .app-panel-header {
 
             & .active-filters {
                 margin-inline-start: 20px;
@@ -202,44 +193,6 @@ const onFormInput = async (formValue: Record<string, any>) => {
                     margin-inline-end: 20px;
                 }
             }
-        }
-
-        & .p-panel-icons {
-            position: absolute;
-            width: 100%;
-            z-index: 1;
-            transform: translateX(-20px);
-
-            .pi-filter-slash {
-                position: absolute;
-                right: 50px;
-                z-index: 3;
-                cursor: pointer;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            & button {
-
-                display: inline;
-                text-align: end;
-                width: 100%;
-                padding: 0 20px;
-
-                &:hover {
-                    background-color: var(--color-card);
-                    transition: all 0.3s;
-                }
-            }
-        }
-
-        & .pi-times {
-            margin-inline: 10px;
-        }
-
-        & .pi-filter,
-        .pi-filter-slash {
-            margin-inline-end: 10px;
         }
     }
 }

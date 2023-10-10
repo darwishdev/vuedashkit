@@ -90,6 +90,7 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
     title: "roles",
     dataKey: "roleId",
     records: records,
+    exportable: true,
     deletedRecords: deletedRecords,
     viewRouter: viewRouter,
     displayType: "card",
@@ -105,8 +106,8 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
         <template #default>
             <DataList class="sm-column" :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
                 :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
-                :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
-                :headers="tableProps.headers">
+                :records="records" :exportable="tableProps.exportable" :options="tableProps.options"
+                :deletedRecords="deletedRecords" :headers="tableProps.headers">
                 <template #start="{ data }">
                     <div class="permissions">
                         <h3>{{ $t('permissions') }}</h3>

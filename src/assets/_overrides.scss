@@ -156,8 +156,25 @@
   color: var(--color-white);
 }
 
+.p-panel.p-panel-toggleable .p-panel-header {
+  padding: 1rem 1.25rem;
+}
 .p-panelmenu .p-panelmenu-content {
   background: var(--color-card);
+}
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel:focus {
+  box-shadow: none !important;
+}
+
+.p-datatable .p-sortable-column:focus,
+.p-datatable .p-sortable-column:focus {
+  box-shadow: none !important;
+}
+.p-datatable .p-datatable-tbody > tr:focus {
+  outline: none !important;
 }
 
 .p-panelmenu

@@ -6,7 +6,7 @@ function mockLoad() {
 
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
-import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
+import type { RoleUpdateRequest, RoleUpdateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import type { AppFormProps } from '@/types/newtypes';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
@@ -15,10 +15,10 @@ const { t } = useI18n()
 await mockLoad()
 
 
-const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
-    title: "role_create",
+const formProps: AppFormProps<RoleUpdateRequest, RoleUpdateResponse> = {
+    title: "role_update",
     submitHandler: {
-        endpoint: apiClient.roleCreate,
+        endpoint: apiClient.roleUpdate,
         redirectRoute: "roles_list"
     },
     sections: {
@@ -67,7 +67,7 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
             <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
         </template>
         <template #fallback>
-            loading from role create
+            loading from role update
         </template>
     </Suspense>
 </template>

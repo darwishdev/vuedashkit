@@ -119,6 +119,7 @@ const route = useRoute()
 const tableRefElement = ref()
 
 const slots = defineSlots<{
+    default(): any
     start(props: { data: any }): any
     end(props: { data: any }): any
     expansion(props: { data: any }): any
@@ -143,13 +144,14 @@ const exportCSV = () => {
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: props.records,
     deletedRecords: props.deletedRecords,
+    tableFiltersRef: tableFilters,
     dataKey: props.dataKey as string,
     fetchFn: props.fetchFn,
     deletedFilter
 }
 const tableStore = useTableNewStore()
 tableStore.initTable(initTableParams)
-const tableFiltersRef = ref(tableFilters)
+// const tableFiltersRef = ref(tableFilters)
 
 
 const renderViewBtn = (data: any) => {
@@ -226,6 +228,7 @@ const renderExpander = () => {
     })
 }
 const renderColumns = () => {
+
     if (props.displayType == 'card') return renderCardColumns()
     const selectAllColumn = renderSelectAllColumn()
     const expanderColumn = renderExpander()
@@ -265,6 +268,26 @@ const renderActionsColumn = () => {
     return actionsColumn
 }
 
+
+const renderTableActions = () => {
+    // options must have at lease two keys title and descriptions so if the table has no handlers inside options and not exportable we will not render it 
+    const noActionsInsideOptions = ObjectKeys(props.options).length == 2
+    const notExportable = typeof props.exportable != 'undefined' && props.exportable == false
+    if (notExportable && noActionsInsideOptions) return
+    return h(TableActions, {
+        exportable: props.exportable,
+        options: props.options, onExport: () => {
+            exportCSV()
+        }
+    })
+}
+
+
+const onGlobalSearch = (val: any) => {
+    console.log("poasdasd")
+    if (!tableStore.tableFiltersRef) return
+    tableStore.tableFiltersRef['global'].value = val ? val : null
+}
 const modelExpansionRef = ref([])
 const renderTable = () => {
 
@@ -278,7 +301,7 @@ const renderTable = () => {
         paginator: true,
         selection: tableStore.modelSelectionRef,
         globalFilterFields: globalFilters,
-        filters: tableFiltersRef.value,
+        filters: tableStore.tableFiltersRef,
         expandedRows: modelExpansionRef.value,
         "onUpdate:selection": (e: any) => {
             tableStore.modelSelectionRef = e
@@ -295,23 +318,17 @@ const renderTable = () => {
         paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
         currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
     }, {
-        default: () => renderColumns(),
+        default: slots.default ? slots.default : () => renderColumns(),
         expansion: slots.expansion,
         header: () => h('div', null, [
-            h(TableActions, {
-                options: props.options, onExport: () => {
-                    exportCSV()
-                }
-            }),
+            renderTableActions(),
             h(TableHeader, {
                 deletedFilter,
                 searchKey,
                 title: props.options.title,
                 displayType: props.displayType,
                 showGlobalSearchFilter: globalFilters.length > 0,
-                "onUpdate:globalSearch": (val: any) => {
-                    tableFiltersRef.value['global'].value = val ? val : null
-                }
+                "onUpdate:globalSearch": onGlobalSearch
             }),
             h(TableFilter, {
                 inputsSchema,
@@ -319,7 +336,8 @@ const renderTable = () => {
                 activeFilters,
                 filterFormValue,
                 "onUpdate:tableFilters": (val: any) => {
-                    tableFiltersRef.value = { ...val }
+                    if (tableStore.tableFiltersRef) return
+                    tableStore.tableFiltersRef = { ...val }
                 }
             })
         ]),
