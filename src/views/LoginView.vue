@@ -1,19 +1,28 @@
 
 
 <script setup lang="ts">
-// import { useAuthStore } from '@/stores/auth';
 import { createClient } from '@supabase/supabase-js'
 import { ref , onMounted } from 'vue'
+import { useRouter } from 'vue-router';
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
-// const authStore = useAuthStore()
 
+const { push , currentRoute } = useRouter();
 const resetPw = ref(false)
+const loginForm = ref(true)
+const otpLoginForm = ref(false)
 const loading = ref(false)
-const email = ref('')
-const password = ref('')
+const emailRedirectUrl = ref()
+const otpRedirectUrl = ref()
+// const email = ref('')
+
+onMounted(() => {
+    let currentUrl = window.location.href;
+    emailRedirectUrl.value = currentUrl.replace('/login', '/login/resetPassword');  
+    otpRedirectUrl.value = currentUrl.replace('/login', '/login/successful');  
+})
 
 const handleLogin = async () => {
     try {
@@ -31,7 +40,7 @@ const handleLogin = async () => {
         loading.value = false
     }
 }
-const login = async (req) => {
+const loginWithPassword = async (req) => {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
           email: req.email,
@@ -42,18 +51,35 @@ const login = async (req) => {
           console.error('Login error:', error.message);
           return;
         }
-
         console.log('Logged in user:', data);
       } catch (error : any) {
         console.error('Login error:', error.message);
       }
 }
-const resetPassword = async (req) => {
+const loginWithOtp = async (req) => {
+      try {
+        const { data, error } = await supabase.auth.signInWithOtp({
+        email: req.email,
+        options: {
+            emailRedirectTo: otpRedirectUrl.value,
+        }
+        })
+
+        if (error) {
+          console.error('Login error:', error.message);
+          return;
+        }
+        console.log('Logged in user:', data);
+      } catch (error : any) {
+        console.error('Login error:', error.message);
+      }
+}
+const sendResetPasswordEmail = async (req) => {
     try {
         const { data, error } = await supabase.auth.resetPasswordForEmail(
           req.email,
           {
-            redirectTo : 'http://localhost:5174/login'
+            redirectTo : emailRedirectUrl.value
           }
         );
 
@@ -70,7 +96,7 @@ const resetPassword = async (req) => {
 </script>
 
 <template>
-    <!-- <form class="row flex-center flex" @submit.prevent="handleLogin">
+<!-- <form class="row flex-center flex" @submit.prevent="handleLogin">
         <div class="col-6 form-widget">
             <h1 class="header">Supabase + Vue 3</h1>
             <p class="description">Sign in via magic link with your email below</p>
@@ -85,19 +111,17 @@ const resetPassword = async (req) => {
     </form> -->
     <div class="login py-5">
         <h1 class="text-center">Login</h1>
-            <FormKit v-if="resetPw" type="form" :actions="true" @submit="resetPassword">
-                    <div class="mt-3">
-                        <FormKit prefix-icon="email" type="text" label="Email address" placeholder="Enter your email address" name="email" validation="required" />
-                    </div>
+            <FormKit v-if="loginForm" type="form" :actions="true" @submit="loginWithPassword">
+                <FormKit prefix-icon="email" outer-class="my-2" type="text" label="Email address" placeholder="Enter your email address" name="email" validation="required" />
+                <FormKit type="password" outer-class="my-2" prefix-icon="password" id="pw" label="Password" placeholder="Enter your password" name="password" validation="required|password" />
+                <h4 class="p-4 py-1 cursor-pointer hover:text-700" @click="resetPw = true; loginForm = false">Reset your password ?</h4>
+                <h4 class="p-4 py-1 cursor-pointer hover:text-700" @click="otpLoginForm = true; loginForm = false; resetPw = false">Login using otp ?</h4>
             </FormKit>
-            <FormKit v-else type="form" :actions="true" @submit="login">
-                    <div class="mt-3">
-                        <FormKit prefix-icon="email" type="text" label="Email address" placeholder="Enter your email address" name="email" validation="required" />
-                    </div>
-                    <div class="mt-3">
-                        <FormKit type="password" prefix-icon="password" id="pw" label="Password" placeholder="Enter your password" name="password" validation="required|password" />
-                    </div>
-                    <h4 class="p-4 py-2 cursor-pointer hover:text-700" @click="resetPw = true">Reset your password ?</h4>
+            <FormKit v-if="resetPw" type="form" :actions="true" @submit="sendResetPasswordEmail">
+                    <FormKit prefix-icon="email" type="text" label="Email address" placeholder="Enter your email address" name="email" validation="required" />
+            </FormKit>
+            <FormKit v-if="otpLoginForm" type="form" :actions="true" @submit="loginWithOtp">
+                    <FormKit prefix-icon="email" type="text" label="Email address" placeholder="Enter your email address" name="email" validation="required" />
             </FormKit>
     </div>
 </template>
@@ -108,10 +132,6 @@ const resetPassword = async (req) => {
 }
 .login .formkit-input{
     padding: 1.8vh;
-    margin: auto;
-    border: none;
-    border-radius: 3px;
-    width: 100%;
     font-size: 13px;
     background-color: var(--fk-bg-input);
 }
