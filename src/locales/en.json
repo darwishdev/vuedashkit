@@ -33,6 +33,8 @@
     "update": "update",
     "halls": "halls",
     "products": "products",
+    "replace": "Replace",
+    "upload": "Upload",
     "ingredients": "ingredients",
     "role_update": "role update",
     "role_create": "create new role",

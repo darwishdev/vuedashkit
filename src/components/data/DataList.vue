@@ -12,6 +12,23 @@ import { stringify } from 'querystring';
 
 
 type ColumnSlots = { body: ({ data }) => VNode[] }
+
+
+
+const prepareRecords = async (records?: any[]): Promise<any[]> => {
+    if (!records) return []
+    const newRecords: any[] = []
+    records.forEach(r => {
+        if (r.createdAt) {
+            r.createdAt = new Date(r.createdAt)
+        }
+        if (r.deletedAt) {
+            r.deletedAt = new Date(r.deletedAt)
+        }
+        newRecords.push(r)
+    })
+    return newRecords
+}
 // this function called while the component is on loading 
 const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promise<{
     inputsSchema: FormKitSchemaNode[],
@@ -42,6 +59,11 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
             const inputFilter = currentValue.filter
             if (inputFilter) {
                 inputsSchema.push(inputFilter.input)
+
+                if (filterForm[key] && key == 'createdAt') {
+                    console.log('prepare', key, filterForm[key])
+                    filterForm[key] = new Date(filterForm[key])
+                }
                 tableFilters[key] = {
                     value: filterForm[key] || null,
                     matchMode: inputFilter.matchMode
@@ -135,15 +157,16 @@ const { inputsSchema,
     deletedFilter,
     searchKey } = await loadElements(props.headers, t)
 
-
+const newRecords = await prepareRecords(props.records)
+const newDeletedRecords = await prepareRecords(props.deletedRecords)
 
 const exportCSV = () => {
     tableRefElement.value.exportCSV()()
 }
 
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
-    records: props.records,
-    deletedRecords: props.deletedRecords,
+    records: newRecords,
+    deletedRecords: newDeletedRecords,
     initiallySelectedItems: props.initiallySelectedItems,
     tableFiltersRef: tableFilters,
     dataKey: props.dataKey as string,
@@ -284,6 +307,11 @@ const renderTableActions = () => {
 }
 
 
+const onFiltersFormUpdated = (val: any) => {
+    if (!tableStore.tableFiltersRef) return
+    tableStore.tableFiltersRef = { ...val }
+}
+
 const onGlobalSearch = (val: any) => {
     console.log("poasdasd")
     if (!tableStore.tableFiltersRef) return
@@ -313,7 +341,7 @@ const renderTable = () => {
             modelExpansionRef.value = e
         },
         "onUpdate:filters": (e: Event) => {
-            console.log(e)
+            console.log('upadat filters', e)
         },
 
         paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
@@ -336,10 +364,7 @@ const renderTable = () => {
                 tableFilters,
                 activeFilters,
                 filterFormValue,
-                "onUpdate:tableFilters": (val: any) => {
-                    if (tableStore.tableFiltersRef) return
-                    tableStore.tableFiltersRef = { ...val }
-                }
+                "onUpdate:tableFilters": onFiltersFormUpdated
             })
         ]),
         empty: () => h('div', {
@@ -380,7 +405,7 @@ const renderTable = () => {
             padding: 0 20px;
         }
 
-        & .p-datatable-tbody>tr {
+        & .p-datatable-tbody.p-datatable-tbody>tr {
             padding: 0 20px;
             background-color: transparent;
         }
@@ -442,7 +467,7 @@ const renderTable = () => {
             width: 100%;
         }
 
-        & tbody {
+        & tbody.p-datatable-tbody {
             display: flex;
             width: 100% !important;
             flex-wrap: wrap;

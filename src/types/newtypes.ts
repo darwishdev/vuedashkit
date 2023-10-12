@@ -3,6 +3,7 @@ import type { ColumnProps } from 'primevue/column'
 import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
+import type { ImageProps } from "primevue/image"
 
 
 // table types
@@ -199,8 +200,27 @@ export type InputPermissionsProps = {
         toggleable?: boolean
         groupCollapsed?: boolean
         inputCollapsed?: boolean
-
-
     },
     // permissions: any
+}
+
+export type SizeObj = { width: number, height?: number }
+export type Size = SizeObj | number
+export type InputImageProps = {
+    context: {
+        node: FormKitNode
+        path: string
+        size?: Size
+    },
+}
+export type InputPickerProps = {
+    context: {
+        node: FormKitNode
+    },
+}
+
+export type AppImageProps = {
+    src: string
+    imageProps?: ImageProps
+    size?: Size
 }

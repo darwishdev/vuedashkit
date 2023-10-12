@@ -1,6 +1,6 @@
 
-import { createLocalStoragePlugin } from '@formkit/addons'
-const isCheckboxAndRadioMultiple = (node: any) => (node.props.type === 'checkbox' || node.props.type === 'radio') && node.props.options
+import type { FormKitPlugin } from '@formkit/core';
+const isCheckboxAndRadioMultiple: FormKitPlugin = (node: any) => (node.props.type === 'checkbox' || node.props.type === 'radio') && node.props.options
 const addAsteriskPlugin = (node: any) => {
     node.on('created', () => {
         const isRequired = node.props.parsedRules.some((rule: any) => rule.name === 'required');
@@ -25,7 +25,7 @@ const addAsteriskPlugin = (node: any) => {
         }
     })
 }
-const scrollToErrors = (node: any) => {
+const scrollToErrors: FormKitPlugin = (node: any) => {
     if (node.props.type === 'form') {
         const scrollTo = (node: any) => {
             const el = document.getElementById(node.props.id);
@@ -56,18 +56,9 @@ const scrollToErrors = (node: any) => {
     return false;
 }
 
-
-export default [
+const plugins: FormKitPlugin[] = [
     addAsteriskPlugin,
     scrollToErrors,
-    createLocalStoragePlugin({
-        // plugin defaults:
-        prefix: 'formkit',
-        key: undefined,
-        control: undefined,
-        maxAge: 3600000, // 1 hour
-        debounce: 200,
-        beforeSave: undefined,
-        beforeLoad: undefined
-    }),
+
 ]
+export default plugins

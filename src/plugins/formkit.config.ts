@@ -8,7 +8,7 @@ const pro = createProPlugin(import.meta.env.VITE_FORMKIT_TOKEN, inputs)
 const config: DefaultConfigOptions = {
     plugins: [pro],
     icons: { ...genesisIcons },
-    // theme: 'genesis'
+    theme: 'genesis'
 
 }
 

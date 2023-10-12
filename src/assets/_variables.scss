@@ -26,7 +26,6 @@
   --color-hover-darken: rgba(255, 255, 255, 0.09);
   --color-head: #fff;
   --color-border: rgba(0, 0, 0, 0.1);
-
   --color-white: #000;
   --color-text: #868c9b;
   --color-secondary: #44486d;
@@ -41,6 +40,7 @@
   --fk-border-box-shadow-focus: transparent !important;
   --fk-bg-input: rgba(230, 17, 17, 0.02) !important;
   --fk-bg-decorator: rgba(0, 0, 0, 0.05);
+  --fk-day-bg: var(--color-card);
   --color-error: rgba(199, 44, 65, 0.3);
 }
 
@@ -57,6 +57,7 @@
   --color-hover-darken: rgba(255, 255, 255, 0.09);
   --color-head: #fff;
   --fk-color-input: var(--color-text);
+  --fk-day-bg: var(--color-card);
   --color-text: #868c9b;
   color-scheme: dark;
 }

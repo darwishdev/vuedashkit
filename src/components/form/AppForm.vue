@@ -247,6 +247,16 @@ const renderForm = () => {
 
 <style lang="scss">
 .app-form {
+    & .formkit-outer {
+        display: flex;
+        align-items: center;
+
+        & .formkit-wrapper {
+            flex: 1;
+        }
+
+
+    }
 
     & .formkit-form {
 

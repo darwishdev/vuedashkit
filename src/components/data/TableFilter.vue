@@ -9,7 +9,6 @@ import { ObjectKeys } from '@/utils/object/object';
 import AppPanel from '../base/AppPanel.vue';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { VNode } from 'vue';
-import { useTableNewStore } from '@/stores/tablenew';
 const props = defineProps<TableFilterProps>();
 const emit = defineEmits<{
     (e: 'update:tableFilters', value: Record<string, DataTableFilterMetaData>): void
@@ -19,7 +18,7 @@ const emit = defineEmits<{
 
 const appPanelProps: AppPanelProps = {
     toggleable: true,
-    header: "filtes",
+    header: "filters",
     icon: "filter"
 }
 // global components
@@ -42,6 +41,7 @@ const hasActiveFilters = computed(() => ObjectKeys(activeFiltersRef.value).lengt
 // debounced emit used here to add some delay on the emit that will apply the filter
 // to avoid making unneccessary work
 const debouncedTableFiltersEmit = Debounce((value: Record<string, DataTableFilterMetaData>) => {
+    console.log("emmittt", value)
     emit('update:tableFilters', value);
     // tableFiltersRef.value = { ...value }
 
@@ -143,12 +143,14 @@ const onFormInput = async (formValue: Record<string, any>) => {
     const urlQuery = {}
     for (const key of keys) {
         const currentInputValue = formValue[key]
-        tableFilters[key].value = currentInputValue
         if (currentInputValue) {
-            activeFiltersRef.value[key] = currentInputValue
             urlQuery[key] = currentInputValue
+            tableFilters[key].value = currentInputValue
+            activeFiltersRef.value[key] = currentInputValue
         } else {
             delete activeFiltersRef.value[key]
+            tableFilters[key].value = undefined
+
         }
     }
     const formValueString = JSON.stringify(urlQuery)

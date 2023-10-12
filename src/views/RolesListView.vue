@@ -10,6 +10,7 @@ import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
 import type { DataListProps, TableRouter } from '@/types/newtypes';
 import { useThemeStore } from '@/stores/theme';
+import { convertDateRedable } from '@/utils/date/date';
 const themeStore = useThemeStore()
 const { t } = useI18n()
 themeStore.startProgressBar()
@@ -76,7 +77,7 @@ const headers: Record<string, ITableHeader> = {
         filter: {
             matchMode: FilterMatchMode.DATE_AFTER,
             input: {
-                $formkit: 'datepicker',
+                $formkit: 'picker',
                 outerClass: "col-12 sm:col-6 md:col-3",
                 name: "createdAt",
                 placeholder: t("createdAt")
@@ -93,7 +94,7 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
     exportable: true,
     deletedRecords: deletedRecords,
     viewRouter: viewRouter,
-    displayType: "card",
+    displayType: "table",
     fetchFn: apiClient.rolesList,
     options: options!,
     headers
@@ -121,6 +122,8 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
                 </template>
                 <template #end="{ data }">
                     <h1>{{ data.roleName }} </h1>
+                    <h4>created_at</h4>
+                    <span> {{ convertDateRedable(data.createdAt) }} </span>
                 </template>
             </DataList>
         </template>

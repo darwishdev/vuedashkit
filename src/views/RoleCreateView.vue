@@ -26,16 +26,29 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
             {
                 $formkit: 'text',
                 prefixIcon: "tools",
-                outerClass: "col-12 sm:col-6 md:col-4",
+                outerClass: "col-12 sm:col-6 md:col-5",
                 name: "roleName",
                 placeholder: t("roleName")
             },
             {
                 $formkit: 'textarea',
                 prefixIcon: "text",
-                outerClass: "col-12 sm:col-6 md:col-8",
+                outerClass: "col-12 sm:col-6 md:col-5",
                 name: "roleDescription",
                 placeholder: t("roleDescription")
+            },
+            {
+                $cmp: 'FormKit',
+                props: {
+                    outerClass: "col-12 sm:col-6 md:col-2",
+                    type: 'image',
+                    name: 'image',
+                    onInput: (req: any) => {
+                        console.log('any', ObjectKeys(req), req, req[0])
+                    },
+                    value: "0.701566374267176.png",
+                    // size: 500
+                }
             }
 
         ],
@@ -49,11 +62,13 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                     props: {
                         outerClass: "w-full",
                         type: 'permissions',
+                        label: 'image',
                         name: 'permissions',
                         onInput: (req: any) => {
                             console.log('any', ObjectKeys(req), req, req[0])
                         },
-                        toggleable: false,
+                        toggleable: false
+
                     }
                 }
             ]
@@ -62,13 +77,6 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
 }
 </script>
 <template>
-    <Suspense timeout="0">
-        <template #default>
-            <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
-        </template>
-        <template #fallback>
-            loading from role create
-        </template>
-    </Suspense>
+    <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
 </template>
  
