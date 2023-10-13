@@ -29,5 +29,6 @@ export default {
             .use(createPinia())
 
         app.provide("loginHandler", config.loginHandler)
+        app.provide("formKitConfig", formKitConfig)
     }
 }

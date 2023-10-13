@@ -1,14 +1,15 @@
+ 
+
 <script setup lang="ts">
-// import { useQueryProvider } from "vue-query";
-import type { LoginHandler } from '@/types/types';
 import { RouterView } from 'vue-router'
-import { useAuthStore } from '@/stores/auth';
-import { ref, inject, onMounted } from 'vue';
-// useQueryProvider();
-const loginHandler = inject('loginHandler') as LoginHandler
-const authStore = useAuthStore()
-authStore.init(loginHandler)
-authStore.loadSavedAuthData()
+import { LocaleSetter } from '@/components/form'
+import { useLanguageStore } from '@/stores/language';
+import { useThemeStore } from '@/stores/theme';
+import { ref, onMounted } from 'vue';
+const themeStore = useThemeStore()
+const languageStore = useLanguageStore()
+themeStore.init()
+languageStore.init()
 const loading = ref(true)
 onMounted(() => {
   setTimeout(() => {
@@ -18,7 +19,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <RouterView />
-  <div class="app-loading" v-if="loading">loading</div>
+  <div class="app-wrapper" :class="{ 'rtl': languageStore.isRtl, 'dark': themeStore.isDark }">
+    <LocaleSetter :ref="(el) => languageStore.localeSetterComponentRef = el" />
+    <RouterView />
+    <div class="app-loading" v-if="loading">loading</div>
+    <AppNotification />
+  </div>
 </template>
  

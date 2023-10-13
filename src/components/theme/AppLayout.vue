@@ -1,20 +1,23 @@
+ 
+
 <script lang="ts" setup>
 import AppNav from './AppNav.vue'
 import { useMenuStore } from '@/stores/menu';
-import { useLanguageStore } from '@/stores/language';
+// import { useLanguageStore } from '@/stores/language';
 import { useThemeStore } from '@/stores/theme';
 import ProgressBar from 'primevue/progressbar';
 import Sidebar from 'primevue/sidebar';
 import AppMenu from './AppMenu.vue';
 import DynamicDialog from 'primevue/dynamicdialog';
+import { useAuthStore } from '@/stores/auth';
+import AppLoading from '@/components/loading/AppLoading.vue';
 
-
+const authStore = useAuthStore()
 const menuStore = useMenuStore()
-const languageStore = useLanguageStore()
+// const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
-languageStore.init()
-themeStore.init()
-
+// themeStore.init()
+authStore.init()
 const routeResolved = () => {
     themeStore.stopProgressBar()
 }
@@ -25,8 +28,7 @@ const toggleDesktopMenu = () => {
 </script>
 
 <template>
-    <div class="app-layout  "
-        :class="{ 'rtl': languageStore.isRtl, 'dark': themeStore.isDark, ' active-menu': themeStore.isMenuOpened }">
+    <div class="app-layout  " :class="{ 'active-menu': themeStore.isMenuOpened }">
         <ProgressBar v-if="themeStore.isProgressBarVisible" mode="indeterminate"></ProgressBar>
         <aside class="desktop-menu">
             <div class="desktop-menu-header">
@@ -43,13 +45,15 @@ const toggleDesktopMenu = () => {
             <app-nav />
         </div>
         <main class="page-content">
-            <RouterView v-slot="{ Component }">
+            <RouterView v-slot="props">
                 <Suspense @resolve="routeResolved" timeout="0">
                     <template #default>
-                        <component :is="Component" />
+                        <component :is="props.Component" />
                     </template>
                     <template #fallback>
-                        <h2>loading from layout</h2>
+                        <div class="loading">
+                            <AppLoading :type="props.route.meta.loadingType" />
+                        </div>
                     </template>
                 </Suspense>
             </RouterView>
@@ -65,6 +69,5 @@ const toggleDesktopMenu = () => {
     </div>
 
     <DynamicDialog />
-    <AppNotification />
 </template>
  

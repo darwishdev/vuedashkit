@@ -97,9 +97,9 @@
         content: url("https://static.exploremelon.com/dashkit/close.svg");
       }
 
-      & .toast-inner::after {
-        content: url("/logo-error.svg");
-      }
+      // & .toast-inner::after {
+      //   content: url("/logo-error.svg");
+      // }
     }
     &.p-toast-message-success {
       background-color: var(--color-success) !important;
@@ -121,8 +121,8 @@
   background: var(--color-primary);
 
   &:hover {
-    background-color: var(--color-primary-darken);
-    transition: background-color 0.5s;
+    // background-color: var(--color-primary-darken);
+    transition: background-color 0.3s;
   }
 }
 .app-btn {
@@ -142,7 +142,7 @@
 }
 
 .p-menu.p-menu-overlay {
-  background: var(--color-background);
+  // background: var(--color-background);
 }
 
 .formkit-file-item {

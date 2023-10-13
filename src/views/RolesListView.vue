@@ -94,7 +94,7 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
     exportable: true,
     deletedRecords: deletedRecords,
     viewRouter: viewRouter,
-    displayType: "table",
+    displayType: "card",
     fetchFn: apiClient.rolesList,
     options: options!,
     headers
@@ -122,8 +122,8 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
                 </template>
                 <template #end="{ data }">
                     <h1>{{ data.roleName }} </h1>
-                    <h4>created_at</h4>
-                    <span> {{ convertDateRedable(data.createdAt) }} </span>
+                    <h4>{{ $t('createdAt') }} : </h4>
+                    <span class="text-center"> {{ convertDateRedable(data.createdAt) }} </span>
                 </template>
             </DataList>
         </template>

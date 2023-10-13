@@ -1,25 +1,13 @@
 // import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import type { FormKitSchemaNode } from '@formkit/core'
-import { useI18n } from 'vue-i18n'
-import type { FormSeciton } from '@/types/types'
+import { computed, reactive, ref } from 'vue'
 export const useFormStore = defineStore('form', () => {
-  const schemas: Record<string, FormKitSchemaNode> = {}
-  const { t } = useI18n()
+  const formData = reactive({} as Record<string, any>)
+  const formElementRef = ref()
+  const showActions = ref(true)
+  const formValue = computed(() => {
+    return formElementRef.value.node._value || null
+  })
 
-
-  const withWrapperClass = (elements: FormKitSchemaNode[], className: string) => {
-    return {
-      $el: 'div',
-      attrs: {
-        class: className
-      },
-      children: elements
-    } as FormKitSchemaNode
-  }
-
-  const generateSchemaFromSections = (sections: FormSeciton[]) => {
-
-  }
-  return {}
+  return { formData, showActions, formElementRef, formValue }
 })

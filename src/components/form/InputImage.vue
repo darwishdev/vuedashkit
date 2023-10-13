@@ -48,7 +48,7 @@ const uploadAvatar = async (evt) => {
         <Skeleton v-show="uploading" :style="sizeObj" class="mr-2">
         </Skeleton>
         <app-image v-show="!uploading" ref="appImageElementRef" :src="path" :size="props.context.size" />
-        <div class="upload">
+        <div class="upload" :style="`width : ${props.context.size || '150'}px`">
             <span>{{ $t('replace') }}</span>
         </div>
         <input @change="uploadAvatar" type="file" id="imageUpload" class="actual-input" accept="image/*">

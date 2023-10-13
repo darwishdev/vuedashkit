@@ -1,7 +1,12 @@
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { defineStore } from 'pinia'
 import { useI18n } from 'vue-i18n';
+import { usePrimeVue } from 'primevue/config';
+import en from '@/locales/en.json'
+import ar from '@/locales/ar.json'
 export const useLanguageStore = defineStore('language', () => {
+  const primevue = usePrimeVue()
+  const localeSetterComponentRef = ref()
   const isRtl = ref(false);
   const i18n = useI18n()
 
@@ -14,13 +19,19 @@ export const useLanguageStore = defineStore('language', () => {
 
   }
   const toggleRtl = () => {
-    document.querySelector("body")?.classList.toggle("rtl")
+    // document.querySelector("body")?.classList.toggle("rtl")
     isRtl.value = !isRtl.value;
     i18n.locale.value = isRtl.value ? 'ar' : "en"
     localStorage.setItem('isRtl', isRtl.value.toString());
+    primevue.config.locale = isRtl.value ? ar as any : en as any
+    setTimeout(() => {
+      if (localeSetterComponentRef.value) localeSetterComponentRef.value.setFormkitLocale(i18n.locale.value)
+    }, 100)
+
   };
   return {
     isRtl,
+    localeSetterComponentRef,
     toggleRtl,
     init
   };

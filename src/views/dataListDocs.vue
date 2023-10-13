@@ -10,7 +10,7 @@ import type { ProductListResponse, productsListRow } from '../api/ApiTypes';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderImage } from '../utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
-import type { AppTableProps, TableRouter } from '../types/newtypes';
+import type { DataListProps, TableRouter } from '../types/newtypes';
 import { useThemeStore } from '../stores/theme';
 const themeStore = useThemeStore()
 const { t } = useI18n()
@@ -141,7 +141,7 @@ themeStore.stopProgressBar()
 
 
 
-const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
+const tableProps: DataListProps<ProductListResponse, productsListRow> = {
     title: "roles",
     dataKey,
     records: records,
@@ -509,9 +509,9 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
     <h2 class="my-5">Here's an example for using the appTable component with setting the displayType property to 'card' :
     </h2>
 
-    <DataList class="sm-column" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter"
-        :title="tableProps.title" :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options"
-        :deletedRecords="deletedRecords" :headers="headers2" :displayType="tableProps.displayType">
+    <DataList class="sm-column" :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
+        :dataKey="tableProps.dataKey" :records="records" :options="tableProps.options" :deletedRecords="deletedRecords"
+        :headers="headers2" :displayType="tableProps.displayType">
         <template #start="{ data }">
             <div class="flex-row md:flex-column">
                 <div class="mx-3">
@@ -587,4 +587,5 @@ const tableProps: AppTableProps<ProductListResponse, productsListRow> = {
         font-weight: 800;
         font-size: 32px;
     }
-}</style>
+}
+</style>

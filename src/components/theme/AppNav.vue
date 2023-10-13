@@ -1,24 +1,30 @@
+ 
+
+
 <script lang="ts" setup>
-import { useDialogStore } from '@/stores/dialog';
 import { useLanguageStore } from '@/stores/language';
 import Menu from 'primevue/menu';
 import { useBreadcrumbStore } from '@/stores/breadcrumb';
 import Breadcrumb from 'primevue/breadcrumb';
 import { useMenuStore } from '@/stores/menu';
+import { LocaleSetter } from '@/components/form'
 import { ref } from 'vue'
 import { useThemeStore } from '@/stores/theme';
-import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+import LanguageToggler from '@/components/base/LanguageToggler.vue';
+import ThemeToggler from '@/components/base/ThemeToggler.vue';
+const localSetterElementRef = ref()
+const router = useRouter()
 const menuStore = useMenuStore()
 const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
-const dialogStore = useDialogStore()
-const authStore = useAuthStore()
 const breadcrumbStore = useBreadcrumbStore();
 const profileMenu = ref();
 
-
 const logout = () => {
-    authStore.logout()
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    router.push("/login")
 }
 const toggleProfileMenu = (event: Event) => {
     profileMenu.value.toggle(event)
@@ -26,6 +32,7 @@ const toggleProfileMenu = (event: Event) => {
 </script>
 <template>
     <nav class="app-nav">
+        <LocaleSetter ref="localSetterElementRef" />
         <div class="start">
             <app-btn class="sidebar-toggler" @click="menuStore.toggleSidebar" icon="bars"></app-btn>
             <app-logo iconOnly />
@@ -35,8 +42,8 @@ const toggleProfileMenu = (event: Event) => {
         </div>
 
         <div class="end">
-            <app-btn @click="languageStore.toggleRtl" icon="globe"></app-btn>
-            <app-btn @click="themeStore.changeTheme" icon="moon"></app-btn>
+            <LanguageToggler />
+            <ThemeToggler />
             <app-btn @click="toggleProfileMenu" icon="user"></app-btn>
             <Menu v-if="!$slots['end']" ref="profileMenu" id="overlay-menu" :popup="true">
                 <template #start>

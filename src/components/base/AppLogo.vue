@@ -15,7 +15,7 @@ const renderFunction = () => {
     }
 
     return h(RouterLink, {
-        to: "/",
+        to: { name: 'home_view' },
     }, {
 
         default: () => h(logoComponent)

@@ -17,7 +17,18 @@ body {
   text-rendering: optimizeLegibility;
   background-repeat: no-repeat;
   background-attachment: fixed;
-
+  & .app-wrapper {
+    background: var(--color-background);
+    transition: color 0.5s, background-color 0.5s;
+    line-height: 1.6;
+    font-family: var(--font-family);
+    min-height: 100vh;
+    color: var(--color-text);
+    font-size: 14px;
+    text-rendering: optimizeLegibility;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
   .p-component {
     font-family: var(--font-family);
   }
@@ -43,13 +54,12 @@ body {
     border-radius: 6px;
   }
 }
-.dark {
-  & .card-dark {
-    background-color: var(--color-card);
-    padding: 16px;
-    border-radius: 6px;
-  }
+.card-dark {
+  background-color: var(--color-card-darken) !important;
+  padding: 16px;
+  border-radius: 6px;
 }
+
 .slide-fade-enter-active {
   transition: all 0.2s ease-out;
 }

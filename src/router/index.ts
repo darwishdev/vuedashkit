@@ -1,14 +1,35 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalized, type NavigationGuardNext } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AppLayout from '@/components/theme/AppLayout.vue'
 import { useThemeStore } from '@/stores/theme';
+import apiClient from '@/api/ApiClient';
 
+
+const authMiddleWare = async (_, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  if (from.name != 'login') {
+    try {
+      const user = await apiClient.userAuthorize({})
+      localStorage.setItem('user', JSON.stringify(user))
+      next()
+      return true
+
+    } catch (e: any) {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+
+      next('/login')
+      return false
+    }
+  }
+  next()
+}
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       component: AppLayout,
+      beforeEnter: authMiddleWare,
       children: [
         {
           path: '/dashboard',
@@ -29,6 +50,7 @@ const router = createRouter({
           path: '/roles',
           name: 'roles_list',
           meta: {
+            loadingType: 'card',
             breadcrumbs: [{ label: "roles_list", to: { name: 'roles_list' } }],
 
           },
@@ -38,6 +60,7 @@ const router = createRouter({
           path: '/roles/create',
           name: 'role_create',
           meta: {
+            loadingType: 'form',
             breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "role_create" }],
           },
           component: () => import('../views/RoleCreateView.vue')
@@ -54,6 +77,7 @@ const router = createRouter({
           path: '/roles/:id/update',
           name: 'role_update',
           meta: {
+            loadingType: 'form',
             breadcrumbs: [{ label: "roles", to: { name: 'roles_list' } }, { label: "update" }]
           },
           component: () => import('../views/RoleUpdateView.vue')

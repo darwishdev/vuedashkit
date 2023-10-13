@@ -13,7 +13,7 @@ export type TableRouter = {
     paramName: string,
     paramColumnName: string
 }
-export type FilterMatchModeValues = 'startsWith' | 'contains' | 'notContains' | 'endsWith' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte' | 'between' | 'dateIs' | 'dateIsNot' | 'dateBefore' | 'dateAfter' | string | undefined;
+export type FilterMatchModeValues = 'startsWith' | 'contains' | 'notContains' | 'endsWith' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte' | 'between' | 'dateIs' | 'dateIsNot' | 'dateBefore' | 'dateAfter' | string | undefined
 export type AppTableFilter = {
     matchMode: FilterMatchModeValues,
     input: FormKitSchemaNode
@@ -23,7 +23,10 @@ export type ApiFormError = {
     globalErrors: string[]
     fieldErrors: Record<string, string>
 }
-
+export interface UserLoginRequest {
+    userName: string
+    userPassword: string
+}
 export type TRecordDefault = Record<string, unknown[]>
 
 export type ApiResponseList<TRecord> = {
@@ -40,6 +43,9 @@ export type TableFilterProps = {
     filterFormValue: Record<string, (string | number | undefined)>
 }
 
+// export type AppLoadingProps = {
+//     view
+// }
 export type AppPanelProps = {
     toggleable?: boolean
     collapsed?: boolean,
@@ -61,42 +67,42 @@ export interface ITableHeader {
 // table options types
 
 type CreateHandler = {
-    title: string;
-    redirectRoute: string;
-    routeName: string;
-    endpoint: string;
+    title: string
+    redirectRoute: string
+    routeName: string
+    endpoint: string
 }
 
 
 
 type UpdateHandler = {
-    title: string;
-    redirectRoute: string;
-    routeName: string;
-    endpoint: string;
-    findEndpoint: string;
-    findRequestProperty: string;
+    title: string
+    redirectRoute: string
+    routeName: string
+    endpoint: string
+    findEndpoint: string
+    findRequestProperty: string
 }
 
 type DeleteRestoreHandler = {
-    endpoint: string;
-    requestProperty: string;
+    endpoint: string
+    requestProperty: string
 }
 
 type ImportHandler = {
-    endpoint: string;
-    importTemplateLink: string;
+    endpoint: string
+    importTemplateLink: string
 }
 
 
 
 export type ApiListOptions = {
-    title: string;
-    description: string;
-    createHandler?: CreateHandler;
-    updateHandler?: UpdateHandler;
-    deleteRestoreHandler?: DeleteRestoreHandler;
-    importHandler?: ImportHandler;
+    title: string
+    description: string
+    createHandler?: CreateHandler
+    updateHandler?: UpdateHandler
+    deleteRestoreHandler?: DeleteRestoreHandler
+    importHandler?: ImportHandler
 }
 
 
@@ -132,15 +138,18 @@ export interface DataListProps<TResp, TRecord> {
     viewRouter?: TableRouter
     options: ApiListOptions
     displayType?: 'card' | 'table'
-    headers: Record<string, ITableHeader>;
+    headers: Record<string, ITableHeader>
 }
-export type TableHeaderFilter = { mode: string; input: FormKitSchemaNode; } | undefined
+export type TableHeaderFilter = {
+    mode: string
+    input: FormKitSchemaNode
+} | undefined
 
 export interface ITableHeaderProps {
     sortable: boolean,
-    isGlobalFilter?: boolean;
-    filter?: AppTableFilter;
-    router?: TableRouter;
+    isGlobalFilter?: boolean
+    filter?: AppTableFilter
+    router?: TableRouter
 }
 
 
@@ -176,8 +185,19 @@ export type AppFormSection = {
     isTitleHidden?: boolean
     isTransparent?: boolean
 }
+
+export type AppFormOptions = {
+    isBulkCreateHidden?: boolean
+    isHeaderSubmitHidden?: boolean
+    successMessageSummary?: string
+    successMessageDetail?: string
+    isSuccessNotificationHidden?: boolean
+    isFormTransparent?: boolean
+}
 export type AppFormProps<TReq, TResp> = {
     title: string
+    options?: AppFormOptions
+
     submitHandler: SubmitHandler<TReq, TResp>,
     findHandler?: FindHandler<any, TReq>,
     sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
@@ -223,4 +243,38 @@ export type AppImageProps = {
     src: string
     imageProps?: ImageProps
     size?: Size
+}
+
+
+export type LoginInfo = {
+    accessToken: string
+    accessTokenExpiresAt?: { nanos: number, seconds: number }
+}
+export type SideBarItem = {
+    key: string
+    label: string
+    icon: string
+    to: string
+    items: SideBarItem[]
+}
+export type User = {
+    userId: number
+    userName: string
+    userImage: string
+    userEmail: string
+    userPhone: string
+    createdAt: string
+    updatedAt: string
+}
+export type UserLoginResponse = {
+    userId: number
+    userName: string
+    userImage: string
+    userEmail: string
+    userPhone: string
+    createdAt: string
+    updatedAt: string
+    permissions: string[]
+    sideBar: SideBarItem[]
+    loginInfo?: LoginInfo
 }

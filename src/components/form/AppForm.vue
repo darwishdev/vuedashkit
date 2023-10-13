@@ -18,7 +18,6 @@ const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitS
 
         for (const key of keys) {
             const currentSection = sections[key]
-            console.log(isAppFormSection(currentSection))
             const title = {
                 $el: 'h2',
                 children: t(key)
@@ -119,36 +118,46 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
 <script setup lang="ts">
 import { h, ref, resolveComponent } from 'vue';
 import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/newtypes';
-import { n, useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
+import { useFormStore } from "@/stores/form";
 import { useRouter, type RouteParams } from 'vue-router';
 
 
 const { push, currentRoute } = useRouter()
 const { t } = useI18n()
 const props = defineProps<AppFormProps<any, any>>();
+
+const slots = defineSlots<{
+    prepend?(): any
+    append?(): any
+}>()
 // global components
-const formScehmaNodeRef = ref<{ node: FormKitNode }>()
 const isBulkCreateRef = ref()
 const notificationStore = useNotificationStore()
+const formStore = useFormStore()
 const formkitComp = resolveComponent('FormKit')
 const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
-
 const schema = await loadElemetnsPromise(props.sections, t)
-
 const value = await loadValue(currentRoute.value.params, props.findHandler)
+
 const renderFormSchema = () => {
     return h(formkitComp, {
-        ref: "formScehmaNodeRef",
+        ref: (el) => formStore.formElementRef = el,
         type: "form",
         outerClass: "card",
         id: 'app-form',
+        validationVisibility: "live",
         onSubmit: submitHandler,
+        onSubmitInvalid: () => {
+            console.log("error captured")
+        },
         value: value,
-        actions: true,
+        actions: formStore.showActions,
     },
         () => h(formkitSchemaComp, {
+            data: formStore.formData,
             schema: {
                 $el: "div",
                 attrs: {
@@ -156,11 +165,17 @@ const renderFormSchema = () => {
                 },
                 children: schema
             }
-        })
+        }),
+
     )
 }
 
 const renderBulkCreateFilter = () => {
+    if (props.options) {
+        if (props.options.isBulkCreateHidden) return
+
+    }
+
     return h(formkitComp, {
         type: "toggle",
         value: false,
@@ -172,41 +187,72 @@ const renderBulkCreateFilter = () => {
     })
 }
 
+const renderHeaderSubmitBtn = () => {
+    if (props.options) {
+        if (props.options.isBulkCreateHidden) return
+    }
+    return h(appBtnComponent, {
+        icon: 'plus',
+        class: 'primary',
+        label: t('save'),
+        onClick: () => {
+            formStore.formElementRef.node.submit()
+        }
+    })
+}
 const renderTitle = () => {
+
     return h('div', {
         class: 'form-title'
     },
         [
             h('h1', t(props.title)),
             h('div', { class: 'end' }, [
-                h(appBtnComponent, {
-                    icon: 'plus',
-                    class: 'primary',
-                    label: t('save'),
-                    onClick: () => {
-                        formScehmaNodeRef.value!.node.submit()
-                    }
-                }),
+                renderHeaderSubmitBtn(),
                 renderBulkCreateFilter()
+
             ])
+
         ]
     )
 }
 
+const handleError = (node: FormKitNode, error: any) => {
+    console.log("error is", error.message)
+    try {
+        const errorObject: ApiFormError = JSON.parse(error.rawMessage)
+        node.setErrors(
+            errorObject.globalErrors,
+            errorObject.fieldErrors
+        )
+        console.log(errorObject)
+    } catch (_err: any) {
+        node.setErrors(
+            [error.message],
+        )
+    }
+}
+
+
 const submitHandler = async (req: any, node: FormKitNode) => {
     const handler = props.submitHandler
-
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
 
     await new Promise((resolve, reject) => {
-
         handler.endpoint(req)
             .then(async (res: any) => {
                 console.log(res)
                 if (handler.callback) await handler.callback!(res)
-                notificationStore.showSuccess("created_summary", "created_detail")
+                if (props.options) {
+                    if (!props.options.isSuccessNotificationHidden) {
+                        notificationStore.showSuccess(props.options.successMessageSummary || "created_summary", props.options.successMessageDetail || "created_detail")
+                    }
+                } else {
+                    notificationStore.showSuccess("created_summary", "created_detail")
+                }
+
                 if (!isBulkCreateRef.value) {
                     if (handler.redirectRoute != "") {
                         push({ name: handler.redirectRoute })
@@ -220,24 +266,27 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                 }
                 resolve(null)
             }).catch((error: any) => {
-                const errorObject: ApiFormError = JSON.parse(error.rawMessage)
-                node.setErrors(
-                    errorObject.globalErrors,
-                    errorObject.fieldErrors
-                )
-                console.log(errorObject)
+                handleError(node, error)
                 resolve(null)
             })
     })
 }
 const renderForm = () => {
+    let className = "card-dark"
+    if (props.options) {
+        if (props.options?.isFormTransparent) className = ""
+    }
     return h("div", {
-        class: "card-dark"
+        class: className
     }, [
+        slots.prepend ? slots.prepend() : null,
         renderTitle(),
-        renderFormSchema()
+        renderFormSchema(),
+        slots.append ? slots.append() : null
     ])
 }
+
+
 </script>
 
 <template>
@@ -246,68 +295,5 @@ const renderForm = () => {
 
 
 <style lang="scss">
-.app-form {
-    & .formkit-outer {
-        display: flex;
-        align-items: center;
-
-        & .formkit-wrapper {
-            flex: 1;
-        }
-
-
-    }
-
-    & .formkit-form {
-
-        display: flex;
-        flex-direction: column;
-    }
-
-    .formkit-messages {
-        order: 1;
-
-        & li {
-            padding: 10px;
-            background-color: var(--color-danger);
-            color: #fff;
-            border-radius: 6px;
-            box-shadow: var(--shadow);
-            margin-top: 20px;
-        }
-    }
-
-    .schema-wrapper {
-        order: 2;
-    }
-
-    .formkit-actions {
-        order: 3;
-    }
-
-    & .form-title {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px solid var(--color-border);
-        margin-bottom: 20px;
-        padding: 10px 0;
-
-        & .end {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-    }
-
-    & .form-section {
-        margin: 20px 0;
-        padding: 0 10px;
-
-        & h2 {
-            border-bottom: 1px solid var(--color-border);
-            padding: 20px 10px;
-            margin-bottom: 20px;
-        }
-    }
-}
+@import url("@/assets/form.scss");
 </style>

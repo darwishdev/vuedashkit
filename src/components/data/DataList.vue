@@ -384,12 +384,17 @@ const renderTable = () => {
 
 <style   lang="scss">
 .app-table {
+    & .p-datatable-header {
+        background-color: transparent !important;
+    }
+
     & .p-paginator-bottom {
-        background-color: var(--color-card);
+
         border-radius: 0 0 20px 20px;
 
+
         & .p-paginator {
-            background-color: transparent;
+            background-color: transparent !important;
             border: none;
         }
     }
@@ -397,9 +402,8 @@ const renderTable = () => {
 
 
     &.p-datatable {
-        &>div {
-            background-color: var(--color-card);
-        }
+        background: var(--color-card);
+        border-radius: 6px;
 
         & .p-datatable-wrapper {
             padding: 0 20px;
@@ -430,6 +434,8 @@ const renderTable = () => {
 
     }
 
+
+
     & .empty-table {
         text-align: center;
 
@@ -437,6 +443,7 @@ const renderTable = () => {
             max-width: 500px;
             padding: 5px;
             background-color: var(--color-danger);
+            color: #fff;
             margin: 20px auto;
             border-radius: 6px;
             text-transform: uppercase;
@@ -445,7 +452,7 @@ const renderTable = () => {
         & p {
             max-width: 800px;
             padding: 25px;
-            background-color: var(--color-card);
+            background: rgba(255, 255, 255, .9);
             margin: 20px auto;
             border-radius: 6px;
         }
@@ -547,6 +554,7 @@ const renderTable = () => {
                         padding-top: 3rem;
                         width: 70%;
                         border-radius: 0 6px 6px 0;
+                        background: var(--color-card-darken);
 
                         & h1 {
                             max-width: 80%;
@@ -582,25 +590,27 @@ const renderTable = () => {
                 & tr:not(.p-datatable-emptymessage) {
                     flex-direction: column;
 
+
                     & td {
                         position: relative;
                         border: none;
 
                         &.p-selection-column {
-                            top: calc(30% + 20px);
-                            left: 10px;
+                            top: calc(30% + 20px) !important;
+                            left: 10px !important;
                         }
 
                         &.actions-btns {
                             position: absolute;
-                            top: 30%;
-                            right: 0;
+                            top: 30% !important;
+                            right: 0 !important;
                         }
 
                         &.card-start {
-                            height: 30%;
-                            width: 100%;
-                            border-radius: 6px 6px 0 0;
+                            height: 30% !important;
+                            width: 100% !important;
+
+                            border-radius: 6px 6px 0 0 !important;
                             justify-content: space-around;
                             flex-direction: row;
 
@@ -619,9 +629,9 @@ const renderTable = () => {
                         }
 
                         &.card-end {
-                            height: 70%;
-                            padding-top: 3rem;
-                            width: 100%;
+                            height: 70% !important;
+                            padding-top: 3rem !important;
+                            width: 100% !important;
                             border-radius: 0 6px 6px 0;
 
                             & h1 {
@@ -644,7 +654,7 @@ const renderTable = () => {
 }
 
 
-.app-layout:not(.dark) {
+.app-layout .app-wrapper :not(.dark) {
 
     .app-table.table-card tbody tr:not(.p-datatable-emptymessage) {
         background-color: rgba(242, 242, 242, 0.9) !important;

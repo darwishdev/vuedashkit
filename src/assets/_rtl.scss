@@ -4,11 +4,54 @@
     overflow: scroll;
     direction: ltr !important;
   }
+  .formkit-prev .formkit-icon,
+  .formkit-next .formkit-icon {
+    transform: rotate(180deg);
+  }
+  .input-permissions .select-all.p-selection-column {
+    right: auto;
+    left: 80px;
+  }
+  .input-permissions .global-search {
+    right: auto;
+    left: 100px;
+  }
+  .app-table {
+    &.table-card {
+      & tbody.p-datatable-tbody {
+        & tr:not(.p-datatable-emptymessage) {
+          & td {
+            &.card-start {
+              border-radius: 0 6px 6px 0;
+            }
+            &.p-selection-column {
+              left: auto;
+              right: calc(30% + 10px);
+            }
+
+            &.actions-btns {
+              right: auto;
+              left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
   direction: rtl;
   --font-family: "Cairo", sans-serif;
   --fk-font-family-input: "Cairo", sans-serif;
   .layout-wrapper {
     background-position-x: 0;
+  }
+  .login-wrapper .login-image {
+    left: auto;
+    right: 0;
+  }
+  .login-wrapper .login-form {
+    margin-left: auto;
+    margin-right: 30%;
   }
   & .login-wrapper footer {
     left: auto;

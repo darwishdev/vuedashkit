@@ -1,6 +1,6 @@
 <script  lang="ts">
 function mockLoad() {
-    return new Promise(r => setTimeout(r, 1000))
+    return new Promise(r => setTimeout(r, 100000))
 }
 </script>
 
@@ -13,7 +13,7 @@ import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
 const { t } = useI18n()
 await mockLoad()
-
+// await setTimeout(() => { }, 20000)
 
 const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
     title: "role_create",
@@ -28,14 +28,17 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                 prefixIcon: "tools",
                 outerClass: "col-12 sm:col-6 md:col-5",
                 name: "roleName",
-                placeholder: t("roleName")
+                validation: "required",
+                placeholder: t("roleName"),
+                label: t("roleName")
             },
             {
                 $formkit: 'textarea',
                 prefixIcon: "text",
                 outerClass: "col-12 sm:col-6 md:col-5",
                 name: "roleDescription",
-                placeholder: t("roleDescription")
+                placeholder: t("roleDescription"),
+                label: t("roleDescription")
             },
             {
                 $cmp: 'FormKit',

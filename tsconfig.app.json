@@ -5,6 +5,7 @@
     "src/**/*",
     "src/vuedashkit.ts",
     "src/**/*.vue",
+    "src/components/loading/*.vue",
     "src/**/**/*.ts",
     "src/**/**/**.ts",
     "src/locales/*.json"
