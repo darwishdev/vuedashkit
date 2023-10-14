@@ -1,115 +1,67 @@
  
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
-import { createClient } from '@supabase/supabase-js'
-import type { ApiFormError, AppFormProps } from '@/types/newtypes';
-// import supabase from '@/api/Supabase';
+import type { AppFormProps, LoginHandler } from '@/types/newtypes';
 import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
 import { useI18n } from 'vue-i18n';
-import type { SignInWithPasswordCredentials, AuthOtpResponse, SignInWithPasswordlessCredentials, AuthTokenResponse } from '@supabase/supabase-js';
-import apiClient from '@/api/ApiClient';
 import { useAuthStore } from '@/stores/auth';
 import { useFormStore } from "@/stores/form";
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, inject } from 'vue'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import LanguageToggler from '@/components/base/LanguageToggler.vue';
 import ThemeToggler from '@/components/base/ThemeToggler.vue';
 import { useRouter } from 'vue-router';
 import { useNotificationStore } from '@/stores/notification';
-import { ObjectKeys } from '@/utils/object/object';
 const { t } = useI18n()
-
+const loginHandler: LoginHandler<any> = inject('loginHandler') as LoginHandler<any>
 const notificationStore = useNotificationStore()
 const { currentRoute } = useRouter()
-
 const authStore = useAuthStore()
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 const formStore = useFormStore()
-
-
 const appFormElementRef = ref()
 
 onMounted(() => {
   const isResetPasswordParam = currentRoute.value.query.isResetPassword
   const isResetPassword = (isResetPasswordParam && isResetPasswordParam == 'true') ? true : false
-
-  console.log(isResetPasswordParam)
   formStore.showActions = !isResetPassword
   formStore.formData = { isResetPassword: isResetPassword }
 })
 
-
-const signInWithPassword = async (req: SignInWithPasswordCredentials): Promise<AuthTokenResponse> => {
+const signInWithOTP = async (): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const request: { email: string, password: string } = { ...req } as { email: string, password: string }
-    request.email = request.email.trim()
-    supabase.auth.signInWithPassword(request).then(res => {
-      console.log(res.error)
-      if (!res.error) {
-        resolve(res)
-      } else {
-        reject(new Error(t('login_invalid')))
-      }
-
-      // notificationStore.showSuccess("logged_in", "logged_in_detail")
-    }).catch(e => {
-      console.log("from authorize", e)
-    })
-
-  })
-}
-
-
-const signInWithOTP = async (): Promise<AuthOtpResponse> => {
-  return new Promise((resolve, reject) => {
-
-    reject(new Error("asd"))
-    const req: SignInWithPasswordlessCredentials = {
-      email: formStore.formValue.email
-    }
-    supabase.auth.signInWithOtp(req).then(res => {
-
-      console.log("error ", res.error)
-      reject("asd")
-      return
+    loginHandler.senedOTPEndpoint({ email: formStore.formValue.email }).then(_ => {
       notificationStore.showSuccess("otp_email_sent", "otp_email_sent_detail")
-      resolve(res)
+      resolve()
     }).catch(e => {
       reject(e)
+      notificationStore.showError("otp_email_failed", "otp_email_failed_detail")
       console.log("from authorize", e)
     })
-
   })
 }
 
-
 const resetPasswordForEmail = async (): Promise<void> => {
-  return new Promise((resolve) => {
-    supabase.auth.resetPasswordForEmail(formStore.formValue.email).then(() => {
+  return new Promise((resolve, reject) => {
+    loginHandler.sendResetLinkEndpoint({ email: formStore.formValue.email }).then(_ => {
       notificationStore.showSuccess("reset_email_sent", "reset_email_sent_detail")
       resolve()
     }).catch(e => {
+      reject(e)
+      notificationStore.showError("reset_email_failed", "reset_email_failed_detail")
       console.log("from authorize", e)
     })
 
   })
 }
+const handleLoginCallback = (resp: UserLoginResponse) => {
+  authStore.saveLoginData(resp)
 
-const handleLoginCallback = async (resp: AuthTokenResponse) => {
-  apiClient.userLogin({ authUserId: resp.data.user?.id }).then((res: UserLoginResponse) => {
-    authStore.saveLoginData(res)
-  }).catch(e => {
-    console.log("from callback", e)
-  })
 }
-
 
 const toggleResetPasswordForm = () => {
   if (!formStore.formData.isResetPassword) {
     RouteQueryAppend('isResetPassword', "true")
+
     Object.assign(formStore.formData, { isResetPassword: true })
     formStore.showActions = false
     return
@@ -121,22 +73,20 @@ const toggleResetPasswordForm = () => {
   }
 }
 
-
-
-
-const formProps: AppFormProps<SignInWithPasswordCredentials, AuthTokenResponse> = {
-  title: "login",
+const formProps: AppFormProps<any, any> = {
+  title: 'login',
   options: {
     isBulkCreateHidden: true,
     isFormTransparent: false,
-    successMessageSummary: "logged_in",
-    successMessageDetail: "logged_in_details",
+    isSuccessNotificationHidden: false,
+    successMessageSummary: 'logged_in',
+    successMessageDetail: 'logged_in_details',
     isHeaderSubmitHidden: true
   },
   submitHandler: {
-    endpoint: signInWithPassword,
+    endpoint: loginHandler.loginEndpoint,
     callback: handleLoginCallback,
-    redirectRoute: "home_view"
+    redirectRoute: loginHandler.redirectRoute || "home_view"
   },
   sections: {
     'login': {

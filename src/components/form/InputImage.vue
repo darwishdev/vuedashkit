@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue'
-import supabase from '@/api/Supabase'
-import type { InputImageProps } from '@/types/newtypes'
+import { ref, toRef, inject } from 'vue'
+import type { InputImageProps, UploadHandler } from '@/types/newtypes'
 import Skeleton from 'primevue/skeleton';
 import { useNotificationStore } from '@/stores/notification';
 const props = defineProps<InputImageProps>();
@@ -11,6 +10,7 @@ const uploading = ref(false)
 const files = ref()
 const notificationStore = useNotificationStore()
 
+const uploadHandler: UploadHandler = inject('uploadHandler') as UploadHandler
 
 type styleSizeObj = { minWidth: string, minHeight?: string }
 const defailSizeObj: styleSizeObj = { minWidth: '150px', minHeight: '150px' }
@@ -18,27 +18,20 @@ const sizeObj: styleSizeObj | undefined = typeof props.context.size == 'undefine
     { minWidth: `${props.context.size}px`, minHeight: `${props.context.size}px` } :
     { minWidth: `${props.context.size.width}px`, minHeight: `${props.context.size.height}px` }
 
-const uploadAvatar = async (evt) => {
+const handleUpload = async (evt: any) => {
     files.value = evt.target.files
-    try {
-        uploading.value = true
-        if (!files.value || files.value.length === 0) {
-            throw new Error('You must select an image to upload.')
-        }
-        const file = files.value[0]
-        const fileExt = file.name.split('.').pop()
-        const filePath = `${Math.random()}.${fileExt}`
-        let { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
-        if (uploadError) throw uploadError
+    uploading.value = true
+    uploadHandler.uploadEndpoint(files.value[0]).then((filePath: string) => {
         appImageElementRef.value.update(filePath)
         path.value = filePath
         props.context.node._value = filePath
         props.context.node.input(props.context.node._value)
-    } catch (error: any) {
+    }).catch((error: any) => {
         notificationStore.showError('upload_error', error.message)
-    } finally {
-        setTimeout(() => uploading.value = false, 10)
-    }
+    }).finally(() => {
+        setTimeout(() => uploading.value = false, 50)
+    })
+
 }
 
 </script>
@@ -51,7 +44,7 @@ const uploadAvatar = async (evt) => {
         <div class="upload" :style="`width : ${props.context.size || '150'}px`">
             <span>{{ $t('replace') }}</span>
         </div>
-        <input @change="uploadAvatar" type="file" id="imageUpload" class="actual-input" accept="image/*">
+        <input @change="handleUpload" type="file" id="imageUpload" class="actual-input" accept="image/*">
     </div>
 </template>
 

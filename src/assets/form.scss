@@ -65,4 +65,8 @@
       margin-bottom: 20px;
     }
   }
+  [data-type="submit"] .formkit-input {
+    background: var(--color-primary);
+    color: #fff;
+  }
 }

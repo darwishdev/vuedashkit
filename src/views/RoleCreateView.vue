@@ -1,6 +1,6 @@
 <script  lang="ts">
 function mockLoad() {
-    return new Promise(r => setTimeout(r, 100000))
+    return new Promise(r => setTimeout(r, 1))
 }
 </script>
 

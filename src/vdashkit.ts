@@ -2,7 +2,7 @@
 import type { App } from "vue"
 import { type DefaultConfigOptions } from '@formkit/vue'
 import * as baseComponents from "@/components/base/base"
-import type { DashKitConfig } from "@/types/types"
+import type { VueDashKitConfig } from "@/types/newtypes"
 import PrimeVue from 'primevue/config'
 import formKitConfigWrapper from "./plugins/formkit.custom.config"
 import { createPinia } from 'pinia'
@@ -13,10 +13,9 @@ import "@/assets/app.scss"
 import ToastService from 'primevue/toastservice';
 import DialogService from 'primevue/dialogservice';
 export default {
-    install: (app: App, config: DashKitConfig) => {
-        const activateFileUpload = config && typeof config.uploadHandler != 'undefined'
+    install: (app: App, config: VueDashKitConfig) => {
         let formKitConfig: DefaultConfigOptions
-        formKitConfig = formKitConfigWrapper(config.formKitConfig, { activateFileUpload })
+        formKitConfig = formKitConfigWrapper(config.formKitConfig)
         Object.keys(baseComponents).forEach((key: string) => {
             app.component(key, baseComponents[key as keyof typeof baseComponents])
         });
@@ -29,6 +28,6 @@ export default {
             .use(createPinia())
 
         app.provide("loginHandler", config.loginHandler)
-        app.provide("formKitConfig", formKitConfig)
+        app.provide("uploadHandler", config.uploadHandler)
     }
 }

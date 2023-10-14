@@ -9,14 +9,14 @@ type loadingComponents = {
     form: any
 }
 
-const props = defineProps<{ type?: string }>()
+const props = defineProps<{ type?: string | unknown }>()
 const components: loadingComponents = {
     table: TableLoading,
     card: CardLoading,
     form: FormLoading
 }
 
-const component = props.type && Object.keys(components).includes(props.type) ? components[props.type] : components.table
+const component = props.type && typeof props.type == 'string' && Object.keys(components).includes(props.type) ? components[props.type] : components.table
 </script>
 
 
