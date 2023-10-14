@@ -11,7 +11,7 @@ type loadingComponents = {
     appLayout: any
 }
 
-const props = defineProps<{ type?: string }>()
+const props = defineProps<{ type?: string | unknown }>()
 const components: loadingComponents = {
     table: TableLoading,
     card: CardLoading,
@@ -19,7 +19,7 @@ const components: loadingComponents = {
     appLayout: AppLayoutLoading
 }
 
-const component = props.type && Object.keys(components).includes(props.type) ? components[props.type] : components.table
+const component = props.type && typeof props.type == 'string' && Object.keys(components).includes(props.type) ? components[props.type] : components.table
 </script>
 
 

@@ -3,7 +3,9 @@ import type { ColumnProps } from 'primevue/column'
 import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
+import type { DefaultConfigOptions } from '@formkit/vue'
 import type { ImageProps } from "primevue/image"
+import type { LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
 
 
 // table types
@@ -277,4 +279,31 @@ export type UserLoginResponse = {
     permissions: string[]
     sideBar: SideBarItem[]
     loginInfo?: LoginInfo
+}
+
+
+
+export type LoginHandler<TResp> = {
+    redirectRoute?: string | 'home_view'
+    loginEndpoint: (req: {
+        email: string
+        password: string
+    }
+    ) => Promise<TResp>
+    senedOTPEndpoint: (req: { email: string }) => Promise<void>
+    sendResetLinkEndpoint: (req: { email: string }) => Promise<void>
+}
+
+export type UploadHandler = {
+    uploadEndpoint: (file: File) => Promise<string>
+}
+
+export interface VueDashKitConfig {
+    formKitConfig: DefaultConfigOptions
+    translations: LocaleMessageObject
+    uploadHandler?: UploadHandler
+    baseImageUrl?: string
+    baseImportDataUrl?: string
+    fallBackImageUrl?: string
+    loginHandler?: LoginHandler<any>
 }

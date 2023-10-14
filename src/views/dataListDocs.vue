@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { ITableHeader } from '../types/types';
-import Skeleton from 'primevue/skeleton';
 
 import DataList from '../components/data/DataList.vue';
-import dataListCardLoading from '../components/Loading/dataListCardLoading.vue';
-import dataListTableLoading from '../components/Loading/dataListTableLoading.vue';
+// import dataListCardLoading from '../components/Loading/dataListCardLoading.vue';
+// import dataListTableLoading from '../components/Loading/dataListTableLoading.vue';
 import apiClient from '../api/ApiMock';
 import type { ProductListResponse, productsListRow } from '../api/ApiTypes';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderImage } from '../utils/table/TableHeader'
