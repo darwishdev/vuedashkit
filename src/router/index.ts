@@ -34,6 +34,9 @@ const router = createRouter({
         {
           path: '/dashboard',
           name: 'home_view',
+          meta: {
+            loadingType: 'appLayout',
+          },
           component: HomeView
         },
         {

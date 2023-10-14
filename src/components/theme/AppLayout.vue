@@ -52,7 +52,7 @@ const toggleDesktopMenu = () => {
                     </template>
                     <template #fallback>
                         <div class="loading">
-                            <AppLoading :type="props.route.meta.loadingType" />
+                            <AppLoading :type="(props.route.meta.loadingType as string)" />
                         </div>
                     </template>
                 </Suspense>
