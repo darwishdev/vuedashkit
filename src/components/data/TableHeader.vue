@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { h, resolveComponent, ref } from 'vue';
-import type { TableHeaderProps } from '@/types/newtypes'
+import type { TableHeaderProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import { Debounce } from '@/utils/debounce/debounce'
@@ -143,4 +143,4 @@ const renderHeader = () => {
 
     }
 }
-</style>
+</style>@/types/types

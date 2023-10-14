@@ -117,7 +117,7 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
 
 <script setup lang="ts">
 import { h, ref, resolveComponent } from 'vue';
-import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/newtypes';
+import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/types';
 import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
 import { useFormStore } from "@/stores/form";
@@ -296,4 +296,4 @@ const renderForm = () => {
 
 <style lang="scss">
 @import url("@/assets/form.scss");
-</style>
+</style>@/types/types

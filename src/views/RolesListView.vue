@@ -8,7 +8,7 @@ import apiClient from '@/api/ApiClient';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
-import type { DataListProps, TableRouter } from '@/types/newtypes';
+import type { DataListProps, TableRouter } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
 import { convertDateRedable } from '@/utils/date/date';
 const themeStore = useThemeStore()
@@ -159,4 +159,4 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
         font-size: 32px;
     }
 }
-</style>
+</style>@/types/types@/types/types

@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import { h, computed, resolveComponent, ref } from 'vue';
-import type { TableFilterProps, AppPanelProps } from '@/types/newtypes'
+import type { TableFilterProps, AppPanelProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { Debounce } from '@/utils/debounce/debounce'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query'
@@ -198,4 +198,4 @@ const onFormInput = async (formValue: Record<string, any>) => {
         }
     }
 }
-</style>
+</style>@/types/types

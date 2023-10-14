@@ -3,7 +3,7 @@ import { createPromiseClient } from "@connectrpc/connect";
 import type { PromiseClient, Transport } from "@connectrpc/connect";
 import { RmsCoreService } from "@buf/ahmeddarwish_mln-rms-core.connectrpc_es/rms/v1/rms_core_service_connect"
 import { type Interceptor } from "@connectrpc/connect";
-import type { ApiFormError } from "@/types/newtypes";
+import type { ApiFormError } from "@/types/types";
 
 const interceptor: Interceptor = (next) => async (req) => {
     try {

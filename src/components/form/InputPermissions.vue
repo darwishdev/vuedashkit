@@ -86,7 +86,7 @@ import AppPanel from '../base/AppPanel.vue';
 import { TableHeaderText, TableHeaderHidden } from '@/utils/table/TableHeader'
 import { useTableNewStore } from '@/stores/tablenew';
 import Column from 'primevue/column';
-import type { DataListProps, InputPermissionsProps, Permission } from '@/types/newtypes';
+import type { DataListProps, InputPermissionsProps, Permission } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 const tableStore = useTableNewStore()
@@ -376,4 +376,4 @@ const onGlobalSearch = (v: any) => {
 .app-card .start {
     background-color: transparent !important;
 }
-</style>
+</style>@/types/types@/types/types

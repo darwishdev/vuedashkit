@@ -7,7 +7,7 @@ function mockLoad() {
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
 import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import type { AppFormProps } from '@/types/newtypes';
+import type { AppFormProps } from '@/types/types';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
@@ -82,4 +82,4 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
 <template>
     <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
 </template>
- 
+ @/types/types

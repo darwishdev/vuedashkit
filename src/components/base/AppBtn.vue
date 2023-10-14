@@ -1,9 +1,9 @@
 
 <script setup lang="ts">
-import type { AppBtnParams } from '@/types/types';
+import type { AppBtnProps } from '@/types/types';
 import { h } from 'vue';
 import Button from 'primevue/button';
-const props = defineProps<AppBtnParams>();
+const props = defineProps<AppBtnProps>();
 
 const renderFunction = () => {
     return h(Button, {
@@ -17,3 +17,4 @@ const renderFunction = () => {
 <template>
     <component class="app-btn" :is="renderFunction" />
 </template>
+@/types/types

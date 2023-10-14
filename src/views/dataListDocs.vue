@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ITableHeader } from '../types/types';
+import type { ITableHeader } from '@/types/types';
 
 import DataList from '../components/data/DataList.vue';
 // import dataListCardLoading from '../components/Loading/dataListCardLoading.vue';
@@ -9,7 +9,7 @@ import type { ProductListResponse, productsListRow } from '../api/ApiTypes';
 import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderImage } from '../utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
-import type { DataListProps, TableRouter } from '../types/newtypes';
+import type { DataListProps, TableRouter } from '@/types/types';
 import { useThemeStore } from '../stores/theme';
 const themeStore = useThemeStore()
 const { t } = useI18n()
@@ -588,3 +588,4 @@ const tableProps: DataListProps<ProductListResponse, productsListRow> = {
     }
 }
 </style>
+@/types/types../types/types

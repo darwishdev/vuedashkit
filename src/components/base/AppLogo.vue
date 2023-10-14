@@ -1,10 +1,10 @@
 
 <script setup lang="ts">
-import type { AppLogoParams } from '@/types/types';
+import type { AppLogoProps } from '@/types/types';
 import { RouterLink } from 'vue-router'
 import { h, resolveComponent } from 'vue';
 
-const props = defineProps<AppLogoParams>();
+const props = defineProps<AppLogoProps>();
 
 const renderFunction = () => {
     const logoComponentName = props.iconOnly ? 'LogoIcon' : 'Logo'
@@ -28,3 +28,4 @@ const renderFunction = () => {
 <template>
     <component class="logo-container" :is="renderFunction" />
 </template>
+@/types/types

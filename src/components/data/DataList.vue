@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { ITableHeader } from '@/types/newtypes'
+import type { ITableHeader } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
 import type { FormKitSchemaNode } from '@formkit/core';
 import router from '@/router';
@@ -7,7 +7,6 @@ import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
 import { FilterMatchMode } from 'primevue/api';
-import { stringify } from 'querystring';
 
 
 
@@ -126,7 +125,7 @@ import TableFilter from './TableFilter.vue';
 import { useDialogStore } from '@/stores/dialog';
 import { useTableNewStore } from '@/stores/tablenew';
 import Column from 'primevue/column';
-import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/newtypes';
+import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router';
@@ -667,3 +666,4 @@ const renderTable = () => {
 </style>
 
 
+@/types/types@/types/types

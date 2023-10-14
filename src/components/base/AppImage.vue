@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import Image, { type ImageSlots } from 'primevue/image';
 import { h, ref } from 'vue';
-import { type AppImageProps, type SizeObj } from '@/types/newtypes'
+import { type AppImageProps, type SizeObj } from '@/types/types'
 
 
 const props = defineProps<AppImageProps>();
@@ -38,3 +38,4 @@ defineExpose({ update })
 <template>
     <component :is="renderImage" />
 </template>
+@/types/types

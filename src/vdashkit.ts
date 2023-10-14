@@ -2,7 +2,7 @@
 import type { App } from "vue"
 import { type DefaultConfigOptions } from '@formkit/vue'
 import * as baseComponents from "@/components/base/base"
-import type { VueDashKitConfig } from "@/types/newtypes"
+import type { VueDashKitConfig } from "@/types/types"
 import PrimeVue from 'primevue/config'
 import formKitConfigWrapper from "./plugins/formkit.custom.config"
 import { createPinia } from 'pinia'
