@@ -7,7 +7,7 @@ function mockLoad() {
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
 import type { RoleUpdateResponse, RoleFindForUpdateRequest, RoleUpdateRequest } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import type { AppFormProps, FindHandler } from '@/types/newtypes';
+import type { AppFormProps, FindHandler } from '@/types/types';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
@@ -76,4 +76,4 @@ const formProps: AppFormProps<RoleUpdateRequest, RoleUpdateResponse> = {
         </template>
     </Suspense>
 </template>
- 
+ @/types/types

@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import { h } from 'vue';
-import type { AppPanelProps } from '@/types/newtypes'
+import type { AppPanelProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import Panel from 'primevue/panel';
 const props = defineProps<AppPanelProps>();
@@ -115,4 +115,4 @@ const renderPanel = () => {
 
     }
 }
-</style>
+</style>@/types/types

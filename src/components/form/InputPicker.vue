@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import type { InputPickerProps } from '@/types/newtypes'
+import type { InputPickerProps } from '@/types/types'
 
 
 const props = defineProps<InputPickerProps>();
@@ -16,4 +16,4 @@ const onInputChange = async (value: any) => {
     <FormKit :ignore="true" outerClass="w-full" type="datepicker" name="custom-picker" @input="onInputChange" />
 </template>
 
- 
+ @/types/types

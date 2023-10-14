@@ -1,6 +1,6 @@
 {
   "name": "v-dashkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "type": "module",
   "module": "dist/vdashkit.js",
@@ -23,8 +23,8 @@
     "./types": "./dist/types/types.d.ts",
     "./base": "./dist/components/base/base.js",
     "./base.d.ts": "./dist/components/base/base.d.ts",
-    "./theme": "./dist/components/theme/theme.js",
-    "./theme.d.ts": "./dist/components/theme/theme.d.ts",
+    "./components": "./dist/components/components.js",
+    "./components.d.ts": "./dist/components/components.d.ts",
     "./stores": "./dist/stores/stores.js",
     "./stores.d.ts": "./dist/stores/stores.d.ts"
   },

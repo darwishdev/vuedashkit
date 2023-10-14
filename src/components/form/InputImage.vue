@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, toRef, inject } from 'vue'
-import type { InputImageProps, UploadHandler } from '@/types/newtypes'
+import type { InputImageProps, UploadHandler } from '@/types/types'
 import Skeleton from 'primevue/skeleton';
 import { useNotificationStore } from '@/stores/notification';
 const props = defineProps<InputImageProps>();
@@ -76,4 +76,4 @@ const handleUpload = async (evt: any) => {
 
     }
 }
-</style>
+</style>@/types/types

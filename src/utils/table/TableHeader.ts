@@ -1,4 +1,4 @@
-import type { TableRouter, ITableHeaderProps, AppTableFilter, ITableHeader } from '@/types/newtypes'
+import type { TableRouter, ITableHeaderProps, AppTableFilter, ITableHeader } from '@/types/types'
 import { h, resolveComponent, type VNode } from 'vue'
 import Tag from 'primevue/tag';
 import { type FormKitSchemaNode } from '@formkit/core'

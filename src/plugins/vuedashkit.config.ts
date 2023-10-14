@@ -2,7 +2,7 @@ import formKitConfig from './formkit.config'
 import en from '@/locales/en.json'
 import ar from '@/locales/ar.json'
 import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
-import type { VueDashKitConfig, UploadHandler, LoginHandler } from '@/types/newtypes'
+import type { VueDashKitConfig, UploadHandler, LoginHandler } from '@/types/types'
 import {
     signInWithPassword,
     sendOTPForEmail,

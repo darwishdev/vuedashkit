@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
-import type { User, SideBarItem } from '@/types/newtypes'
+import type { User, SideBarItem } from '@/types/types'
 
 import { useRouter } from 'vue-router'
 export const useAuthStore = defineStore('auth', () => {

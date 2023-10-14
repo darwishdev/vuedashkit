@@ -1,7 +1,7 @@
  
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
-import type { AppFormProps, LoginHandler } from '@/types/newtypes';
+import type { AppFormProps, LoginHandler } from '@/types/types';
 import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
@@ -223,4 +223,4 @@ const formProps: AppFormProps<any, any> = {
 
 
 }
-</style>
+</style>@/types/types

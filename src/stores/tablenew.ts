@@ -1,5 +1,5 @@
 
-import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault } from '@/types/newtypes'
+import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault } from '@/types/types'
 import { defineStore } from 'pinia'
 import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
@@ -18,12 +18,6 @@ export const useTableNewStore = defineStore('tablenew', () => {
     return records.value
   })
   const selectedIds = computed(() => {
-
-    console.log("helooo")
-    // console.log("first cgec", modelSelectionRef.value.length == 0 || !dataKey)
-    // console.log("seeeeeee seond", !(dataKey in modelSelectionRef.value[0]))
-    // if (modelSelectionRef.value.length == 0 || !dataKey) return []
-    // if (!(dataKey in modelSelectionRef.value[0])) return []
     return modelSelectionRef.value.map((row: any) => {
       return row[dataKey]
     })

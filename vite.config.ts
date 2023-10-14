@@ -1,14 +1,11 @@
 import { fileURLToPath, URL } from 'node:url'
-// import typescript from 'rollup-plugin-typescript2';
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts';
-
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ include: ["src/vdashkit.ts", "src/types/types.ts", "src/stores/*", "src/components/base/*", "src/components/theme/*"] }),
+    dts({ include: ["src/vdashkit.ts", "src/types/types.ts", "src/components/base/base.ts", "src/components/components.ts", "src/stores/*"] }),
   ],
   resolve: {
     alias: {
@@ -16,9 +13,9 @@ export default defineConfig({
     }
   },
   build: {
-    cssCodeSplit: false,
+    cssCodeSplit: true,
     lib: {
-      entry: ["src/vdashkit.ts", "src/stores/stores.ts", "src/components/base/base.ts", "src/components/theme/theme.ts", "src/types/types.ts"],
+      entry: ["src/vdashkit.ts", "src/stores/stores.ts", "src/components/base/base.ts", "src/components/components.ts", "src/types/types.ts"],
       formats: ["es"],
       name: "vdashkit",
       fileName: (_, entry) => {
@@ -31,8 +28,8 @@ export default defineConfig({
         if (entry == 'base') {
           return `components/base/base.js`
         }
-        if (entry == 'theme') {
-          return `components/theme/theme.js`
+        if (entry == 'components') {
+          return `components/components.js`
         }
         return `${entry}.js`
       }

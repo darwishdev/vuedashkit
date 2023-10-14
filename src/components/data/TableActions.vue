@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import { h, resolveComponent, ref } from 'vue';
-import type { TableActionsProps } from '@/types/newtypes'
+import type { TableActionsProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router';
 import { useDialogStore } from '@/stores/dialog';
@@ -206,4 +206,4 @@ const renderTableActions = () => {
         }
     }
 }
-</style>
+</style>@/types/types
