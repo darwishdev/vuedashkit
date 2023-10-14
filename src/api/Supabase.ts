@@ -7,6 +7,10 @@ import apiClient from './ApiClient';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+const currentUrl = window.location.href;
+const emailRedirectUrl = currentUrl.replace('/login', '/login/resetPassword');  
+const otpRedirectUrl = currentUrl.replace('/login', '/login/successful'); 
+
 export const signInWithPassword = async (formValue: { email: string, password: string }): Promise<UserLoginResponse> => {
     return new Promise((resolve, reject) => {
         formValue.email = formValue.email.trim()
@@ -39,8 +43,9 @@ export const uploadFile = async (file: File): Promise<string> => {
 }
 
 export const sendOTPForEmail = async (formValue: { email: string }): Promise<void> => {
+
     return new Promise((resolve, reject) => {
-        supabase.auth.signInWithOtp(formValue).then(_ => {
+        supabase.auth.signInWithOtp({email : formValue.email , options : {emailRedirectTo : otpRedirectUrl}}).then(_ => {
             resolve()
         }).catch(e => {
             reject(e)
@@ -53,7 +58,9 @@ export const sendOTPForEmail = async (formValue: { email: string }): Promise<voi
 
 export const sendResetPasswordForEmail = async (formValue: { email: string }): Promise<void> => {
     return new Promise((resolve) => {
-        supabase.auth.resetPasswordForEmail(formValue.email).then(() => {
+        supabase.auth.resetPasswordForEmail(formValue.email , {
+            redirectTo : emailRedirectUrl
+        }).then(() => {
             resolve()
         }).catch(e => {
             console.log("from authorize", e)
