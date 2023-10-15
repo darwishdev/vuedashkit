@@ -126,6 +126,14 @@ const router = createRouter({
           component: () => import('../views/notificationStoreDocs.vue')
         },
         {
+          path: '/breadcrumbStore',
+          name: 'breadcrumb_store',
+          meta: {
+            breadcrumbs: [{ label: "Breadcrumb Store", to: { name: 'breadcrumb_store' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/breadcrumbStoreDocs.vue')
+        },
+        {
           path: '/dataList',
           name: 'data_list',
           meta: {
