@@ -41,7 +41,7 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   const changeTheme = () => {
-    // document.querySelector("body")?.classList.toggle("dark")
+    document.querySelector("body")?.classList.toggle("dark")
     primevue.changeTheme(currentTheme.value, targetTheme.value, 'theme-link', () => {
       isDark.value = !isDark.value
       localStorage.setItem("dark", isDark.value.toString())

@@ -2,10 +2,22 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts';
+
+
+
+
+const listToBuildTs = [
+  "src/vdashkit.ts",
+  "src/types/types.ts",
+  // "src/components/base/base.ts",
+  "src/components/theme/AppLayout.vue",
+  "src/stores/stores.ts",
+  'src/utils/table/TableHeader.ts'
+]
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ include: ["src/vdashkit.ts", "src/types/types.ts", "src/components/base/base.ts", "src/components/components.ts", "src/stores/*", 'src/utils/table/*.ts', 'src/views/views.ts'] }),
+    dts({ include: listToBuildTs }),
   ],
   resolve: {
     alias: {
@@ -13,9 +25,9 @@ export default defineConfig({
     }
   },
   build: {
-    cssCodeSplit: false,
+    cssCodeSplit: true,
     lib: {
-      entry: ["src/vdashkit.ts", "src/stores/stores.ts", "src/components/base/base.ts", "src/components/components.ts", "src/types/types.ts", "src/utils/table/TableHeader.ts"],
+      entry: listToBuildTs,
       formats: ["es"],
       name: "vdashkit",
       fileName: (_, entry) => {
@@ -25,11 +37,9 @@ export default defineConfig({
         if (entry == 'stores') {
           return `stores/stores.js`
         }
-        if (entry == 'base') {
-          return `components/base/base.js`
-        }
-        if (entry == 'components') {
-          return `components/components.js`
+
+        if (entry == 'AppLayout') {
+          return `components/theme/AppLayout.js`
         }
         if (entry == 'TableHeader') {
           return `utils/table/TableHeader.js`

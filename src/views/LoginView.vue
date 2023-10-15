@@ -223,4 +223,4 @@ const formProps: AppFormProps<any, any> = {
 
 
 }
-</style>@/types/types
+</style> 

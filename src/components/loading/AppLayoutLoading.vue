@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TableLoading from '@/components/loading/TableLoading.vue';
 import Skeleton from 'primevue/skeleton';
 
 </script>
@@ -25,10 +26,14 @@ import Skeleton from 'primevue/skeleton';
         </div>
     </div>
     <div class="w-11 m-auto absolute top-0 right-0">
-        <div class="flex justify-content-end m-5 border-2 p-4 border-round" style="border-color: rgba(255, 255, 255, 0.05);">
+        <div class="flex justify-content-end m-5 border-2 p-4 border-round"
+            style="border-color: rgba(255, 255, 255, 0.05);">
             <Skeleton width="2rem" height="2rem" class="mx-1"></Skeleton>
             <Skeleton width="2rem" height="2rem" class="mx-1"></Skeleton>
             <Skeleton width="2rem" height="2rem" class="mx-1"></Skeleton>
         </div>
+    </div>
+    <div class="main" style="width : 80%">
+        <TableLoading />
     </div>
 </template>

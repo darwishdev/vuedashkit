@@ -2,22 +2,18 @@
 
 
 <script lang="ts" setup>
-import { useLanguageStore } from '@/stores/language';
 import Menu from 'primevue/menu';
 import { useBreadcrumbStore } from '@/stores/breadcrumb';
 import Breadcrumb from 'primevue/breadcrumb';
 import { useMenuStore } from '@/stores/menu';
 import { LocaleSetter } from '@/components/form'
 import { ref } from 'vue'
-import { useThemeStore } from '@/stores/theme';
 import { useRouter } from 'vue-router';
 import LanguageToggler from '@/components/base/LanguageToggler.vue';
 import ThemeToggler from '@/components/base/ThemeToggler.vue';
 const localSetterElementRef = ref()
 const router = useRouter()
 const menuStore = useMenuStore()
-const languageStore = useLanguageStore()
-const themeStore = useThemeStore()
 const breadcrumbStore = useBreadcrumbStore();
 const profileMenu = ref();
 

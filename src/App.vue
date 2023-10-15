@@ -7,6 +7,7 @@ import { useLanguageStore } from '@/stores/language';
 import { useThemeStore } from '@/stores/theme';
 import { ref, onMounted } from 'vue';
 import { useDialogStore } from './stores/dialog';
+import AppLayoutLoading from '@/components/loading/AppLayoutLoading.vue';
 import { useDialog } from "primevue/usedialog";
 
 const themeStore = useThemeStore()
@@ -21,7 +22,7 @@ onMounted(() => {
 
   setTimeout(() => {
     loading.value = false
-  }, 1000)
+  }, 500)
 })
 </script>
 
@@ -29,7 +30,9 @@ onMounted(() => {
   <div class="app-wrapper" :class="{ 'rtl': languageStore.isRtl, 'dark': themeStore.isDark }">
     <LocaleSetter :ref="(el) => languageStore.localeSetterComponentRef = el" />
     <RouterView />
-    <div class="app-loading" v-if="loading">loading</div>
+    <div class="app-loading" v-if="loading">
+      <AppLayoutLoading></AppLayoutLoading>
+    </div>
     <AppNotification />
   </div>
 </template>

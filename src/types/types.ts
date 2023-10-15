@@ -315,3 +315,9 @@ export interface VueDashKitConfig {
     fallBackImageUrl?: string
     loginHandler?: LoginHandler<any>
 }
+
+export type LoadingComponents = {
+    table: any
+    card: any
+    form: any
+}

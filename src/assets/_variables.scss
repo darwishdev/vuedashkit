@@ -51,7 +51,8 @@
   --color-error: rgba(199, 44, 65, 0.3);
 }
 
-body .dark {
+body .dark,
+body.dark {
   --color-background: var(--color-background-dark);
   --color-input: rgba(255, 255, 255, 0.05);
   --color-card: rgba(255, 255, 255, 0.05);
