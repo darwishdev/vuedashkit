@@ -26,6 +26,8 @@
     "./components": "./dist/components/components.js",
     "./components.d.ts": "./dist/components/components.d.ts",
     "./stores": "./dist/stores/stores.js",
+    "./utils/tableHeader": "./dist/utils/table/TableHeader.js",
+    "./utils/tableHeader.d.ts": "./dist/utils/table/TableHeader.d.ts",
     "./stores.d.ts": "./dist/stores/stores.d.ts"
   },
   "keywords": [

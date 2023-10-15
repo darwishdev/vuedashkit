@@ -17,3 +17,63 @@ const expandedKeys = ref();
         </template>
     </PanelMenu>
 </template>
+
+
+
+<style lang="scss">
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {
+    color: var(--color-white);
+}
+
+.p-panelmenu .p-toggleable-content {
+    background-color: var(--color-card);
+}
+
+.p-panelmenu .p-panelmenu-content {
+    border: none !important;
+    background: none;
+}
+
+.p-panelmenu .p-menuitem-link {
+    color: var(--color-secondary);
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {
+    padding: 8px 10px;
+}
+
+.p-menuitem {
+    margin: 10px;
+}
+
+.p-submenu-icon {
+    order: 2;
+}
+
+.p-menuitem-text {
+    flex: 1;
+}
+
+.p-panelmenu .p-panelmenu-header .material-symbols-outlined {
+    margin-inline-end: 20px;
+}
+
+.p-panelmenu .p-menuitem .material-symbols-outlined {
+    margin-inline-end: 15px;
+    font-size: 40px;
+}
+
+.p-panelmenu .p-panelmenu-header .p-panelmenu-header-content {
+    border: none;
+    outline: none !important;
+    border-radius: 6px;
+    box-shadow: none !important;
+    background: transparent !important;
+    transition: box-shadow 0.2s;
+    border-radius: 6px;
+}
+
+.p-panelmenu-header-action {
+    outline: none !important;
+}
+</style>

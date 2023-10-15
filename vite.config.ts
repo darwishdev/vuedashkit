@@ -5,7 +5,7 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ include: ["src/vdashkit.ts", "src/types/types.ts", "src/components/base/base.ts", "src/components/components.ts", "src/stores/*"] }),
+    dts({ include: ["src/vdashkit.ts", "src/types/types.ts", "src/components/base/base.ts", "src/components/components.ts", "src/stores/*", 'src/utils/table/*.ts', 'src/views/views.ts'] }),
   ],
   resolve: {
     alias: {
@@ -13,9 +13,9 @@ export default defineConfig({
     }
   },
   build: {
-    cssCodeSplit: true,
+    cssCodeSplit: false,
     lib: {
-      entry: ["src/vdashkit.ts", "src/stores/stores.ts", "src/components/base/base.ts", "src/components/components.ts", "src/types/types.ts"],
+      entry: ["src/vdashkit.ts", "src/stores/stores.ts", "src/components/base/base.ts", "src/components/components.ts", "src/types/types.ts", "src/utils/table/TableHeader.ts"],
       formats: ["es"],
       name: "vdashkit",
       fileName: (_, entry) => {
@@ -31,6 +31,10 @@ export default defineConfig({
         if (entry == 'components') {
           return `components/components.js`
         }
+        if (entry == 'TableHeader') {
+          return `utils/table/TableHeader.js`
+        }
+
         return `${entry}.js`
       }
 

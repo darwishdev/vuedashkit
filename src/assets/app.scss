@@ -1,7 +1,2 @@
-@import "https://unpkg.com/primeflex@^3/primeflex.css",
-  "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Montserrat:wght@400;500;700&display=swap&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
-  "@formkit/themes/genesis", "@formkit/pro/genesis", "_variables", "_mixins",
-  "_base", "_form_variables", "_primeflex", "_rtl", "_dialog", "_overrides",
-  "_notification", "_app_logo", "_login", "_utilities", "_app_loading",
-  "_desktop_menu", "_app_btn", "_app_img", "primeicons/primeicons.css",
-  "_app_menu", "_app_card";
+@import "_variables", "_mixins", "_base", "_rtl", "_overrides", "_utilities",
+  "_form_variables", "_app_btn";

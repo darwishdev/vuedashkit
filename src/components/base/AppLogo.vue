@@ -28,4 +28,26 @@ const renderFunction = () => {
 <template>
     <component class="logo-container" :is="renderFunction" />
 </template>
-@/types/types
+
+<style lang="scss">
+.logo-container {
+    display: flex;
+
+    & svg {
+
+        // max-width: 80px;
+        & path {
+            transition: var(--transition);
+            fill: var(--color-white) !important;
+        }
+    }
+
+    &:hover {
+        & svg {
+            & path {
+                fill: var(--color-primary);
+            }
+        }
+    }
+}
+</style>

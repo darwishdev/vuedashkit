@@ -4,7 +4,6 @@ import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_ml
 import type { AppFormProps } from '@/types/types';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
-import { ObjectKeys } from '@/utils/object/object';
 const { t } = useI18n()
 
 const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {

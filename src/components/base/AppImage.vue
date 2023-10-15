@@ -38,4 +38,9 @@ defineExpose({ update })
 <template>
     <component :is="renderImage" />
 </template>
-@/types/types
+<style>
+img {
+    background-color: var(--fk-bg-input);
+    border-radius: 5px;
+}
+</style>

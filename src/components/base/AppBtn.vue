@@ -17,4 +17,6 @@ const renderFunction = () => {
 <template>
     <component class="app-btn" :is="renderFunction" />
 </template>
-@/types/types
+
+ 
+
