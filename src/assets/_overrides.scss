@@ -1,6 +1,10 @@
 .p-breadcrumb-list .p-menuitem-link.router-link-active {
   background-color: transparent !important;
 }
+.app-table .empty-table p {
+  background: none;
+  color: var(--color-text);
+}
 
 .p-sidebar {
   background: var(--color-background) !important;
