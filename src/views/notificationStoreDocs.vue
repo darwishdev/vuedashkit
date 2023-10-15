@@ -44,7 +44,8 @@
             
             <h2 class="w-10 m-auto text-center">By utilizing the Notification Store, you can easily manage and display 
                 success and error notifications in your Vue.js application. The store integrates with PrimeVue's toast 
-                component and supports internationalization through the useI18n function.</h2>
+                component and supports internationalization through the useI18n function.
+            </h2>
         </div>
     </div>
 </template>
