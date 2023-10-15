@@ -22,5 +22,6 @@ export default {
 
         app.provide("loginHandler", config.loginHandler)
         app.provide("uploadHandler", config.uploadHandler)
+        app.provide("permissionsHandler", config.permissionsHandler)
     }
 }

@@ -2,13 +2,13 @@
 import type { ITableHeader } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
 import type { FormKitSchemaNode } from '@formkit/core';
-import router from '@/router';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
+import { useRouter } from 'vue-router';
 import { FilterMatchMode } from 'primevue/api';
 
-
+const router = useRouter()
 
 type ColumnSlots = { body: ({ data }) => VNode[] }
 

@@ -1,7 +1,7 @@
 
 <script lang="ts">
 import { type FormKitSchemaNode } from '@formkit/core'
-import type { PermissionGroup } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
+import type { PermissionGroup } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
 type searchablePermission = {
     searchPermissions: string
@@ -77,16 +77,14 @@ const loadElemetns = (groups: PermissionGroup[], value: any): Promise<{ schema: 
 
 
 <script setup lang="ts">
-import type { ITableHeader } from '@/types/types';
+import type { ITableHeader, PermissionsListResponse } from '@/types/types';
 import DataList from '@/components/data/DataList.vue';
-import type { PermissionsListResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import apiClient from '@/api/ApiClient';
-import { ref, watch } from 'vue'
+import { ref, inject, watch } from 'vue'
 import AppPanel from '../base/AppPanel.vue';
 import { TableHeaderText, TableHeaderHidden } from '@/utils/table/TableHeader'
 import { useTableNewStore } from '@/stores/tablenew';
 import Column from 'primevue/column';
-import type { DataListProps, InputPermissionsProps, Permission } from '@/types/types';
+import type { DataListProps, InputPermissionsProps, Permission, PermissionsHandler } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
 const tableStore = useTableNewStore()
@@ -94,8 +92,8 @@ themeStore.startProgressBar()
 const props = defineProps<InputPermissionsProps>();
 const isModelSelectionBlocing = ref(false)
 const isInputsFormBlocing = ref(false)
-
-const { records } = await apiClient.permissionsList({})
+const permissionHandler = inject('permissionsHandler') as PermissionsHandler
+const { records } = await permissionHandler.permissionsListAllEndpoint({})
 const { modelValues, initiallySelectedItems, searchablePermission } = await loadElemetns(records, props.context.node._value)
 const modelValuesRef = ref(modelValues)
 

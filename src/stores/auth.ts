@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
-import type { User, SideBarItem } from '@/types/types'
+// import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
+import type { User, SideBarItem, UserLoginResponse } from '@/types/types'
 
 export const useAuthStore = defineStore('auth', () => {
   const loginHandler = ref<UserLoginResponse | null>(null)

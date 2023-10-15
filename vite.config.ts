@@ -9,10 +9,7 @@ import dts from 'vite-plugin-dts';
 const listToBuildTs = [
   "src/vdashkit.ts",
   "src/types/types.ts",
-  // "src/components/base/base.ts",
-  "src/components/theme/AppLayout.vue",
-  "src/stores/stores.ts",
-  'src/utils/table/TableHeader.ts'
+  "src/components/theme/AppLayout.vue"
 ]
 export default defineConfig({
   plugins: [
@@ -34,17 +31,9 @@ export default defineConfig({
         if (entry == 'types') {
           return `types/types.js`
         }
-        if (entry == 'stores') {
-          return `stores/stores.js`
-        }
-
         if (entry == 'AppLayout') {
           return `components/theme/AppLayout.js`
         }
-        if (entry == 'TableHeader') {
-          return `utils/table/TableHeader.js`
-        }
-
         return `${entry}.js`
       }
 
@@ -53,7 +42,6 @@ export default defineConfig({
       external: [
         "@formkit/addons",
         "@formkit/icons",
-        "@formkit/pro",
         "@formkit/vue",
         "pinia",
         "primeicons",
@@ -68,7 +56,6 @@ export default defineConfig({
           vue: 'Vue',
           primevue: 'primevue',
           i18n: 'i18n',
-
         },
       },
     },

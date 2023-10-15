@@ -2,7 +2,6 @@
 import { inject } from "vue";
 import { useTableNewStore } from "@/stores/tablenew";
 import { useNotificationStore } from "@/stores/notification";
-import apiClient from "@/api/ApiClient";
 
 
 // const props = defineProps<TableHeaderProps>();
@@ -13,18 +12,20 @@ const close = (e: any) => {
     dialogRef.value.close(e);
 };
 const confirm = () => {
-    const func = apiClient['roleDeleteRestore']
+    // const func = apiClient['roleDeleteRestore']
 
 
-    func({ roleIds: tableStore.selectedIds }).then((_) => {
-        tableStore.deleteSelectedRows()
-        dialogRef.value.close()
-        notificationStore.showSuccess("deleted_summary", "deleted_detail")
-    }).catch(e => {
-        console.log("eerrror", e)
-        notificationStore.showError("deleted_summary", e)
+    // func({ roleIds: tableStore.selectedIds }).then((_) => {
+    //     tableStore.deleteSelectedRows()
+    //     dialogRef.value.close()
+    //     notificationStore.showSuccess("deleted_summary", "deleted_detail")
+    // }).catch(e => {
+    //     console.log("eerrror", e)
+    //     notificationStore.showError("deleted_summary", e)
 
-    })
+    // })
+
+    console.log('confirmed')
 };
 </script>
 

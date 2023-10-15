@@ -19,16 +19,11 @@
   ],
   "exports": {
     ".": "./dist/vdashkit.js",
-    "./style": "./dist/app.css",
+    "./style/app.css": "./dist/app.css",
+    "./style/AppLayout.css": "./dist/AppLayout.css",
     "./types": "./dist/types/types.d.ts",
-    "./base": "./dist/components/base/base.js",
-    "./base.d.ts": "./dist/components/base/base.d.ts",
-    "./AppLayout": "./dist/components/theme/AppLayout.js",
-    "./AppLayout.d.ts": "./dist/components/theme/AppLayout.d.ts",
-    "./stores": "./dist/stores/stores.js",
-    "./utils/tableHeader": "./dist/utils/table/TableHeader.js",
-    "./utils/tableHeader.d.ts": "./dist/utils/table/TableHeader.d.ts",
-    "./stores.d.ts": "./dist/stores/stores.d.ts"
+    "./components/theme/AppLayout": "./dist/components/theme/AppLayout.js",
+    "./components/theme/AppLayout.d.ts": "./dist/components/theme/AppLayout.vue.d.ts"
   },
   "keywords": [
     "dashboard",
@@ -49,11 +44,8 @@
     "url": "https://github.com/darwishdev/dash-kit"
   },
   "peerDependencies": {
-    "@buf/ahmeddarwish_mln-rms-core.connectrpc_es": "^0.13.2-20230916224445-cb562895d142.1",
-    "@bufbuild/connect-web": "^0.10.0",
     "@formkit/addons": "^0.19.0",
     "@formkit/icons": "^0.19.0",
-    "@formkit/pro": "^0.117.5",
     "@formkit/vue": "^1.2.2",
     "pinia": "^2.1.6",
     "primeicons": "^6.0.1",
@@ -81,9 +73,6 @@
     "vue-tsc": "^1.8.8"
   },
   "dependencies": {
-    "@formkit/themes": "^1.2.2",
-    "@supabase/supabase-js": "^2.38.0",
-    "@tanstack/vue-query": "^4.35.3",
     "file-saver": "^2.0.5"
   }
 }

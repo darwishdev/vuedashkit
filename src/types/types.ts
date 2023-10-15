@@ -224,6 +224,15 @@ export type PermissionGroup = {
     permissionGroup: string,
     permissions: Permission[]
 }
+
+export type PermissionsListResponse = {
+    records: PermissionGroup[],
+}
+
+
+export type PermissionsHandler = {
+    permissionsListAllEndpoint: (req: any) => Promise<PermissionsListResponse>,
+}
 export type InputPermissionsProps = {
     context: {
         node: FormKitNode
@@ -306,10 +315,12 @@ export type UploadHandler = {
     uploadEndpoint: (file: File) => Promise<string>
 }
 
+
 export interface VueDashKitConfig {
     formKitConfig: DefaultConfigOptions
     translations: LocaleMessageObject
     uploadHandler?: UploadHandler
+    permissionsHandler?: PermissionsHandler
     baseImageUrl?: string
     baseImportDataUrl?: string
     fallBackImageUrl?: string
