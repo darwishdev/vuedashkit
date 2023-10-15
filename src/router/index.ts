@@ -94,6 +94,38 @@ const router = createRouter({
           component: () => import('../views/appFormDocs.vue')
         },
         {
+          path: '/authStore',
+          name: 'auth_store',
+          meta: {
+            breadcrumbs: [{ label: "Auth Store", to: { name: 'auth_store' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/authStoreDocs.vue')
+        },
+        {
+          path: '/langStore',
+          name: 'lang_store',
+          meta: {
+            breadcrumbs: [{ label: "Language Store", to: { name: 'lang_store' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/langaugeStoreDocs.vue')
+        },
+        {
+          path: '/themeStore',
+          name: 'theme_store',
+          meta: {
+            breadcrumbs: [{ label: "Theme Store", to: { name: 'theme_store' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/themeStoreDocs.vue')
+        },
+        {
+          path: '/notificationStore',
+          name: 'notification_store',
+          meta: {
+            breadcrumbs: [{ label: "Notification Store", to: { name: 'notification_store' } }, { label: "Docs" }]
+          },
+          component: () => import('../views/notificationStoreDocs.vue')
+        },
+        {
           path: '/dataList',
           name: 'data_list',
           meta: {
