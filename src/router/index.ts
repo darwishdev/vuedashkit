@@ -175,6 +175,22 @@ const router = createRouter({
           component: () => import('../views/UsersView.vue')
         },
         {
+          path: '/user/profile',
+          name: 'user_profile',
+          meta: {
+            breadcrumbs: [{ label: "user", to: { name: 'user_profile' } }, { label: "profile" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
+          path: '/user/:id/update',
+          name: 'user_update',
+          meta: {
+            breadcrumbs: [{ label: "user", to: { name: 'users_list' } }, { label: "update" }]
+          },
+          component: () => import('../views/ProfileView.vue')
+        },
+        {
           path: '/units',
           name: 'units_list',
           meta: {
