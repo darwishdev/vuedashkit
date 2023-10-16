@@ -18,10 +18,11 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('token', response.loginInfo?.accessToken as string)
   }
   const init = () => {
-    const user = localStorage.getItem('user') as string
-    if (!user) return
-    const userObj = JSON.parse(user) as UserLoginResponse
+    const userData = localStorage.getItem('user') as string
+    if (!userData) return
+    const userObj = JSON.parse(userData) as UserLoginResponse
     sidebar.value = userObj.sideBar
+    user.value = userObj
   }
 
   return {
