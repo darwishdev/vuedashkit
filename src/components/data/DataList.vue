@@ -5,10 +5,9 @@ import type { FormKitSchemaNode } from '@formkit/core';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
-import { useRouter } from 'vue-router';
 import { FilterMatchMode } from 'primevue/api';
 
-const router = useRouter()
+
 
 type ColumnSlots = { body: ({ data }) => VNode[] }
 
@@ -29,7 +28,7 @@ const prepareRecords = async (records?: any[]): Promise<any[]> => {
     return newRecords
 }
 // this function called while the component is on loading 
-const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promise<{
+const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQuery: Record<string, any>): Promise<{
     inputsSchema: FormKitSchemaNode[],
     tableFilters: Record<string, DataTableFilterMetaData>,
     activeFilters: Record<string, (string | number | Date)>,
@@ -40,10 +39,12 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
     searchKey: string,
 }> => {
     return new Promise((resolve: Function) => {
-        const filterFormStr: string | undefined = router.currentRoute.value.query.filterForm as string
+        const filterFormStr: string | undefined = routeQuery.filterForm as string
+        const deletedFilterStr: string | undefined = routeQuery.showDeleted as string
+        const searchKeyParam: string | undefined = routeQuery.search as string
+
+
         const filterForm = filterFormStr ? JSON.parse(filterFormStr) : {}
-        const deletedFilterStr: string | undefined = router.currentRoute.value.query.showDeleted as string
-        const searchKeyParam: string | undefined = router.currentRoute.value.query.search as string
         const keys = ObjectKeys(headers)
         const inputsSchema: FormKitSchemaNode[] = []
         const filterFormValue: Record<string, (string | number | null)> = {}
@@ -128,7 +129,7 @@ import Column from 'primevue/column';
 import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { h, resolveComponent, ref } from 'vue'
 const appBtnComponent = resolveComponent('app-btn')
 const emit = defineEmits<{
@@ -136,7 +137,7 @@ const emit = defineEmits<{
 }>();
 const dialogStore = useDialogStore()
 const { t } = useI18n()
-const route = useRoute()
+const router = useRouter()
 const tableRefElement = ref()
 
 const slots = defineSlots<{
@@ -154,7 +155,7 @@ const { inputsSchema,
     globalFilters,
     tableFilters,
     deletedFilter,
-    searchKey } = await loadElements(props.headers, t)
+    searchKey } = await loadElements(props.headers, t, router.currentRoute.value.query)
 
 const newRecords = await prepareRecords(props.records)
 const newDeletedRecords = await prepareRecords(props.deletedRecords)
@@ -199,7 +200,7 @@ const renderUpdateBtn = (data: any) => {
         class: "warning",
         icon: "pencil",
         onClick: () => {
-            router.push({ name: routeName, params })
+            // router.push({ name: routeName, params })
         }
     })
 }
@@ -370,7 +371,7 @@ const renderTable = () => {
             class: "empty-table"
         }, [
             h("h3", t(tableStore.deleteRestoreVaraints.empty)),
-            h("p", t(`breif_${route.name as string}`)),
+            // h("p", t(`breif_${router.currentRoute.value.name as string}`)),
         ]),
     })
 }

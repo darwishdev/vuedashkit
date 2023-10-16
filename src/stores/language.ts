@@ -18,7 +18,7 @@ export const useLanguageStore = defineStore('language', () => {
 
   }
   const toggleRtl = () => {
-    // document.querySelector("body")?.classList.toggle("rtl")
+    document.querySelector("body")?.classList.toggle("rtl")
     isRtl.value = !isRtl.value;
     i18n.locale.value = isRtl.value ? 'ar' : "en"
     localStorage.setItem('isRtl', isRtl.value.toString());

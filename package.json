@@ -1,29 +1,41 @@
 {
   "name": "v-dashkit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "type": "module",
-  "module": "dist/vdashkit.js",
-  "types": "dist/vdashkit.d.ts",
+  "module": "dist/src/vdashkit.js",
+  "types": "dist/src/vdashkit.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "run-p type-check build-only build-types",
     "update": "npm update @buf/ahmeddarwish_mln-rms-core.connectrpc_es",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
+    "build-types": "vue-tsc --declaration --emitDeclarationOnly",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "files": [
     "dist"
   ],
   "exports": {
-    ".": "./dist/vdashkit.js",
-    "./style/app.css": "./dist/app.css",
-    "./style/AppLayout.css": "./dist/AppLayout.css",
-    "./types": "./dist/types/types.d.ts",
-    "./components/theme/AppLayout": "./dist/components/theme/AppLayout.js",
-    "./components/theme/AppLayout.d.ts": "./dist/components/theme/AppLayout.vue.d.ts"
+    ".": "./dist/src/vdashkit.js",
+    "./types": "./dist/src/types/types.d.ts",
+    "./style": "./dist/style.css",
+    "./data/DataList": "./dist/src/components/data/DataList.vue.js",
+    "./data/DataList.d.ts": "./dist/src/components/data/DataList.vue.d.ts",
+    "./form/LoginForm": "./dist/src/components/form/LoginForm.vue.js",
+    "./form/LoginForm.d.ts": "./dist/src/components/form/LoginForm.d.ts",
+    "./form/AppForm": "./dist/src/components/form/AppForm.vue.js",
+    "./form/AppForm.d.ts": "./dist/src/components/form/AppForm.d.ts",
+    "./stores": "./dist//src/stores/stores.js",
+    "./stores.d.ts": "./dist/src/stores/stores.d.ts",
+    "./theme/AppLayout": "./dist/src/components/theme/AppLayout.vue.js",
+    "./theme/AppLayout.d.ts": "./dist/src/components/theme/AppLayout.vue.d.ts",
+    "./utils/table": "./dist/src/utils/table/TableHeader.js",
+    "./utils/table.d.ts": "./dist/src/utils/table/TableHeader.d.ts",
+    "./utils/object": "./dist/src/utils/object/object.js",
+    "./utils/object.d.ts": "./dist/src/utils/object/object.d.ts"
   },
   "keywords": [
     "dashboard",
@@ -55,6 +67,7 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
+    "@babel/types": "^7.23.0",
     "@tsconfig/node18": "^18.2.0",
     "@types/argparse": "^2.0.10",
     "@types/jsdom": "^21.1.1",
@@ -67,12 +80,13 @@
     "npm-run-all": "^4.1.5",
     "sass": "^1.64.2",
     "vite": "^4.4.5",
-    "vite-plugin-dts": "^3.2.0",
+    "vite-plugin-dts": "^3.6.0",
     "vite-svg-loader": "^4.0.0",
     "vitest": "^0.34.2",
     "vue-tsc": "^1.8.8"
   },
   "dependencies": {
-    "file-saver": "^2.0.5"
+    "file-saver": "^2.0.5",
+    "rollup-plugin-typescript2": "^0.36.0"
   }
 }

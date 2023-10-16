@@ -123,7 +123,6 @@ const renderImportMenu = () => {
 }
 
 const renderExportBtn = () => {
-    console.log("Asdasd", props.exportable)
     if (typeof props.exportable != 'undefined' && props.exportable == false) return
     return h(appBtnComponent, {
         icon: "download",

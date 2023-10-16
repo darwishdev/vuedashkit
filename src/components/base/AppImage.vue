@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
 import Image, { type ImageSlots } from 'primevue/image';
-import { h, ref } from 'vue';
+import { h, ref, inject } from 'vue';
 import { type AppImageProps, type SizeObj } from '@/types/types'
 
 
@@ -9,8 +9,8 @@ const props = defineProps<AppImageProps>();
 const slots = defineSlots<ImageSlots>();
 const defaultWidth = 150
 // get needed urls provided by package config
-const baseImageUrl = import.meta.env.VITE_BASE_IMG
-const fallBackImageUrl = import.meta.env.VITE_FALLBACK_IMG
+const baseImageUrl = inject('baseImageUrl') as string
+const fallBackImageUrl = inject('fallBackImageUrl') as string
 const imageSrc = ref(`${baseImageUrl}${props.src}`)
 
 

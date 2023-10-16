@@ -17,7 +17,7 @@ export const useBreadcrumbStore = defineStore('breadcrumb', () => {
 
     const breacrumbs = route.meta.breadcrumbs as MenuItem[]
     return breacrumbs.map((item) => {
-      item.label = t(item.label)
+      item.label = t(item.label as string)
       return item
     })
 

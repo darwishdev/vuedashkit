@@ -16,6 +16,9 @@
   "compilerOptions": {
     "composite": true,
     "noImplicitAny": false,
+    "declaration": true,
+    "outDir": "dist",
+    "declarationDir": "dist",
     "module": "ESNext",
     "paths": {
       "@/*": [

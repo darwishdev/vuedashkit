@@ -34,7 +34,7 @@ const renderPanel = () => {
             class: 'app-panel-header'
         }, [
             slots.icon ? slots.icon() : h('i', { class: `pi pi-${[props.icon]}` }),
-            slots.title ? slots.title() : h("span", t(props.header)),
+            slots.title ? slots.title() : h("span", t(props.header || '')),
             slots.headerStart ? slots.headerStart() : null
         ]),
         icons: () => slots.headerEnd ? slots.headerEnd() : null,
