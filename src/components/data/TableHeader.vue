@@ -5,7 +5,9 @@ import { useI18n } from 'vue-i18n'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import { Debounce } from '@/utils/debounce/debounce'
 import { useTableNewStore } from '@/stores/tablenew';
+import { useNotificationStore } from '@/stores/notification';
 const tableStore = useTableNewStore()
+const notificationStore = useNotificationStore()
 
 
 const props = defineProps<TableHeaderProps>();
@@ -71,7 +73,11 @@ const renderSelectAll = () => {
         outerClass: "deleted-toggle",
         onInput: (v: boolean) => {
             if (v) {
-                tableStore.modelSelectionRef = tableStore.records
+                if (tableStore.data) {
+                    tableStore.modelSelectionRef = tableStore.data
+                } else {
+                    notificationStore.showError('select_all_empty', 'select_all_detail')
+                }
                 return
             }
             if (tableStore.modelSelectionRef.length == tableStore.data?.length) {

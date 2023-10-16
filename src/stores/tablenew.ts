@@ -1,12 +1,15 @@
 
-import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault } from '@/types/types'
+import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault, DeleteRestoreHandler } from '@/types/types'
 import { defineStore } from 'pinia'
 import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
 
 export const useTableNewStore = defineStore('tablenew', () => {
   const showDeletedRef = ref<Boolean>(false)
+  const dataListElementRef = ref()
+
   const modelSelectionRef = ref<any[]>([])
+  const deleteRestoreHandler = ref<DeleteRestoreHandler | undefined>()
   const records = ref<unknown[]>([])
   const deletedRecords = ref<unknown[] | undefined>([])
   let fetchFn: tableFetchFn<ApiResponseList<TRecordDefault>, TRecordDefault> | undefined
@@ -57,6 +60,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     if (params.initiallySelectedItems) modelSelectionRef.value = params.initiallySelectedItems
     records.value = params.records
     deletedRecords.value = params.deletedRecords
+    deleteRestoreHandler.value = params.deleteRestoreHandler
     tableFiltersRef.value = params.tableFiltersRef
     showDeletedRef.value = params.deletedFilter
     fetchFn = params.fetchFn
@@ -87,6 +91,8 @@ export const useTableNewStore = defineStore('tablenew', () => {
     refetchData,
     isAllRecordsSelected,
     modelSelectionRef,
+    dataListElementRef,
+    deleteRestoreHandler,
     fetchFn,
     tableFiltersRef,
     deleteRestoreVaraints,

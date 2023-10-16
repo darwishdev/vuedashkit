@@ -1,6 +1,6 @@
 {
   "name": "v-dashkit",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "private": false,
   "type": "module",
   "module": "dist/src/vdashkit.js",
@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
-    "build-types": "vue-tsc --declaration --emitDeclarationOnly",
+    "build-types": "npx vue-tsc --declaration --emitDeclarationOnly --outDir dist -p tsconfig.app.json --target esnext  ",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "files": [
@@ -28,10 +28,12 @@
     "./form/LoginForm.d.ts": "./dist/src/components/form/LoginForm.d.ts",
     "./form/AppForm": "./dist/src/components/form/AppForm.vue.js",
     "./form/AppForm.d.ts": "./dist/src/components/form/AppForm.d.ts",
-    "./stores": "./dist//src/stores/stores.js",
+    "./stores": "./dist/src/stores/stores.js",
     "./stores.d.ts": "./dist/src/stores/stores.d.ts",
     "./theme/AppLayout": "./dist/src/components/theme/AppLayout.vue.js",
     "./theme/AppLayout.d.ts": "./dist/src/components/theme/AppLayout.vue.d.ts",
+    "./loading/AppLayoutLoading": "./dist/src/components/loading/AppLayoutLoading.vue.js",
+    "./loading/AppLayoutLoading.d.ts": "./dist/src/components/loading/AppLayoutLoading.vue.d.ts",
     "./utils/table": "./dist/src/utils/table/TableHeader.js",
     "./utils/table.d.ts": "./dist/src/utils/table/TableHeader.d.ts",
     "./utils/object": "./dist/src/utils/object/object.js",

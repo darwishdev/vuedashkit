@@ -1,7 +1,7 @@
  
 
 <script setup lang="ts">
-import { h, resolveComponent, ref } from 'vue';
+import { h, resolveComponent, inject, ref } from 'vue';
 import type { TableActionsProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router';
@@ -11,6 +11,7 @@ import Menu from 'primevue/menu';
 import { useNotificationStore } from "@/stores/notification";
 import { useTableNewStore } from '@/stores/tablenew';
 import { useThemeStore } from '@/stores/theme';
+import { ObjectKeys } from '@/utils/object/object';
 const themeStore = useThemeStore()
 
 const tableStore = useTableNewStore()
@@ -24,7 +25,7 @@ const appBtnComponent = resolveComponent('app-btn')
 const router = useRouter()
 const dialogStore = useDialogStore()
 const formkitComp = resolveComponent('FormKit')
-const baseImport = import.meta.env.VITE_BASE_IMPORT_URL
+const baseImport = inject('baseImportDataUrl') || '' as string
 const { t } = useI18n()
 const renderCreateBtn = () => {
     if (!props.options!.createHandler) {
@@ -102,7 +103,7 @@ const renderImportMenu = () => {
             onClick: (e: Event) => importMenuRef.value.toggle(e)
         }),
         h(Menu, {
-            ref: "importMenuRef",
+            ref: (el) => importMenuRef.value = el,
             class: "import-menu",
             popup: true
         }, {
@@ -123,14 +124,13 @@ const renderImportMenu = () => {
 }
 
 const renderExportBtn = () => {
-    if (typeof props.exportable != 'undefined' && props.exportable == false) return
+    if ((typeof props.exportable != 'undefined' && props.exportable == false) || tableStore.dataListElementRef) return
     return h(appBtnComponent, {
         icon: "download",
         class: "info",
         onClick: (e: Event) => {
-            // tableRef.value.exportCSV()
-            console.log(e)
-            emit('export')
+            console.log('fromactions', tableStore.dataListElementRef.exportCSV, ObjectKeys(tableStore.dataListElementRef))
+            tableStore.dataListElementRef.exportCSV()
         },
         label: t("export")
     })

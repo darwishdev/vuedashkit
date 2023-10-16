@@ -10,7 +10,7 @@ import '@/assets/app.scss'
 import { createPinia } from 'pinia'
 import initI18n from '@/plugins/i18n'
 export default {
-    install: (app: App, config: VueDashKitConfig) => {
+    install: <TApi = any>(app: App, config: VueDashKitConfig<TApi>) => {
         let formKitConfig: DefaultConfigOptions
         formKitConfig = formKitConfigWrapper(config.formKitConfig)
         Object.keys(baseComponents).forEach((key: string) => {
@@ -28,5 +28,7 @@ export default {
         app.provide("permissionsHandler", config.permissionsHandler)
         app.provide("baseImageUrl", config.baseImageUrl)
         app.provide("fallBackImageUrl", config.fallBackImageUrl)
+        app.provide("fallBackImageUrl", config.fallBackImageUrl)
+        app.provide("baseImportDataUrl", config.baseImportDataUrl)
     }
 }

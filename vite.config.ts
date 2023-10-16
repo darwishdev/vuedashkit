@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dts from 'vite-plugin-dts';
-import typescript2 from 'rollup-plugin-typescript2';
 
 
 
@@ -20,15 +19,16 @@ type buildResult = {
 }
 
 const buildObjectMap: Record<string, buildObject> = {
-  vdashkit: { dtsFile: 'src/vdashkit.ts', entryFile: "src/vdashkit.js" },
-  types: { dtsFile: 'src/types/types.ts', entryFile: "src/types/types.js" },
-  stores: { dtsFile: 'src/stores/stores.ts', entryFile: "src/stores/stores.js" },
-  TableHeader: { dtsFile: 'src/utils/table/TableHeader.ts', entryFile: "src/utils/table/TableHeader.js" },
-  object: { dtsFile: "src/utils/object/object.ts", entryFile: "src/utils/object/object.js" },
+  vdashkit: { dtsFile: 'src/vdashkit.ts', entryFile: "src/vdashkit.js", isTs2: true },
+  types: { dtsFile: 'src/types/types.ts', entryFile: "src/types/types.js", isTs2: true },
+  stores: { dtsFile: 'src/stores/stores.ts', entryFile: "src/stores/stores.js", isTs2: true },
+  TableHeader: { dtsFile: 'src/utils/table/TableHeader.ts', entryFile: "src/utils/table/TableHeader.js", isTs2: true },
+  object: { dtsFile: "src/utils/object/object.ts", entryFile: "src/utils/object/object.js", isTs2: true },
   AppLayout: { dtsFile: "src/components/theme/AppLayout.vue", entryFile: "src/components/theme/AppLayout.vue.js", isTs2: true },
   AppForm: { dtsFile: "src/components/form/AppForm.vue", entryFile: "src/components/form/AppForm.vue.js", isTs2: true },
   DataList: { dtsFile: "src/components/data/DataList.vue", entryFile: "src/components/data/DataList.vue.js", isTs2: true },
   LoginForm: { dtsFile: "src/components/form/LoginForm.vue", entryFile: "src/components/form/LoginForm.vue.js", isTs2: true },
+  AppLayoutLoading: { dtsFile: "src/components/loading/AppLayoutLoading.vue", entryFile: "src/components/loading/AppLayoutLoading.vue.js", isTs2: true },
 }
 
 
@@ -64,10 +64,7 @@ const {
   entriesList,
   fileNames
 } = getBuildElements()
-console.log(ts2List,
-  dtsList,
-  entriesList,
-  fileNames)
+
 export default defineConfig({
   plugins: [
     vue(),

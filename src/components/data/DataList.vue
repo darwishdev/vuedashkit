@@ -138,7 +138,7 @@ const emit = defineEmits<{
 const dialogStore = useDialogStore()
 const { t } = useI18n()
 const router = useRouter()
-const tableRefElement = ref()
+// const tableRefElement = ref()
 
 const slots = defineSlots<{
     default(): any
@@ -160,14 +160,11 @@ const { inputsSchema,
 const newRecords = await prepareRecords(props.records)
 const newDeletedRecords = await prepareRecords(props.deletedRecords)
 
-const exportCSV = () => {
-    tableRefElement.value.exportCSV()()
-}
-
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: newRecords,
     deletedRecords: newDeletedRecords,
     initiallySelectedItems: props.initiallySelectedItems,
+    deleteRestoreHandler: props.options.deleteRestoreHandler,
     tableFiltersRef: tableFilters,
     dataKey: props.dataKey as string,
     fetchFn: props.fetchFn,
@@ -200,7 +197,7 @@ const renderUpdateBtn = (data: any) => {
         class: "warning",
         icon: "pencil",
         onClick: () => {
-            // router.push({ name: routeName, params })
+            router.push({ name: routeName, params })
         }
     })
 }
@@ -300,9 +297,7 @@ const renderTableActions = () => {
     if (notExportable && noActionsInsideOptions) return
     return h(TableActions, {
         exportable: props.exportable,
-        options: props.options, onExport: () => {
-            exportCSV()
-        }
+        options: props.options
     })
 }
 
@@ -325,7 +320,7 @@ const renderTable = () => {
         value: tableStore.data,
         rows: 10,
         maxHeight: 200,
-        ref: "tableRefElement",
+        ref: (el) => tableStore.dataListElementRef = el,
         // scrollable: false,
         paginator: true,
         selection: tableStore.modelSelectionRef,

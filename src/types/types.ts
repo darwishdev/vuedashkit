@@ -94,8 +94,8 @@ type UpdateHandler = {
     findRequestProperty: string
 }
 
-type DeleteRestoreHandler = {
-    endpoint: string
+export type DeleteRestoreHandler = {
+    endpoint: (req: any) => Promise<any> | string
     requestProperty: string
 }
 
@@ -168,6 +168,7 @@ export type InitTableParams<TResp, TRecord> = {
     records: Record<string, any>[]
     deletedRecords?: Record<string, any>[]
     dataKey: string
+    deleteRestoreHandler?: DeleteRestoreHandler,
     initiallySelectedItems?: any[]
     tableFiltersRef?: Record<string, DataTableFilterMetaData>
     deletedFilter: boolean
@@ -316,9 +317,10 @@ export type UploadHandler = {
 }
 
 
-export interface VueDashKitConfig {
+export interface VueDashKitConfig<TApi = any> {
     formKitConfig: DefaultConfigOptions
     translations: LocaleMessageObject
+    apiClient?: TApi,
     uploadHandler?: UploadHandler
     permissionsHandler?: PermissionsHandler
     baseImageUrl?: string

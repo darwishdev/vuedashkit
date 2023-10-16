@@ -6,26 +6,30 @@ import { useNotificationStore } from "@/stores/notification";
 
 // const props = defineProps<TableHeaderProps>();
 const dialogRef = inject("dialogRef") as any;
+const apiClient = inject("apiClient") as any;
 const tableStore = useTableNewStore()
 const notificationStore = useNotificationStore()
 const close = (e: any) => {
     dialogRef.value.close(e);
 };
 const confirm = () => {
-    // const func = apiClient['roleDeleteRestore']
+    if (!tableStore.deleteRestoreHandler || tableStore.selectedIds.length == 0) {
+        notificationStore.showError("deleted_error_summary", 'cant_reach_delete_restore_handler')
+        dialogRef.value.close()
+        return
+    }
+    const func = typeof tableStore.deleteRestoreHandler.endpoint == 'string' ? apiClient[tableStore.deleteRestoreHandler.endpoint] : tableStore.deleteRestoreHandler.endpoint
+    const req: any = {}
+    req[tableStore.deleteRestoreHandler.requestProperty] = tableStore.selectedIds
+    func(req).then((_) => {
+        tableStore.deleteSelectedRows()
+        dialogRef.value.close()
+        notificationStore.showSuccess("deleted_summary", "deleted_detail")
+    }).catch(e => {
+        console.log("eerrror", e)
+        notificationStore.showError("deleted_error_summary", e)
 
-
-    // func({ roleIds: tableStore.selectedIds }).then((_) => {
-    //     tableStore.deleteSelectedRows()
-    //     dialogRef.value.close()
-    //     notificationStore.showSuccess("deleted_summary", "deleted_detail")
-    // }).catch(e => {
-    //     console.log("eerrror", e)
-    //     notificationStore.showError("deleted_summary", e)
-
-    // })
-
-    console.log('confirmed')
+    })
 };
 </script>
 

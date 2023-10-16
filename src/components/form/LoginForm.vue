@@ -163,8 +163,7 @@ const formProps: AppFormProps<any, any> = {
                 <Suspense>
                     <template #default>
 
-                        <app-form ref="appFormElementRef" :options="formProps.options" :title="formProps.title"
-                            :sections="formProps.sections" :submitHandler="formProps.submitHandler">
+                        <app-form ref="appFormElementRef" :formProps="formProps">
                             <template #prepend>
                                 <div class="flex justify-content-center">
                                     <LanguageToggler />
