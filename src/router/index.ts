@@ -47,6 +47,9 @@ const router = createRouter({
         {
           path: '/profile',
           name: 'profile_view',
+          meta: {
+            loadingType: 'profile',
+          },
           component: () => import('../views/ProfileView.vue')
         },
         {
@@ -173,14 +176,6 @@ const router = createRouter({
             breadcrumbs: [{ label: "users", to: { name: 'users_list' } }, { label: "view" }]
           },
           component: () => import('../views/UsersView.vue')
-        },
-        {
-          path: '/user/profile',
-          name: 'user_profile',
-          meta: {
-            breadcrumbs: [{ label: "user", to: { name: 'user_profile' } }, { label: "profile" }]
-          },
-          component: () => import('../views/ProfileView.vue')
         },
         {
           path: '/user/:id/update',

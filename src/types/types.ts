@@ -320,4 +320,5 @@ export type LoadingComponents = {
     table: any
     card: any
     form: any
+    profile: any
 }
