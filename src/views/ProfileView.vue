@@ -2,7 +2,7 @@
 import AppImage from '@/components/base/AppImage.vue'
 import Button from 'primevue/button';
 import { useAuthStore } from '@/stores/auth';
-import type { AppFormProps } from '@/types/types';
+import type { AppFormProps, DataListProps, ITableHeader, TableRouter } from '@/types/types';
 import { ref } from 'vue';
 import AppForm from '@/components/form/AppForm.vue';
 import supabase from '@/api/Supabase';
@@ -10,6 +10,7 @@ import { useI18n } from 'vue-i18n';
 import type { UserResetPasswordResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
 import type { UserResponse } from '@supabase/gotrue-js/dist/module/lib/types';
 import apiClient from '@/api/ApiClient';
+import { TableHeaderLink } from '@/utils/table/TableHeader';
 const authStore = useAuthStore()
 await authStore.init()
 const { t } = useI18n()
@@ -39,6 +40,7 @@ const updateUserPw = (req : {password : string , password_confirm : string}): Pr
         });
     })
 }
+
 
 const formProps: AppFormProps<any, any> = {
   title: 'Security',
@@ -98,9 +100,6 @@ const formProps: AppFormProps<any, any> = {
                     <li class="list-none mr-3">
                         <h3 class="text-white">{{ user!.userPhone }}</h3>
                     </li>
-                    <!-- <li v-for="role in user!.roles" class="mx-3">
-                        <h3 class="text-white">{{ role.roleName }}</h3>
-                    </li> -->
                     <li class="mx-2">
                         <h3 class="text-white">Joined at {{ userCreatedAt }}
                         </h3>
@@ -118,23 +117,18 @@ const formProps: AppFormProps<any, any> = {
     </div>
 
     <!-- User Owned Roles -->
-    <div class="my-5">
-        <!-- <app-crud :options="RolesCrudOptions" :data="responseData?.roles">
-            <template #actions>
-                <Button label="Edit" class="px-3" icon="pi pi-pencil" severity="success" raised
-                    @click="AttachRoles(responseData.user.userId)" />
-            </template>
-            <template #default="{ data }">
-                <div class="w-7 flex flex-wrap my-2" v-if="responseData!.roles.length > 0">
-                    <h3 v-for="role in data" class="p-2 px-3 border-round my-1 mx-1"
-                        style="color: #256029; background-color: #c8e6c9d3;">{{ role.roleName }}</h3>
-                </div>
-                <div v-else>
-                    <h1 class="text-primary text-center p-5 m-auto">There are no owned roles yet!</h1>
-                </div>
-            </template>
-        </app-crud> -->
+    <div class="my-5 bg-card p-4 border-round">
+        <h1 class="my-2">Owned Roles</h1>
+        <div class="w-7 flex flex-wrap" v-if="user!.roles.length > 0">
+            <h3 v-for="role in user!.roles" class="p-2 px-3 border-round my-1 mx-1"
+                style="color: #256029; background-color: #c8e6c9d3;">{{ role.roleName }}</h3>
+        </div>
+        <div v-else>
+            <h1 class="text-primary text-center p-5 m-auto">There are no owned roles yet!</h1>
+        </div>
     </div>
+
+
     <app-form ref="appFormElementRef" :options="formProps.options" :title="formProps.title"
     :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
 </template>
