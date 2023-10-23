@@ -7,7 +7,9 @@ function mockLoad() {
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
 import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import type { AppFormProps } from '@/types/types';
+import type { AppFormProps , dropdownSchema } from '@/types/types';
+import type { FormKitSchemaNode } from '@formkit/core'
+
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
@@ -15,10 +17,18 @@ const { t } = useI18n()
 await mockLoad()
 // await setTimeout(() => { }, 20000)
 
+const testFn = (req) => {
+console.log(req);
+
+}
+
 const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
     title: "role_create",
     submitHandler: {
-        endpoint: apiClient.roleCreate,
+        endpoint: testFn,
+        mapFunction : (req : any) => {
+            console.log(req);
+        },
         redirectRoute: "roles_list"
     },
     sections: {
@@ -50,6 +60,44 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                         console.log('any', ObjectKeys(req), req, req[0])
                     },
                     value: "0.701566374267176.png",
+                    // size: 500
+                }
+            },
+            {
+                $cmp: 'FormKit',
+                props: {
+                    outerClass: "w-full",
+                    name : 'Cities',
+                    type: 'dependentDropdown',
+                    groupName : 'Cities',
+                    dropdownsSchema : [
+                    {
+                        name : 'cityId',
+                        isIndependent : true,
+                        dataKey : {},
+                        label : 'City',
+                        placeholder : 'choose your city',
+                        validation : 'required',            
+                    },
+                    {
+                        name : 'districtId',
+                        isIndependent : false,
+                        dataKey : 'cityId',
+                        label : 'District',
+                        placeholder : 'Choose your district',
+                        validation : 'required',
+                        dependentOn : 'cityId'
+                    },
+                    {
+                        name : 'neighborhoodId',
+                        isIndependent : false,
+                        dataKey : 'districtId',
+                        label : 'Neighborhood',
+                        placeholder : 'Choose your neighborhood',
+                        validation : 'required',
+                        dependentOn : 'districtId'
+                    }
+                ] as Array<dropdownSchema>
                     // size: 500
                 }
             }
