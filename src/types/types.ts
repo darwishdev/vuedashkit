@@ -249,6 +249,25 @@ export type InputPickerProps = {
     },
 }
 
+export type dependentDropdownProps = {
+    context: {
+        node: FormKitNode
+        groupName?: string
+        dropdownsSchema : Array<dropdownSchema | FormKitSchemaNode> 
+    },
+}
+
+export type dropdownSchema = {
+    name : string
+    isIndependent? : boolean
+    dependentOn? : string
+    validation: string
+    label: string
+    placeholder: string
+    dataKey : string 
+    options : (req : any) => Promise<any>
+}
+
 export type AppImageProps = {
     src: string
     imageProps?: ImageProps
