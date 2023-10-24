@@ -124,7 +124,7 @@ const renderImportMenu = () => {
 }
 
 const renderExportBtn = () => {
-    if ((typeof props.exportable != 'undefined' && props.exportable == false) || tableStore.dataListElementRef) return
+    if ((typeof props.exportable != 'undefined' && props.exportable == false) || !tableStore.dataListElementRef) return
     return h(appBtnComponent, {
         icon: "download",
         class: "info",
