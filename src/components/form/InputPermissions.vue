@@ -135,11 +135,11 @@ const emitEvent = () => {
         const group = modelValuesRef.value[key]
         group.forEach(permission => {
             if (permission) permissions.push(permission)
-            console.log('permission', permission)
+            // console.log('permission', permission)
 
         })
     }
-    console.log("ana", modelValuesRef.value)
+    // console.log("ana", modelValuesRef.value)
     props.context.node.input(permissions)
 }
 const permissionGroupUpdated = (v: any, data: any) => {
@@ -169,7 +169,7 @@ const permissionGroupUpdated = (v: any, data: any) => {
     emitEvent()
     setTimeout(() => isInputsFormBlocing.value = false, 100)
 
-    console.log("updated group", selectedItems.length, data.permissions.length)
+    // console.log("updated group", selectedItems.length, data.permissions.length)
 }
 const modelSelectionRef = ref([])
 
@@ -186,7 +186,7 @@ watch(modelSelectionRef, async (newValue, oldValue) => {
         return
     }
     if (newValue.length > oldValue.length) {
-        console.log("attaching pemissions")
+        // console.log("attaching pemissions")
         newValue.forEach((group: any) => {
             const permissions: any[] = []
             group.permissions.forEach((permission: any) => {
@@ -208,18 +208,18 @@ const onUpdateModelSelection = (v: any) => {
     if (isInputsFormBlocing.value) return
 
     isModelSelectionBlocing.value = true
-    console.log("selection val", v)
+    // console.log("selection val", v)
     modelSelectionRef.value = v
     setTimeout(() => isModelSelectionBlocing.value = false, 100)
 }
 
 const searchKey = ""
 const onGlobalSearch = (v: any) => {
-    console.log(Object.keys(dataListElementRef.value))
+    // console.log(Object.keys(dataListElementRef.value))
     if (!tableStore.tableFiltersRef) return
     tableStore.tableFiltersRef['global'].value = v ? v : null
 
-    console.log("global search", v)
+    // console.log("global search", v)
 }
 </script>
 <template>

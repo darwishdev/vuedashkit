@@ -6,6 +6,8 @@ export const useFormStore = defineStore('form', () => {
   const formElementRef = ref()
   const showActions = ref(true)
   const formValue = computed(() => {
+    if(!formElementRef.value) return null
+    if(!formElementRef.value.node) return null
     return formElementRef.value.node._value || null
   })
 

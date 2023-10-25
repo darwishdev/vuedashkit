@@ -9,11 +9,13 @@ import AppForm from '@/components/form/AppForm.vue';
 import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import type { AppFormProps , dropdownSchema } from '@/types/types';
 import type { FormKitSchemaNode } from '@formkit/core'
-
+import { useFormStore } from '@/stores/form';
 import apiClient from '@/api/ApiClient';
 import { useI18n } from 'vue-i18n';
 import { ObjectKeys } from '@/utils/object/object';
 const { t } = useI18n()
+
+const formStore = useFormStore()
 await mockLoad()
 // await setTimeout(() => { }, 20000)
 
@@ -67,35 +69,50 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                 $cmp: 'FormKit',
                 props: {
                     outerClass: "w-full",
-                    name : 'Cities',
                     type: 'dependentDropdown',
+                    name : 'Cities',
                     groupName : 'Cities',
                     dropdownsSchema : [
                     {
                         name : 'cityId',
-                        isIndependent : true,
-                        dataKey : {},
-                        label : 'City',
-                        placeholder : 'choose your city',
-                        validation : 'required',            
+                        optionsListFn : apiClient.citiesInputList,
+                        elementProps : {
+                            label : 'City',
+                            placeholder : 'choose your city',
+                            validation : 'required'
+                        }      
+                    },
+                    {
+                        name : 'roleId',
+                        optionsListFn : apiClient.rolesInputList,
+                        elementProps : {
+                            label : 'Roles',
+                            placeholder : 'choose your role',
+                            validation : 'required',      
+                        }
                     },
                     {
                         name : 'districtId',
-                        isIndependent : false,
                         dataKey : 'cityId',
-                        label : 'District',
-                        placeholder : 'Choose your district',
-                        validation : 'required',
-                        dependentOn : 'cityId'
+                        dependsOn : 'cityId',
+                        optionsListFn : apiClient.districtsInputList,
+                        elementProps : {   
+                            label : 'District',
+                            placeholder : 'Choose your district',
+                            validation : 'required',
+                        }
+                        // optionsListFn : apiClient.districtsInputList
                     },
                     {
                         name : 'neighborhoodId',
-                        isIndependent : false,
                         dataKey : 'districtId',
-                        label : 'Neighborhood',
-                        placeholder : 'Choose your neighborhood',
-                        validation : 'required',
-                        dependentOn : 'districtId'
+                        elementProps : {   
+                            label : 'Neighborhood',
+                            placeholder : 'Choose your neighborhood',
+                            validation : 'required',
+                        },
+                        dependsOn : 'districtId',
+                        optionsListFn : apiClient.neighbourhoodsInputList,
                     }
                 ] as Array<dropdownSchema>
                     // size: 500
@@ -116,7 +133,7 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                         label: 'image',
                         name: 'permissions',
                         onInput: (req: any) => {
-                            console.log('any', ObjectKeys(req), req, req[0])
+                            // console.log('any', ObjectKeys(req), req, req[0])
                         },
                         toggleable: false
 
@@ -126,8 +143,8 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
         }
     }
 }
+ 
 </script>
 <template>
-    <app-form :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
-</template>
- @/types/types
+     <app-form   :title="formProps.title" :sections="formProps.sections" :submitHandler="formProps.submitHandler" />
+</template> 

@@ -1,6 +1,6 @@
 import { FilterMatchMode, type FilterMatchModeOptions } from "primevue/api"
 import type { ColumnProps } from 'primevue/column'
-import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
+import type { FormKitNode, FormKitSchemaNode , FormKitSchemaProps } from '@formkit/core'
 import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
 import type { DefaultConfigOptions } from '@formkit/vue'
@@ -252,20 +252,18 @@ export type InputPickerProps = {
 export type dependentDropdownProps = {
     context: {
         node: FormKitNode
+        attrs: any
         groupName?: string
-        dropdownsSchema : Array<dropdownSchema | FormKitSchemaNode> 
+        dropdownsSchema : Array<dropdownSchema> 
     },
 }
 
 export type dropdownSchema = {
     name : string
-    isIndependent? : boolean
-    dependentOn? : string
-    validation: string
-    label: string
-    placeholder: string
-    dataKey : string 
-    options : (req : any) => Promise<any>
+    dependsOn? : string
+    dataKey?: string 
+    optionsListFn : (req : any) => Promise<any>
+    elementProps : FormKitSchemaNode | any
 }
 
 export type AppImageProps = {
