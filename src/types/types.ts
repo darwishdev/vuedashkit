@@ -253,8 +253,9 @@ export type dependentDropdownProps = {
     context: {
         node: FormKitNode
         attrs: any
-        groupName?: string
-        dropdownsSchema : Array<dropdownSchema> 
+        apiEndpoint?: (req : any) => Promise<any>
+        apiLevelsStructure? : Array<ApiLevelStructure> 
+        dropdownsSchema? : Array<dropdownSchema> 
     },
 }
 
@@ -264,6 +265,13 @@ export type dropdownSchema = {
     dataKey?: string 
     optionsListFn : (req : any) => Promise<any>
     elementProps : FormKitSchemaNode | any
+}
+export type ApiLevelStructure = {
+    levelNumber : number
+    levelName : string
+    parentLevelName? : string
+    levelLabel?: string 
+    levelPlaceholder?: string 
 }
 
 export type AppImageProps = {

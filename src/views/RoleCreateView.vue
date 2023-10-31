@@ -7,7 +7,7 @@ function mockLoad() {
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
 import type { RoleCreateRequest, RoleCreateResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import type { AppFormProps , dropdownSchema } from '@/types/types';
+import type { AppFormProps , dropdownSchema , ApiLevelStructure } from '@/types/types';
 import type { FormKitSchemaNode } from '@formkit/core'
 import { useFormStore } from '@/stores/form';
 import apiClient from '@/api/ApiClient';
@@ -65,56 +65,86 @@ const formProps: AppFormProps<RoleCreateRequest, RoleCreateResponse> = {
                     // size: 500
                 }
             },
+            // {
+            //     $cmp: 'FormKit',
+            //     props: {
+            //         outerClass: "w-full",
+            //         type: 'dependentDropdown',
+            //         name : 'Cities',
+            //         groupName : 'Cities',
+            //         dropdownsSchema : [
+            //         {
+            //             name : 'cityId',
+            //             optionsListFn : apiClient.citiesInputList,
+            //             elementProps : {
+            //                 label : 'City',
+            //                 placeholder : 'choose your city',
+            //                 validation : 'required'
+            //             }      
+            //         },
+            //         {
+            //             name : 'roleId',
+            //             optionsListFn : apiClient.rolesInputList,
+            //             elementProps : {
+            //                 label : 'Roles',
+            //                 placeholder : 'choose your role',
+            //                 validation : 'required',      
+            //             }
+            //         },
+            //         {
+            //             name : 'districtId',
+            //             dataKey : 'cityId',
+            //             dependsOn : 'cityId',
+            //             optionsListFn : apiClient.districtsInputList,
+            //             elementProps : {   
+            //                 label : 'District',
+            //                 placeholder : 'Choose your district',
+            //                 validation : 'required',
+            //             }
+            //             // optionsListFn : apiClient.districtsInputList
+            //         },
+            //         {
+            //             name : 'neighborhoodId',
+            //             dataKey : 'districtId',
+            //             elementProps : {   
+            //                 label : 'Neighborhood',
+            //                 placeholder : 'Choose your neighborhood',
+            //                 validation : 'required',
+            //             },
+            //             dependsOn : 'districtId',
+            //             optionsListFn : apiClient.neighbourhoodsInputList,
+            //         }
+            //     ] as Array<dropdownSchema>
+            //     }
             {
                 $cmp: 'FormKit',
                 props: {
                     outerClass: "w-full",
                     type: 'dependentDropdown',
                     name : 'Cities',
-                    groupName : 'Cities',
-                    dropdownsSchema : [
-                    {
-                        name : 'cityId',
-                        optionsListFn : apiClient.citiesInputList,
-                        elementProps : {
-                            label : 'City',
-                            placeholder : 'choose your city',
-                            validation : 'required'
-                        }      
-                    },
-                    {
-                        name : 'roleId',
-                        optionsListFn : apiClient.rolesInputList,
-                        elementProps : {
-                            label : 'Roles',
-                            placeholder : 'choose your role',
-                            validation : 'required',      
-                        }
-                    },
-                    {
-                        name : 'districtId',
-                        dataKey : 'cityId',
-                        dependsOn : 'cityId',
-                        optionsListFn : apiClient.districtsInputList,
-                        elementProps : {   
-                            label : 'District',
-                            placeholder : 'Choose your district',
-                            validation : 'required',
-                        }
-                        // optionsListFn : apiClient.districtsInputList
-                    },
-                    {
-                        name : 'neighborhoodId',
-                        dataKey : 'districtId',
-                        elementProps : {   
-                            label : 'Neighborhood',
-                            placeholder : 'Choose your neighborhood',
-                            validation : 'required',
+                    apiEndpoint : apiClient.placesInputList,
+                    apiLevelsStructure : [
+                        {
+                            levelNumber : 1,
+                            levelName : 'cityId',
+                            levelLabel : 'City',
+                            levelPlaceholder : 'choose your city',
                         },
-                        dependsOn : 'districtId',
-                        optionsListFn : apiClient.neighbourhoodsInputList,
-                    }
-                ] as Array<dropdownSchema>
+                        {
+                            levelNumber : 2,
+                            levelName : 'districtId',
+                            levelLabel : 'Districts',
+                            levelPlaceholder : 'Choose your district',
+                            parentLevelName : 'cityId'
+                        },
+                        {
+                            levelNumber : 3,
+                            levelName : 'neighbourhoodId',
+                            levelLabel : 'Neighbourhoods',
+                            levelPlaceholder : 'Choose your Neighbourhood',
+                            parentLevelName : 'districtId'
+                        }
+                    ] as Array<ApiLevelStructure>
                     // size: 500
                 }
             }

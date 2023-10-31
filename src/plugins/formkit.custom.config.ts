@@ -10,7 +10,7 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
         props: ['permissions', 'toggleable', 'groupCollapsed', 'inputCollapsed'],
     })
     const dependentDropdownInput = createInput(dependentDropdown, {
-        props: ['dropDownSchema' , 'groupName'],
+        props: ['dropDownSchema' , 'apiEndpoint' , 'apiLevelsStructure'],
     })
     const imageInput = createInput(InputImage, {
         props: ['path', 'size'],
