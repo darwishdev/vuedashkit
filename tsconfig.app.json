@@ -6,6 +6,7 @@
     "src/vuedashkit.ts",
     "src/**/*.vue",
     "src/components/loading/*.vue",
+    "src/components/form/*",
     "src/**/**/*.ts",
     "src/**/**/**.ts",
     "src/locales/*.json"
@@ -16,7 +17,12 @@
   "compilerOptions": {
     "composite": true,
     "noImplicitAny": false,
+    "target": "ESNext",
+    // "moduleResolution": "nodenext",
     "module": "ESNext",
+    "rootDir": "./src",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "paths": {
       "@/*": [
         "./src/*"

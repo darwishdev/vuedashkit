@@ -1,6 +1,5 @@
-import { FilterMatchMode, type FilterMatchModeOptions } from "primevue/api"
 import type { ColumnProps } from 'primevue/column'
-import type { FormKitNode, FormKitSchemaNode , FormKitSchemaProps } from '@formkit/core'
+import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
 import type { DefaultConfigOptions } from '@formkit/vue'
@@ -248,30 +247,73 @@ export type InputPickerProps = {
         node: FormKitNode
     },
 }
+export type DependentDropdownInutData = {
+    value: string | number,
+    label: string,
+    children?: DependentDropdownInutData[],
+}
+export type DependentDropdownInut = {
+    options: DependentDropdownInutData[]
+}
+export type DependentDropdownOptionsListFn = (req: any) => Promise<DependentDropdownInut>
+export type DepndentDropdownSchema = FormKitSchemaNode & {
+    dependsOn?: string
+    requestPropertyName?: string
+    optionsListFn?: DependentDropdownOptionsListFn
+}
+export type DependentDropdownLevel = {
+    label: string,
+    optionsListFn?: DependentDropdownOptionsListFn,
+    requestPropertyName?: string
+    placeholder?: string,
+    outerClass?: string
+    prefixIcon?: string,
+    suffixIcon?: string,
+    validation?: string,
+    validationVisibility?: string,
+    validationLabel?: string,
+
+}
+export type DependentDropdownActiveInput = {
+    value: number,
+    children: DependentDropdownInutData[]
+
+}
+export type DependentDropdownLevels = Record<string, DependentDropdownLevel>
+export type DependentDropdownActiveInputs = Record<string, DependentDropdownActiveInput>
+
+export type InputDependentDropdownProps = {
+    context: {
+        node: FormKitNode
+        attrs: any
+        groupName?: string
+        data?: DependentDropdownInut | DependentDropdownOptionsListFn,
+        levels: DependentDropdownLevels
+    }
+}
 
 export type dependentDropdownProps = {
     context: {
         node: FormKitNode
         attrs: any
-        apiEndpoint?: (req : any) => Promise<any>
-        apiLevelsStructure? : Array<ApiLevelStructure> 
-        dropdownsSchema? : Array<dropdownSchema> 
+        groupName?: string
+        dropdownsSchema: Array<dropdownSchema>
     },
 }
 
 export type dropdownSchema = {
-    name : string
-    dependsOn? : string
-    dataKey?: string 
-    optionsListFn : (req : any) => Promise<any>
-    elementProps : FormKitSchemaNode | any
+    name: string
+    dependsOn?: string
+    dataKey?: string
+    optionsListFn: (req: any) => Promise<any>
+    elementProps: FormKitSchemaNode | any
 }
 export type ApiLevelStructure = {
-    levelNumber : number
-    levelName : string
-    parentLevelName? : string
-    levelLabel?: string 
-    levelPlaceholder?: string 
+    levelNumber: number
+    levelName: string
+    parentLevelName?: string
+    levelLabel?: string
+    levelPlaceholder?: string
 }
 
 export type AppImageProps = {

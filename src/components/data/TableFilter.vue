@@ -41,7 +41,6 @@ const hasActiveFilters = computed(() => ObjectKeys(activeFiltersRef.value).lengt
 // debounced emit used here to add some delay on the emit that will apply the filter
 // to avoid making unneccessary work
 const debouncedTableFiltersEmit = Debounce((value: Record<string, DataTableFilterMetaData>) => {
-    console.log("emmittt", value)
     emit('update:tableFilters', value);
     // tableFiltersRef.value = { ...value }
 

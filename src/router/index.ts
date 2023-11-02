@@ -9,9 +9,6 @@ const authMiddleWare = async (_, from: RouteLocationNormalized, next: Navigation
   if (from.name != 'login') {
     try {
       const user = await apiClient.userAuthorize({})
-      console.log('from router');
-      console.log(user);
-      
       localStorage.setItem('user', JSON.stringify(user))
       next()
       return true

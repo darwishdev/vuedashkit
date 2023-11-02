@@ -61,7 +61,6 @@ export const useTableNewStore = defineStore('tablenew', () => {
     showDeletedRef.value = params.deletedFilter
     fetchFn = params.fetchFn
     dataKey = params.dataKey
-    console.log("init", params.initiallySelectedItems)
   }
 
   const deleteSelectedRows = () => {
