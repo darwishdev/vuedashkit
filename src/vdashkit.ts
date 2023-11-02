@@ -24,6 +24,7 @@ export default {
 
 
         app.provide("loginHandler", config.loginHandler)
+        app.provide("apiClient", config.apiClient)
         app.provide("uploadHandler", config.uploadHandler)
         app.provide("permissionsHandler", config.permissionsHandler)
         app.provide("baseImageUrl", config.baseImageUrl)

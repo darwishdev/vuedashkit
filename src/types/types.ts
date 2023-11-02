@@ -334,3 +334,47 @@ export type LoadingComponents = {
     card: any
     form: any
 }
+export type DependentDropdownInutData = {
+    value: string | number,
+    label: string,
+    children?: DependentDropdownInutData[],
+}
+export type DependentDropdownInut = {
+    options: DependentDropdownInutData[]
+}
+export type DependentDropdownOptionsListFn = (req: any) => Promise<DependentDropdownInut>
+export type DepndentDropdownSchema = FormKitSchemaNode & {
+    dependsOn?: string
+    requestPropertyName?: string
+    optionsListFn?: DependentDropdownOptionsListFn
+}
+export type DependentDropdownLevel = {
+    label: string,
+    optionsListFn?: DependentDropdownOptionsListFn,
+    requestPropertyName?: string
+    placeholder?: string,
+    outerClass?: string
+    prefixIcon?: string,
+    suffixIcon?: string,
+    validation?: string,
+    validationVisibility?: string,
+    validationLabel?: string,
+
+}
+export type DependentDropdownActiveInput = {
+    value: number,
+    children: DependentDropdownInutData[]
+
+}
+export type DependentDropdownLevels = Record<string, DependentDropdownLevel>
+export type DependentDropdownActiveInputs = Record<string, DependentDropdownActiveInput>
+
+export type InputDependentDropdownProps = {
+    context: {
+        node: FormKitNode
+        attrs: any
+        groupName?: string
+        data?: DependentDropdownInut | DependentDropdownOptionsListFn,
+        levels: DependentDropdownLevels
+    }
+}

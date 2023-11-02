@@ -55,7 +55,7 @@ const renderPanel = () => {
 
     & .p-panel-header,
     .p-panel-content {
-        background-color: transparent;
+        background: var(--color-card);
         border: none;
     }
 
@@ -102,7 +102,7 @@ const renderPanel = () => {
                 height: 100%;
 
                 &:hover {
-                    background-color: var(--color-card);
+                    background: var(--color-card);
                     transition: all 0.3s;
                 }
             }

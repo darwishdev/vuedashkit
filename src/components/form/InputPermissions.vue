@@ -272,7 +272,7 @@ const onGlobalSearch = (v: any) => {
     &>.p-toggleable-content {
         & .p-panel-content {
             padding: 0;
-            background-color: var(--color-card);
+            background: var(--color-card);
         }
     }
 
@@ -280,7 +280,8 @@ const onGlobalSearch = (v: any) => {
     & .permission-group-panel {
         & .p-panel-content {
             padding: 0;
-            background-color: transparent !important;
+            background: var(--color-card) !important;
+            transform: translateY(9px);
         }
     }
 

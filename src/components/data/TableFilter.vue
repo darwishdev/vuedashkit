@@ -60,6 +60,7 @@ const removeFilter = (filter: string) => {
         node._value[filter] = null
     }
     node.input(node?._value)
+    console.log("renmoveing filter", filterFormNodeRef.value, filterFormNodeRef)
 }
 // the entry point for the component while we render the panel
 const renderFiltersPanel = () => {
@@ -112,7 +113,7 @@ const renderActiveFilters = () => {
 const renderFiltersFormSchema = () => {
     return h(formkitComp, {
         id: "filter-form",
-        ref: "filterFormNodeRef",
+        ref: (el) => filterFormNodeRef.value = el,
         type: "form",
         value: filterFormValue,
         actions: false,
@@ -187,7 +188,7 @@ const onFormInput = async (formValue: Record<string, any>) => {
                 gap: 10px;
 
                 & .active-filter {
-                    background-color: var(--color-card);
+                    background: var(--color-card);
                     cursor: pointer;
                     padding: 5px 20px;
                     border-radius: 25px;

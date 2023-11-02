@@ -196,7 +196,7 @@
 
 .p-accordion-header,
 .p-panel .p-panel-header {
-  background-color: var(--color-card);
+  background: var(--color-card);
 }
 
 .p-panelmenu .p-panelmenu-header .material-symbols-outlined {
@@ -230,7 +230,7 @@
 }
 .p-progressbar {
   height: 3px;
-  // background-color: var(--color-card);
+  // background: var(--color-card);
 }
 .p-progressbar-indeterminate .p-progressbar-value::before {
   height: 3px;

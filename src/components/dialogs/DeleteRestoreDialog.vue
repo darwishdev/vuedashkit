@@ -13,12 +13,14 @@ const close = (e: any) => {
     dialogRef.value.close(e);
 };
 const confirm = () => {
+
     if (!tableStore.deleteRestoreHandler || tableStore.selectedIds.length == 0) {
         notificationStore.showError("deleted_error_summary", 'cant_reach_delete_restore_handler')
         dialogRef.value.close()
         return
     }
     const func = typeof tableStore.deleteRestoreHandler.endpoint == 'string' ? apiClient[tableStore.deleteRestoreHandler.endpoint] : tableStore.deleteRestoreHandler.endpoint
+
     const req: any = {}
     req[tableStore.deleteRestoreHandler.requestProperty] = tableStore.selectedIds
     func(req).then((_) => {
@@ -28,8 +30,8 @@ const confirm = () => {
     }).catch(e => {
         console.log("eerrror", e)
         notificationStore.showError("deleted_error_summary", e)
-
     })
+    return
 };
 </script>
 

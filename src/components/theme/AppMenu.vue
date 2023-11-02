@@ -26,7 +26,7 @@ const expandedKeys = ref();
 }
 
 .p-panelmenu .p-toggleable-content {
-    background-color: var(--color-card);
+    background: var(--color-card);
 }
 
 .p-panelmenu .p-panelmenu-content {
