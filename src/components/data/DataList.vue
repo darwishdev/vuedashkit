@@ -10,7 +10,7 @@ import { FilterMatchMode } from 'primevue/api';
 
 
 
-type ColumnSlots = { body: ({ data }) => VNode[], editor: (props: any) => any }
+type ColumnSlots = { body: ({ data }) => VNode[], editor?: (props: any) => any }
 
 
 
@@ -18,12 +18,17 @@ const prepareRecords = async (records?: any[]): Promise<any[]> => {
     if (!records) return []
     const newRecords: any[] = []
     records.forEach(r => {
-        if (r.createdAt) {
-            r.createdAt = new Date(r.createdAt)
+        try {
+            if (r.createdAt) {
+                r.createdAt = new Date(r.createdAt)
+            }
+            if (r.deletedAt) {
+                r.deletedAt = new Date(r.deletedAt)
+            }
+        } catch (error) {
+            console.error("cannot parse the response dates", error)
         }
-        if (r.deletedAt) {
-            r.deletedAt = new Date(r.deletedAt)
-        }
+
         newRecords.push(r)
     })
     return newRecords
@@ -34,7 +39,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
     tableFilters: Record<string, DataTableFilterMetaData>,
     activeFilters: Record<string, (string | number | Date)>,
     filterFormValue: Record<string, (string | number | undefined)>
-    tableColumns: { props: ColumnProps, slots: ColumnSlots | null }[]
+    tableColumns: { props: ColumnProps, slots: ColumnSlots | null, key: string }[]
     deletedFilter: boolean,
     globalFilters: string[],
     searchKey: string,
@@ -48,7 +53,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
         const inputsSchema: FormKitSchemaNode[] = []
         const filterFormValue: Record<string, (string | number | null)> = {}
         const tableFilters: Record<string, DataTableFilterMetaData> = {}
-        const tableColumns: { props: ColumnProps, slots: ColumnSlots | null }[] = []
+        const tableColumns: { props: ColumnProps, slots: ColumnSlots | null, key: string }[] = []
         const activeFilters: Record<string, (string | number | Date)> = {}
         const deletedFilter = deletedFilterStr ? deletedFilterStr == 'true' : false
         const searchKey = searchKeyParam ? searchKeyParam : ""
@@ -89,10 +94,9 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
                 const renderFunc = currentValue.renderHtml as (row: any) => VNode
                 columnSlots = {
                     body: (slotProps) => [renderFunc(slotProps.data)],
-                    editor: (props) => [h("input", { placeholder: "hello" })]
                 }
             }
-            tableColumns.push({ props: columnProps, slots: columnSlots })
+            tableColumns.push({ props: columnProps, slots: columnSlots, key })
         }
 
 
@@ -150,7 +154,7 @@ const slots = defineSlots<{
     actions(props: { data: any }): any
     prependActions(props: { data: any }): any
     appendActions(props: { data: any }): any
-}>()
+} & any>()
 const props = defineProps<DataListProps<any, any>>();
 
 const { inputsSchema,
@@ -186,6 +190,7 @@ const renderViewBtn = (data: any) => {
     if (!props.viewRouter) return
     const { name, paramColumnName, paramName } = props.viewRouter
     const params = {}
+
     params[paramName] = data[paramColumnName]
     return h(appBtnComponent, {
         class: "w-full transparent",
@@ -269,7 +274,11 @@ const renderColumns = () => {
     ]
 
     tableColumns.forEach((columnObj) => {
-        const columnNode = h(Column, columnObj.props, columnObj.slots ? { body: columnObj.slots.body } : {})
+        const isSlotPassed = ObjectKeys(slots).includes(`items.${columnObj.key}`)
+        const bodySlot = isSlotPassed ? slots[`items.${columnObj.key}`] : columnObj.slots ? columnObj.slots.body : undefined
+        console.log(isSlotPassed)
+        console.log(`items.${columnObj.key}`)
+        const columnNode = h(Column, columnObj.props, { body: bodySlot })
         columns.push(columnNode)
     })
     const actionsColumn = renderActionsColumn()
@@ -698,6 +707,3 @@ const renderTable = () => {
     width: 3rem;
 }
 </style>
-
-
-@/types/types@/types/types
