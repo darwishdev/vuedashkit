@@ -10,7 +10,7 @@ import { FilterMatchMode } from 'primevue/api';
 
 
 
-type ColumnSlots = { body: ({ data }) => VNode[] }
+type ColumnSlots = { body: ({ data }) => VNode[], editor: (props: any) => any }
 
 
 
@@ -89,6 +89,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
                 const renderFunc = currentValue.renderHtml as (row: any) => VNode
                 columnSlots = {
                     body: (slotProps) => [renderFunc(slotProps.data)],
+                    editor: (props) => [h("input", { placeholder: "hello" })]
                 }
             }
             tableColumns.push({ props: columnProps, slots: columnSlots })
@@ -129,6 +130,8 @@ import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } 
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router';
+import Menu from 'primevue/menu';
+
 import { h, resolveComponent, ref } from 'vue'
 const appBtnComponent = resolveComponent('app-btn')
 const emit = defineEmits<{
@@ -144,6 +147,9 @@ const slots = defineSlots<{
     start(props: { data: any }): any
     end(props: { data: any }): any
     expansion(props: { data: any }): any
+    actions(props: { data: any }): any
+    prependActions(props: { data: any }): any
+    appendActions(props: { data: any }): any
 }>()
 const props = defineProps<DataListProps<any, any>>();
 
@@ -176,15 +182,15 @@ const tableStore = useTableNewStore()
 tableStore.initTable(initTableParams)
 // const tableFiltersRef = ref(tableFilters)
 
-
 const renderViewBtn = (data: any) => {
     if (!props.viewRouter) return
     const { name, paramColumnName, paramName } = props.viewRouter
     const params = {}
     params[paramName] = data[paramColumnName]
     return h(appBtnComponent, {
-        class: "info",
+        class: "w-full transparent",
         icon: "eye",
+        label: t("view"),
         onClick: () => {
             router.push({ name, params })
         }
@@ -196,8 +202,10 @@ const renderUpdateBtn = (data: any) => {
     const { routeName } = props.options.updateHandler
     const params = { id: data[props.dataKey] }
     return h(appBtnComponent, {
-        class: "warning",
+        class: "w-full transparent",
         icon: "pencil",
+        label: t("update"),
+
         onClick: () => {
             router.push({ name: routeName, params })
         }
@@ -207,7 +215,8 @@ const renderDeleteRestoreBtn = (data: any) => {
     if (!props.options.deleteRestoreHandler) return
     return h(appBtnComponent, {
         icon: tableStore.deleteRestoreVaraints.icon,
-        class: "danger",
+        class: "w-full transparent",
+        label: t(tableStore.deleteRestoreVaraints.label),
         onClick: () => {
             tableStore.modelSelectionRef = [data]
             dialogStore.openDeleteRestore()
@@ -273,6 +282,7 @@ const renderColumns = () => {
 const renderActionsColumn = () => {
     if (!props.options.updateHandler && !props.options.deleteRestoreHandler && !props.viewRouter) return
 
+
     const actionsColumn = h(Column, {
         header: 'actions',
         class: "actions-btns",
@@ -281,11 +291,35 @@ const renderActionsColumn = () => {
         },
     }, {
         body: ({ data }) => h('div', {
-            class: "flex "
+            class: "actions-wrapperr "
         }, [
-            renderViewBtn(data),
-            renderUpdateBtn(data),
-            renderDeleteRestoreBtn(data)
+            h(appBtnComponent, {
+                icon: "ellipsis-v",
+                class: "warning",
+                onClick: (e: Event) => tableStore.actionsMenuRef.toggle(e)
+            }),
+            h(Menu, {
+                ref: (el) => {
+                    if (el && !tableStore.actionsMenuRef) {
+                        tableStore.actionsMenuRef = el
+                    }
+                },
+                class: "import-menu",
+                popup: true
+            },
+                {
+                    'start': () => h('div', slots.actions ? slots.actions(data) : [
+                        slots.prependActions ? slots.prependActions(data) : null,
+                        renderViewBtn(data),
+                        renderUpdateBtn(data),
+                        renderDeleteRestoreBtn(data),
+                        slots.appendActions ? slots.appendActions(data) : null,
+                    ]),
+                }
+            )
+            // renderViewBtn(data),
+            // renderUpdateBtn(data),
+            // renderDeleteRestoreBtn(data)
         ])
     })
     return actionsColumn

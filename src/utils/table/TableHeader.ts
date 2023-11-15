@@ -1,18 +1,24 @@
 import type { TableRouter, ITableHeaderProps, AppTableFilter, ITableHeader } from '@/types/types'
+import type { FormKitSchemaNode } from '@formkit/core'
 import { h, resolveComponent } from 'vue'
 import Tag from 'primevue/tag';
 import { type ColumnProps } from 'primevue/column';
 import { convertDateRedable } from '@/utils/date/date';
 
-export class TableHeaderText implements ITableHeader {
+
+
+
+export class TableHeaderBase {
     columnProps: ColumnProps = {}
     columnName: string
     tableRouter?: TableRouter
+    editInput?: FormKitSchemaNode
     isGlobalFilter: boolean
     filter?: AppTableFilter
     constructor(name: string, params: ITableHeaderProps) {
         this.columnName = name
         this.filter = params.filter
+        this.editInput = params.editInput
         this.columnProps.sortable = params.sortable
         this.isGlobalFilter = typeof params.isGlobalFilter == 'undefined' ? false : params.isGlobalFilter
         if (params.filter) {
@@ -22,6 +28,9 @@ export class TableHeaderText implements ITableHeader {
             this.tableRouter = params.router
         }
     }
+}
+export class TableHeaderText extends TableHeaderBase implements ITableHeader {
+
 }
 
 export class TableHeaderCount extends TableHeaderText implements ITableHeader {

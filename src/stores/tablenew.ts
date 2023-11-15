@@ -7,6 +7,7 @@ import { ref, computed } from 'vue'
 export const useTableNewStore = defineStore('tablenew', () => {
   const showDeletedRef = ref<Boolean>(false)
   const modelSelectionRef = ref<any[]>([])
+  const actionsMenuRef = ref<any>()
   const records = ref<unknown[]>([])
   const deletedRecords = ref<unknown[] | undefined>([])
   let fetchFn: tableFetchFn<ApiResponseList<TRecordDefault>, TRecordDefault> | undefined
@@ -89,6 +90,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     fetchFn,
     tableFiltersRef,
     deleteRestoreVaraints,
+    actionsMenuRef,
     showDeletedRef,
   }
 })

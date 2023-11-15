@@ -31,6 +31,13 @@ const headers: Record<string, ITableHeader> = {
     'roleName': new TableHeaderText('roleName', {
         sortable: true,
         isGlobalFilter: true,
+        editInput: {
+            $formkit: 'text',
+            prefixIcon: "tools",
+            outerClass: "col-12 sm:col-6 md:col-3",
+            name: "roleName",
+            placeholder: t("roleName")
+        },
         filter: {
             matchMode: FilterMatchMode.CONTAINS,
             input: {
@@ -108,6 +115,8 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
                 :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
                 :records="records" :exportable="tableProps.exportable" :options="tableProps.options"
                 :deletedRecords="deletedRecords" :headers="tableProps.headers">
+
+
                 <template #start="{ data }">
                     <div class="permissions">
                         <h3>{{ $t('permissions') }}</h3>

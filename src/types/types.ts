@@ -68,6 +68,7 @@ export interface ITableHeader {
     columnProps?: ColumnProps
     filter?: AppTableFilter
     tableRouter?: TableRouter
+    editInput?: FormKitSchemaNode
     isGlobalFilter?: boolean
     renderHtml?: (value: any) => VNode
 }
@@ -156,6 +157,7 @@ export type TableHeaderFilter = {
 
 export interface ITableHeaderProps {
     sortable: boolean,
+    editInput?: FormKitSchemaNode
     isGlobalFilter?: boolean
     filter?: AppTableFilter
     router?: TableRouter
