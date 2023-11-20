@@ -4,7 +4,6 @@ import { useAuthStore } from '@/stores/auth'
 import PanelMenu from 'primevue/panelmenu';
 import { ref } from "vue"
 const authStore = useAuthStore()
-
 const expandedKeys = ref();
 </script>
 <template>
@@ -17,8 +16,6 @@ const expandedKeys = ref();
         </template>
     </PanelMenu>
 </template>
-
-
 
 <style lang="scss">
 .p-panelmenu .p-panelmenu-header .p-panelmenu-header-content .p-panelmenu-header-action {

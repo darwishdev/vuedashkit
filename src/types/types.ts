@@ -75,7 +75,15 @@ export interface ITableHeader {
 
 
 // table options types
-
+export type InputUnitQtyProps = {
+    context: {
+        node: FormKitNode
+        buyUnit: string
+        sellUnit: string
+        buyUnitValue: number
+        sellUnitValue: number
+    },
+}
 type CreateHandler = {
     title: string
     redirectRoute: string
