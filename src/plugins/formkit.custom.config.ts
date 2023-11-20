@@ -1,5 +1,5 @@
 
-import { InputPicker, InputImage, InputPermissions, dependentDropdown, InputDependentDropdown } from "@/components/form/index"
+import { InputPicker, InputImage, InputPermissions, dependentDropdown, InputUnitQty, InputDependentDropdown } from "@/components/form/index"
 import { createInput } from '@formkit/vue'
 import type { DefaultConfigOptions } from '@formkit/vue'
 import customPlugins from './formkitPlugins'
@@ -9,6 +9,10 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
     const permissionsInput = createInput(InputPermissions, {
         props: ['permissions', 'toggleable', 'groupCollapsed', 'inputCollapsed'],
     })
+    const unitQtyInput = createInput(InputUnitQty, {
+        props: ['buyUnit', 'sellUnit', 'buyUnitValue', 'sellUnitValue'],
+    })
+
     const dependentDropdownModified = createInput(InputDependentDropdown, {
         props: ['dropDownSchema', 'data', 'groupName', 'levels'],
     })
@@ -24,6 +28,7 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
     const inputs = {
         'permissions': permissionsInput,
         'dependentDropdown': dependentDropdownInput,
+        'unitQty': unitQtyInput,
         'dependentDropdownModified': dependentDropdownModified,
         'image': imageInput,
         'picker': pickerInput,

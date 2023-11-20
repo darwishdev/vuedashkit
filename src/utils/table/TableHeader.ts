@@ -1,5 +1,5 @@
-import type { TableRouter, ITableHeaderProps, AppTableFilter, ITableHeader } from '@/types/types'
-import type { FormKitSchemaNode } from '@formkit/core'
+import type { TableRouter, ITableHeaderProps, AppTableFilter, FormKitNodeInput, ITableHeader } from '@/types/types'
+import type { FormKitNode } from '@formkit/core'
 import { h, resolveComponent } from 'vue'
 import Tag from 'primevue/tag';
 import { type ColumnProps } from 'primevue/column';
@@ -12,7 +12,7 @@ export class TableHeaderBase {
     columnProps: ColumnProps = {}
     columnName: string
     tableRouter?: TableRouter
-    editInput?: FormKitSchemaNode
+    editInput?: FormKitNodeInput
     isGlobalFilter: boolean
     filter?: AppTableFilter
     constructor(name: string, params: ITableHeaderProps) {
@@ -87,4 +87,14 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 
         return h('div', convertDateRedable(data))
     }
-} 
+}
+
+
+export class TableHeaderInput extends TableHeaderText implements ITableHeader {
+    renderHtml = (value: any) => {
+        if (!this.editInput) return h('span', value[this.columnName])
+        const schemaComponent = resolveComponent('FormKit')
+        // this.editInput.value = value[this.columnName]
+        return h(schemaComponent, { ...this.editInput, value: value[this.columnName] })
+    }
+}

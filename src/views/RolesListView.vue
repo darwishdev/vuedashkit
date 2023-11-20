@@ -4,12 +4,11 @@
 import DataList from '@/components/data/DataList.vue';
 import type { RolesListResponse, RolesListRow } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
 import apiClient from '@/api/ApiClient';
-import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate } from '@/utils/table/TableHeader'
+import { TableHeaderText, TableHeaderCount, TableHeaderLink, TableHeaderDate, TableHeaderInput } from '@/utils/table/TableHeader'
 import { FilterMatchMode } from 'primevue/api';
 import { useI18n } from 'vue-i18n'
 import type { ITableHeader, DataListProps, TableRouter } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
-import { convertDateRedable } from '@/utils/date/date';
 const themeStore = useThemeStore()
 const { t } = useI18n()
 themeStore.startProgressBar()
@@ -31,13 +30,7 @@ const headers: Record<string, ITableHeader> = {
     'roleName': new TableHeaderText('roleName', {
         sortable: true,
         isGlobalFilter: true,
-        editInput: {
-            $formkit: 'text',
-            prefixIcon: "tools",
-            outerClass: "col-12 sm:col-6 md:col-3",
-            name: "roleName",
-            placeholder: t("roleName")
-        },
+
         filter: {
             matchMode: FilterMatchMode.CONTAINS,
             input: {
@@ -49,8 +42,22 @@ const headers: Record<string, ITableHeader> = {
             }
         }
     }),
-    'permissionsCount': new TableHeaderCount('permissionsCount', {
+
+    'permissionsCount': new TableHeaderInput('permissionsCount', {
         sortable: true,
+        editInput: {
+            type: 'unitQty',
+            // prefixIcon: "tools",
+            props: {
+                buyUnit: "kg",
+                sellUnit: "g",
+                buyUnitValue: 100,
+                sellUnitValue: 1,
+            },
+            outerClass: "col-12 ",
+            name: "roleName",
+            placeholder: t("roleName")
+        },
         filter: {
             matchMode: FilterMatchMode.GREATER_THAN,
             input: {
@@ -64,8 +71,9 @@ const headers: Record<string, ITableHeader> = {
             }
         }
     }),
-    'usersCount': new TableHeaderCount('usersCount', {
+    'usersCount': new TableHeaderInput('usersCount', {
         sortable: true,
+
         filter: {
             matchMode: FilterMatchMode.GREATER_THAN,
             input: {

@@ -68,9 +68,19 @@ export interface ITableHeader {
     columnProps?: ColumnProps
     filter?: AppTableFilter
     tableRouter?: TableRouter
-    editInput?: FormKitSchemaNode
+    editInput?: FormKitNodeInput
     isGlobalFilter?: boolean
     renderHtml?: (value: any) => VNode
+}
+
+export type InputUnitQtyProps = {
+    context: {
+        node: FormKitNode
+        buyUnit: string
+        sellUnit: string
+        buyUnitValue: number
+        sellUnitValue: number
+    },
 }
 
 
@@ -155,9 +165,17 @@ export type TableHeaderFilter = {
     input: FormKitSchemaNode
 } | undefined
 
+export type FormKitNodeInput = {
+    type: string
+    prefixIcon?: string
+    outerClass?: string
+    props?: any
+    name?: string
+    placeholder?: string
+}
 export interface ITableHeaderProps {
     sortable: boolean,
-    editInput?: FormKitSchemaNode
+    editInput?: FormKitNodeInput
     isGlobalFilter?: boolean
     filter?: AppTableFilter
     router?: TableRouter
