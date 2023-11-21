@@ -115,4 +115,4 @@ const renderPanel = () => {
 
     }
 }
-</style>@/types/types
+</style>

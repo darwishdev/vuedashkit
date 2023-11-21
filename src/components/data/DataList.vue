@@ -125,12 +125,13 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
 
 <script setup lang="ts">
 import TableActions from './TableActions.vue';
+import TableRowActions from './TableRowActions.vue';
 import TableHeader from './TableHeader.vue';
 import TableFilter from './TableFilter.vue';
 import { useDialogStore } from '@/stores/dialog';
 import { useTableNewStore } from '@/stores/tablenew';
 import Column from 'primevue/column';
-import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
+import type { TRecordDefault, TableRowActionsProps, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router';
@@ -164,10 +165,10 @@ const { inputsSchema,
     globalFilters,
     tableFilters,
     deletedFilter,
-    searchKey } = await loadElements(props.headers, t)
+    searchKey } = await loadElements(props.context.headers, t)
 
-const newRecords = await prepareRecords(props.records)
-const newDeletedRecords = await prepareRecords(props.deletedRecords)
+const newRecords = await prepareRecords(props.context.records)
+const newDeletedRecords = await prepareRecords(props.context.deletedRecords)
 
 const exportCSV = () => {
     tableRefElement.value.exportCSV()()
@@ -176,10 +177,10 @@ const exportCSV = () => {
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: newRecords,
     deletedRecords: newDeletedRecords,
-    initiallySelectedItems: props.initiallySelectedItems,
+    initiallySelectedItems: props.context.initiallySelectedItems,
     tableFiltersRef: tableFilters,
-    dataKey: props.dataKey as string,
-    fetchFn: props.fetchFn,
+    dataKey: props.context.dataKey as string,
+    fetchFn: props.context.fetchFn,
     deletedFilter
 }
 const tableStore = useTableNewStore()
@@ -187,8 +188,8 @@ tableStore.initTable(initTableParams)
 // const tableFiltersRef = ref(tableFilters)
 
 const renderViewBtn = (data: any) => {
-    if (!props.viewRouter) return
-    const { name, paramColumnName, paramName } = props.viewRouter
+    if (!props.context.viewRouter) return
+    const { name, paramColumnName, paramName } = props.context.viewRouter
     const params = {}
 
     params[paramName] = data[paramColumnName]
@@ -203,9 +204,9 @@ const renderViewBtn = (data: any) => {
 }
 
 const renderUpdateBtn = (data: any) => {
-    if (!props.options.updateHandler) return
-    const { routeName } = props.options.updateHandler
-    const params = { id: data[props.dataKey] }
+    if (!props.context.options.updateHandler) return
+    const { routeName } = props.context.options.updateHandler
+    const params = { id: data[props.context.dataKey] }
     return h(appBtnComponent, {
         class: "w-full transparent",
         icon: "pencil",
@@ -217,7 +218,7 @@ const renderUpdateBtn = (data: any) => {
     })
 }
 const renderDeleteRestoreBtn = (data: any) => {
-    if (!props.options.deleteRestoreHandler) return
+    if (!props.context.options.deleteRestoreHandler) return
     return h(appBtnComponent, {
         icon: tableStore.deleteRestoreVaraints.icon,
         class: "w-full transparent",
@@ -266,7 +267,7 @@ const renderExpander = () => {
 }
 const renderColumns = () => {
 
-    if (props.displayType == 'card') return renderCardColumns()
+    if (props.context.displayType == 'card') return renderCardColumns()
     const selectAllColumn = renderSelectAllColumn()
     const expanderColumn = renderExpander()
     const columns: VNode[] = [
@@ -289,9 +290,14 @@ const renderColumns = () => {
 }
 
 const renderActionsColumn = () => {
-    if (!props.options.updateHandler && !props.options.deleteRestoreHandler && !props.viewRouter) return
+    if (!props.context.options.updateHandler && !props.context.options.deleteRestoreHandler && !props.context.viewRouter) return
 
+    const rowActionsProps: TableRowActionsProps = {
+        viewRouter: props.context.viewRouter,
+        dataKey: props.context.dataKey as string,
+        options: props.context.options
 
+    }
     const actionsColumn = h(Column, {
         header: 'actions',
         class: "actions-btns",
@@ -337,12 +343,13 @@ const renderActionsColumn = () => {
 
 const renderTableActions = () => {
     // options must have at lease two keys title and descriptions so if the table has no handlers inside options and not exportable we will not render it 
-    const noActionsInsideOptions = ObjectKeys(props.options).length == 2
-    const notExportable = typeof props.exportable != 'undefined' && props.exportable == false
+    const noActionsInsideOptions = ObjectKeys(props.context.options).length == 2
+    const notExportable = typeof props.context.exportable != 'undefined' && props.context.exportable == false
     if (notExportable && noActionsInsideOptions) return
     return h(TableActions, {
-        exportable: props.exportable,
-        options: props.options, onExport: () => {
+        exportable: props.context.exportable,
+        formSections: props.context.formSections,
+        options: props.context.options, onExport: () => {
             exportCSV()
         }
     })
@@ -396,8 +403,8 @@ const renderTable = () => {
             h(TableHeader, {
                 deletedFilter,
                 searchKey,
-                title: props.options.title,
-                displayType: props.displayType,
+                title: props.context.options.title,
+                displayType: props.context.displayType,
                 showGlobalSearchFilter: globalFilters.length > 0,
                 "onUpdate:globalSearch": onGlobalSearch
             }),
@@ -420,7 +427,7 @@ const renderTable = () => {
 </script>
 
 <template>
-    <component class="app-table" :class="{ 'table-card': props.displayType == 'card' }" :is="renderTable()" />
+    <component class="app-table" :class="{ 'table-card': props.context.displayType == 'card' }" :is="renderTable()" />
 </template>
 
 

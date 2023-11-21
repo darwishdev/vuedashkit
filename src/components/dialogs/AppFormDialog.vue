@@ -3,41 +3,55 @@ import { inject } from "vue";
 import { useTableNewStore } from "@/stores/tablenew";
 import { useNotificationStore } from "@/stores/notification";
 import apiClient from "@/api/ApiClient";
-
+import type { AppFormDialogProps, AppFormProps } from "@/types/types";
+import AppForm from '@/components/form/AppForm.vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n()
+const props = defineProps<AppFormDialogProps>();
 
 // const props = defineProps<TableHeaderProps>();
 const dialogRef = inject("dialogRef") as any;
-const tableStore = useTableNewStore()
 const notificationStore = useNotificationStore()
 const close = (e: any) => {
     dialogRef.value.close(e);
 };
-const confirm = () => {
-    const func = apiClient['roleDeleteRestore']
 
+const testFn = (req) => {
+    console.log(req);
+}
 
-    func({ roleIds: tableStore.selectedIds }).then((_) => {
-        tableStore.deleteSelectedRows()
-        dialogRef.value.close()
-        notificationStore.showSuccess("deleted_summary", "deleted_detail")
-    }).catch(e => {
-        console.log("eerrror", e)
-        notificationStore.showError("deleted_summary", e)
+const formProps: AppFormProps<any, any> = {
+    context: {
+        title: "role_create",
+        options: {
+            isBulkCreateHidden: true,
+            isHeaderSubmitHidden: true,
+            isFormTransparent: true,
+        },
+        submitHandler: {
+            endpoint: testFn,
+            redirectRoute: "roles_list"
+        },
+        sections: props.sections
+    }
 
-    })
-};
+}
 </script>
 
 <template>
-    <div class="delete-restore-dialog">
-        <i class="pi pi-trash"></i>
-        <h2>{{ $t('delete_restore_dialog_title') }}</h2>
-        <p>{{ $t(`${tableStore.deleteRestoreVaraints.label}_dialog_breif`) }}
-        </p>
-        <div class="actions">
-            <app-btn icon="check" @click="confirm" :label="$t('confirm')" class="success"></app-btn>
-            <app-btn icon="times" @click="close" :label="$t('canel')" class="danger"></app-btn>
-        </div>
+    <div class="form-dialog">
+        <Suspense timeout="0">
+            <template #default>
+                <app-form :context="formProps.context" />
+            </template>
+            <template #fallback>
+                <div class="loading">
+                    loo
+                </div>
+            </template>
+        </Suspense>
+
+
     </div>
 </template>
 
@@ -53,7 +67,6 @@ const confirm = () => {
 
     & .p-dialog-header {
         background: transparent;
-        display: none;
     }
 
     & .p-dialog-content {
@@ -63,7 +76,6 @@ const confirm = () => {
 
 .delete-restore-dialog {
     text-align: center;
-    padding-top: 1.5rem;
 
     & i {
         font-size: 1.5rem;

@@ -143,4 +143,4 @@ const renderHeader = () => {
 
     }
 }
-</style>@/types/types
+</style>

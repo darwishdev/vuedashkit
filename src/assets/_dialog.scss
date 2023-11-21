@@ -2,6 +2,7 @@
   background: var(--color-background);
   & .p-dialog-header {
     background: transparent;
+    display: none !important;
   }
   & .p-dialog-content {
     background: transparent;

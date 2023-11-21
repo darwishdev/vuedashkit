@@ -21,6 +21,32 @@ const viewRouter: TableRouter = {
     paramName: "id",
     paramColumnName: dataKey
 }
+
+const formSections = {
+    'role_info': {
+        isTitleHidden: true,
+        isTransparent: true,
+        inputs: [
+            {
+                $formkit: 'text',
+                prefixIcon: "tools",
+                outerClass: "col-12 sm:col-6 md:col-5",
+                name: "roleName",
+                validation: "required",
+                placeholder: t("roleName"),
+                label: t("roleName")
+            },
+            {
+                $formkit: 'textarea',
+                prefixIcon: "text",
+                outerClass: "col-12 sm:col-6 md:col-7",
+                name: "roleDescription",
+                placeholder: t("roleDescription"),
+                label: t("roleDescription")
+            },
+        ]
+    }
+}
 const headers: Record<string, ITableHeader> = {
     'roleId': new TableHeaderLink('roleId', {
         sortable: true,
@@ -102,16 +128,20 @@ const headers: Record<string, ITableHeader> = {
 
 
 const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
-    title: "roles",
-    dataKey: "roleId",
-    records: records,
-    exportable: true,
-    deletedRecords: deletedRecords,
-    viewRouter: viewRouter,
-    // displayType: "card",
-    fetchFn: apiClient.rolesList,
-    options: options!,
-    headers
+    context: {
+
+        title: "roles",
+        dataKey: "roleId",
+        records: records,
+        exportable: true,
+        deletedRecords: deletedRecords,
+        viewRouter: viewRouter,
+        formSections,
+        // displayType: "card",
+        fetchFn: apiClient.rolesList,
+        options: options!,
+        headers
+    }
 }
 
 
@@ -119,11 +149,7 @@ const tableProps: DataListProps<RolesListResponse, RolesListRow> = {
 <template>
     <Suspense timeout="0">
         <template #default>
-            <DataList class="sm-column" :displayType="tableProps.displayType" :fetchFn="tableProps.fetchFn"
-                :viewRouter="tableProps.viewRouter" :title="tableProps.title" :dataKey="tableProps.dataKey"
-                :records="records" :exportable="tableProps.exportable" :options="tableProps.options"
-                :deletedRecords="deletedRecords" :headers="tableProps.headers">
-
+            <DataList class="sm-column" :context="tableProps.context">
                 <template #items.roleName="{ data }">
                     {{ data.roleName }}
                 </template>

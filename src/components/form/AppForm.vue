@@ -139,8 +139,8 @@ const formStore = useFormStore()
 const formkitComp = resolveComponent('FormKit')
 const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
-const schema = await loadElemetnsPromise(props.sections, t)
-const value = await loadValue(currentRoute.value.params, props.findHandler)
+const schema = await loadElemetnsPromise(props.context.sections, t)
+const value = await loadValue(currentRoute.value.params, props.context.findHandler)
 
 const renderFormSchema = () => {
     return h(formkitComp, {
@@ -171,8 +171,8 @@ const renderFormSchema = () => {
 }
 
 const renderBulkCreateFilter = () => {
-    if (props.options) {
-        if (props.options.isBulkCreateHidden) return
+    if (props.context.options) {
+        if (props.context.options.isBulkCreateHidden) return
 
     }
 
@@ -188,8 +188,8 @@ const renderBulkCreateFilter = () => {
 }
 
 const renderHeaderSubmitBtn = () => {
-    if (props.options) {
-        if (props.options.isBulkCreateHidden) return
+    if (props.context.options) {
+        if (props.context.options.isBulkCreateHidden) return
     }
     return h(appBtnComponent, {
         icon: 'plus',
@@ -206,7 +206,7 @@ const renderTitle = () => {
         class: 'form-title'
     },
         [
-            h('h1', t(props.title)),
+            h('h1', t(props.context.title)),
             h('div', { class: 'end' }, [
                 renderHeaderSubmitBtn(),
                 renderBulkCreateFilter()
@@ -235,7 +235,7 @@ const handleError = (node: FormKitNode, error: any) => {
 
 
 const submitHandler = async (req: any, node: FormKitNode) => {
-    const handler = props.submitHandler
+    const handler = props.context.submitHandler
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
@@ -245,9 +245,9 @@ const submitHandler = async (req: any, node: FormKitNode) => {
             .then(async (res: any) => {
                 console.log(res)
                 if (handler.callback) await handler.callback!(res)
-                if (props.options) {
-                    if (!props.options.isSuccessNotificationHidden) {
-                        notificationStore.showSuccess(props.options.successMessageSummary || "created_summary", props.options.successMessageDetail || "created_detail")
+                if (props.context.options) {
+                    if (!props.context.options.isSuccessNotificationHidden) {
+                        notificationStore.showSuccess(props.context.options.successMessageSummary || "created_summary", props.context.options.successMessageDetail || "created_detail")
                     }
                 } else {
                     notificationStore.showSuccess("created_summary", "created_detail")
@@ -273,8 +273,8 @@ const submitHandler = async (req: any, node: FormKitNode) => {
 }
 const renderForm = () => {
     let className = "card-dark"
-    if (props.options) {
-        if (props.options?.isFormTransparent) className = ""
+    if (props.context.options) {
+        if (props.context.options?.isFormTransparent) className = ""
     }
     return h("div", {
         class: className
@@ -296,4 +296,4 @@ const renderForm = () => {
 
 <style lang="scss">
 @import url("@/assets/form.scss");
-</style>@/types/types
+</style>

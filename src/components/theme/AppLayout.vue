@@ -27,6 +27,11 @@ const toggleDesktopMenu = () => {
     themeStore.toggleDesktopMenu()
 }
 
+const handleErr = (e) => {
+    console.log('errorCaptured')
+    console.log(e)
+}
+
 </script>
 
 <template>
@@ -48,7 +53,7 @@ const toggleDesktopMenu = () => {
         </div>
         <main class="page-content">
             <RouterView v-slot="props">
-                <Suspense @resolve="routeResolved" timeout="0">
+                <Suspense @resolve="routeResolved" @errorCaptured="handleErr" , timeout="0">
                     <template #default>
                         <component :is="props.Component" />
                     </template>

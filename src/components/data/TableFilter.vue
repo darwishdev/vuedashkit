@@ -197,4 +197,4 @@ const onFormInput = async (formValue: Record<string, any>) => {
         }
     }
 }
-</style>@/types/types
+</style>

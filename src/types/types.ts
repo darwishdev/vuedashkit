@@ -28,6 +28,7 @@ export type AppBtnProps = {
     icon?: string
     disabled?: boolean
 }
+
 export type ApiFormError = {
     globalErrors: string[]
     fieldErrors: Record<string, string>
@@ -129,6 +130,7 @@ export type ApiListOptions = {
 
 export type TableActionsProps = {
     options: ApiListOptions
+    formSections?: Record<string, (AppFormSection | FormKitSchemaNode[])>
     exportable?: boolean
 }
 
@@ -147,18 +149,29 @@ export type tableFetchFn<TResp, TRecord> =
         ? TResp
         : undefined>
 
-export interface DataListProps<TResp, TRecord> {
-    title: string
-    dataKey: keyof TRecord
-    exportable?: boolean
-    initiallySelectedItems?: any[],
-    fetchFn?: tableFetchFn<TResp, TRecord>
-    records: TRecord[]
-    deletedRecords?: TRecord[]
-    viewRouter?: TableRouter
+
+export type TableRowActionsProps = {
+    viewRouter?: TableRouter,
+    dataKey: string
     options: ApiListOptions
-    displayType?: 'card' | 'table'
-    headers: Record<string, ITableHeader>
+
+}
+export interface DataListProps<TResp, TRecord> {
+    context: {
+        title: string
+        dataKey: keyof TRecord
+        exportable?: boolean
+        initiallySelectedItems?: any[],
+        fetchFn?: tableFetchFn<TResp, TRecord>
+        records: TRecord[]
+        deletedRecords?: TRecord[]
+        viewRouter?: TableRouter
+        options: ApiListOptions
+        displayType?: 'card' | 'table'
+        formSections?: Record<string, (AppFormSection | FormKitSchemaNode[])>
+        headers: Record<string, ITableHeader>
+    }
+
 }
 export type TableHeaderFilter = {
     mode: string
@@ -224,12 +237,13 @@ export type AppFormOptions = {
     isFormTransparent?: boolean
 }
 export type AppFormProps<TReq, TResp> = {
-    title: string
-    options?: AppFormOptions
-
-    submitHandler: SubmitHandler<TReq, TResp>,
-    findHandler?: FindHandler<any, TReq>,
-    sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
+    context: {
+        title: string
+        options?: AppFormOptions
+        submitHandler: SubmitHandler<TReq, TResp>,
+        findHandler?: FindHandler<any, TReq>,
+        sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
+    }
 }
 
 
@@ -408,4 +422,8 @@ export type LoadingComponents = {
     card: any
     form: any
     profile: any
+}
+export type AppFormDialogProps = {
+    sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
+    handler: CreateHandler | UpdateHandler
 }

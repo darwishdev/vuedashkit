@@ -1,4 +1,5 @@
 @import "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Montserrat:wght@400;500;700&display=swap&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
+@import "primeicons/primeicons.css";
 :root {
   --color-background-dark: linear-gradient(180deg, #2e323f 0%, #0a061a 100%);
   --color-background-light: linear-gradient(180deg, #f6f9fc 0%, #ececf9 100%);
@@ -355,6 +356,11 @@ nav a span {
   background-color: transparent !important;
 }
 
+.app-table .empty-table p {
+  background: none;
+  color: var(--color-text);
+}
+
 .p-sidebar {
   background: var(--color-background) !important;
   border: none;
@@ -688,6 +694,10 @@ nav a span {
     transform: translateX(100%);
   }
 }
+.p-menu.p-menu-overlay {
+  background: var(--color-background);
+}
+
 .success {
   background: var(--color-success) !important;
   color: #fff !important;
@@ -738,7 +748,6 @@ nav a span {
 }
 
 :root {
-  --fk-color-input: var(--color-white);
   --fk-margin-help: 15px 0;
   --fk-color-help: var(--color-white);
   --fk-bg-input: rgba(108, 117, 125, 0.2);
@@ -748,11 +757,7 @@ nav a span {
   --fk-font-size-label: 16px;
   --fk-color-tag: #256029;
   --fk-day-bg: var(--color-card);
-  --fk-day-bg-hover: rgba(23,255,255,1)
-  --fk-color-primary: transparent;
-  --fk-color-tag-background: #c8e6c9;
-  --fk-day-bg-selected:var(--color-primary);
-  --fk-dropdown-active-bg:var(--color-primary);
+  --fk-day-bg-hover: rgba(23, 255, 255, 1);
   --fk-border-width: 0;
 }
 

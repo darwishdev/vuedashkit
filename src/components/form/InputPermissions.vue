@@ -376,4 +376,4 @@ const onGlobalSearch = (v: any) => {
 .app-card .start {
     background-color: transparent !important;
 }
-</style>@/types/types@/types/types
+</style>@/types/types

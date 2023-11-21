@@ -76,4 +76,4 @@ const handleUpload = async (evt: any) => {
 
     }
 }
-</style>@/types/types
+</style>
