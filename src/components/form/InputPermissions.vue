@@ -114,16 +114,19 @@ const headers: Record<string, ITableHeader> = {
 
 
 const tableProps: DataListProps<PermissionsListResponse, searchablePermission> = {
-    title: "permissions",
-    dataKey: "permissionGroup",
-    records: searchablePermission,
-    initiallySelectedItems: initiallySelectedItems,
-    displayType: "table",
-    options: {
+    context: {
+
         title: "permissions",
-        description: "permissions_description"
-    },
-    headers
+        dataKey: "permissionGroup",
+        records: searchablePermission,
+        initiallySelectedItems: initiallySelectedItems,
+        displayType: "table",
+        options: {
+            title: "permissions",
+            description: "permissions_description"
+        },
+        headers
+    }
 }
 const emitEvent = () => {
     const keys = ObjectKeys(modelValuesRef.value)
@@ -229,11 +232,8 @@ const onGlobalSearch = (v: any) => {
                 prefixIcon="search" @input="onGlobalSearch" />
 
         </template>
-        <DataList :initiallySelectedItems="tableProps.initiallySelectedItems" ref="dataListElementRef"
-            @update:selection="onUpdateModelSelection" class="sm-column " :displayType="tableProps.displayType"
-            :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
-            :dataKey="tableProps.dataKey" :records="tableProps.records" :options="tableProps.options"
-            :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
+        <DataList ref="dataListElementRef" @update:selection="onUpdateModelSelection" class="sm-column "
+            :context="tableProps.context">
             <template #default>
                 <Column style="width:100%;" header="permissionGroup" field="permissionGroup">
 
@@ -246,8 +246,8 @@ const onGlobalSearch = (v: any) => {
                                     :name="data.permissionGroup">
 
                                     <form-kit v-for="(permission, index) in data.permissions"
-                                        :label="permission.permissionName" :onValue="permission.permissionId" :key="index"
-                                        type="toggle" @input="null"></form-kit>
+                                        :label="$t(permission.permissionName)" :onValue="permission.permissionId"
+                                        :key="index" type="toggle" @input="null"></form-kit>
                                 </form-kit>
 
                             </div>

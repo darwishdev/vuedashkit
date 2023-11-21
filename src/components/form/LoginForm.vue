@@ -73,82 +73,85 @@ const toggleResetPasswordForm = () => {
 }
 
 const formProps: AppFormProps<any, any> = {
-    title: 'login',
-    options: {
-        isBulkCreateHidden: true,
-        isFormTransparent: false,
-        isSuccessNotificationHidden: false,
-        successMessageSummary: 'logged_in',
-        successMessageDetail: 'logged_in_details',
-        isHeaderSubmitHidden: true
-    },
-    submitHandler: {
-        endpoint: loginHandler.loginEndpoint,
-        callback: handleLoginCallback,
-        redirectRoute: loginHandler.redirectRoute || "home_view"
-    },
-    sections: {
-        'login': {
-            isTitleHidden: true,
-            isTransparent: true,
-            inputs: [
-                {
-                    $formkit: 'text',
-                    prefixIcon: "email",
-                    outerClass: "col-12",
-                    validation: "required:email",
-                    name: "email",
-                    placeholder: t("email"),
-                    label: t("email")
-                },
-                {
-                    $formkit: 'password',
-                    prefixIcon: "password",
-                    if: "$isResetPassword == false",
-                    outerClass: "col-12",
-                    validation: "required",
-                    name: "password",
-                    placeholder: t("password"),
-                    label: t("password")
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword == false",
-                    props: {
-                        class: "w-full forgot-password",
-                        label: t('forgot_password'),
-                        onClick: toggleResetPasswordForm
-                    }
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full success",
-                        label: t('login_with_otp'),
-                        onClick: signInWithOTP
-                    }
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full primary",
-                        label: t('send_reset_link'),
-                        onClick: resetPasswordForEmail
-                    }
-                },
+    context: {
 
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full danger",
-                        label: t('back_to_login'),
-                        onClick: toggleResetPasswordForm
+        title: 'login',
+        options: {
+            isBulkCreateHidden: true,
+            isFormTransparent: false,
+            isSuccessNotificationHidden: false,
+            successMessageSummary: 'logged_in',
+            successMessageDetail: 'logged_in_details',
+            isHeaderSubmitHidden: true
+        },
+        submitHandler: {
+            endpoint: loginHandler.loginEndpoint,
+            callback: handleLoginCallback,
+            redirectRoute: loginHandler.redirectRoute || "home_view"
+        },
+        sections: {
+            'login': {
+                isTitleHidden: true,
+                isTransparent: true,
+                inputs: [
+                    {
+                        $formkit: 'text',
+                        prefixIcon: "email",
+                        outerClass: "col-12",
+                        validation: "required:email",
+                        name: "email",
+                        placeholder: t("email"),
+                        label: t("email")
+                    },
+                    {
+                        $formkit: 'password',
+                        prefixIcon: "password",
+                        if: "$isResetPassword == false",
+                        outerClass: "col-12",
+                        validation: "required",
+                        name: "password",
+                        placeholder: t("password"),
+                        label: t("password")
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword == false",
+                        props: {
+                            class: "w-full forgot-password",
+                            label: t('forgot_password'),
+                            onClick: toggleResetPasswordForm
+                        }
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full success",
+                            label: t('login_with_otp'),
+                            onClick: signInWithOTP
+                        }
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full primary",
+                            label: t('send_reset_link'),
+                            onClick: resetPasswordForEmail
+                        }
+                    },
+
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full danger",
+                            label: t('back_to_login'),
+                            onClick: toggleResetPasswordForm
+                        }
                     }
-                }
-            ]
+                ]
+            }
         }
     }
 }
@@ -163,7 +166,7 @@ const formProps: AppFormProps<any, any> = {
                 <Suspense>
                     <template #default>
 
-                        <app-form ref="appFormElementRef" :formProps="formProps">
+                        <app-form ref="appFormElementRef" :context="formProps.context">
                             <template #prepend>
                                 <div class="flex justify-content-center">
                                     <LanguageToggler />

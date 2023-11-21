@@ -155,19 +155,19 @@ const { inputsSchema,
     globalFilters,
     tableFilters,
     deletedFilter,
-    searchKey } = await loadElements(props.headers, t, router.currentRoute.value.query)
+    searchKey } = await loadElements(props.context.headers, t, router.currentRoute.value.query)
 
-const newRecords = await prepareRecords(props.records)
-const newDeletedRecords = await prepareRecords(props.deletedRecords)
+const newRecords = await prepareRecords(props.context.records)
+const newDeletedRecords = await prepareRecords(props.context.deletedRecords)
 
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: newRecords,
     deletedRecords: newDeletedRecords,
-    initiallySelectedItems: props.initiallySelectedItems,
-    deleteRestoreHandler: props.options.deleteRestoreHandler,
+    initiallySelectedItems: props.context.initiallySelectedItems,
+    deleteRestoreHandler: props.context.options.deleteRestoreHandler,
     tableFiltersRef: tableFilters,
-    dataKey: props.dataKey as string,
-    fetchFn: props.fetchFn,
+    dataKey: props.context.dataKey as string,
+    fetchFn: props.context.fetchFn,
     deletedFilter
 }
 const tableStore = useTableNewStore()
@@ -176,8 +176,8 @@ tableStore.initTable(initTableParams)
 
 
 const renderViewBtn = (data: any) => {
-    if (!props.viewRouter) return
-    const { name, paramColumnName, paramName } = props.viewRouter
+    if (!props.context.viewRouter) return
+    const { name, paramColumnName, paramName } = props.context.viewRouter
     const params = {}
     params[paramName] = data[paramColumnName]
     return h(appBtnComponent, {
@@ -190,9 +190,9 @@ const renderViewBtn = (data: any) => {
 }
 
 const renderUpdateBtn = (data: any) => {
-    if (!props.options.updateHandler) return
-    const { routeName } = props.options.updateHandler
-    const params = { id: data[props.dataKey] }
+    if (!props.context.options.updateHandler) return
+    const { routeName } = props.context.options.updateHandler
+    const params = { id: data[props.context.dataKey] }
     return h(appBtnComponent, {
         class: "warning",
         icon: "pencil",
@@ -202,7 +202,7 @@ const renderUpdateBtn = (data: any) => {
     })
 }
 const renderDeleteRestoreBtn = (data: any) => {
-    if (!props.options.deleteRestoreHandler) return
+    if (!props.context.options.deleteRestoreHandler) return
     return h(appBtnComponent, {
         icon: tableStore.deleteRestoreVaraints.icon,
         class: "danger",
@@ -250,7 +250,7 @@ const renderExpander = () => {
 }
 const renderColumns = () => {
 
-    if (props.displayType == 'card') return renderCardColumns()
+    if (props.context.displayType == 'card') return renderCardColumns()
     const selectAllColumn = renderSelectAllColumn()
     const expanderColumn = renderExpander()
     const columns: VNode[] = [
@@ -269,7 +269,7 @@ const renderColumns = () => {
 }
 
 const renderActionsColumn = () => {
-    if (!props.options.updateHandler && !props.options.deleteRestoreHandler && !props.viewRouter) return
+    if (!props.context.options.updateHandler && !props.context.options.deleteRestoreHandler && !props.context.viewRouter) return
 
     const actionsColumn = h(Column, {
         header: 'actions',
@@ -292,12 +292,13 @@ const renderActionsColumn = () => {
 
 const renderTableActions = () => {
     // options must have at lease two keys title and descriptions so if the table has no handlers inside options and not exportable we will not render it 
-    const noActionsInsideOptions = ObjectKeys(props.options).length == 2
-    const notExportable = typeof props.exportable != 'undefined' && props.exportable == false
+    const noActionsInsideOptions = ObjectKeys(props.context.options).length == 2
+    const notExportable = typeof props.context.exportable != 'undefined' && props.context.exportable == false
     if (notExportable && noActionsInsideOptions) return
     return h(TableActions, {
-        exportable: props.exportable,
-        options: props.options
+        exportable: props.context.exportable,
+        formSections: props.context.formSections,
+        options: props.context.options
     })
 }
 
@@ -349,8 +350,8 @@ const renderTable = () => {
             h(TableHeader, {
                 deletedFilter,
                 searchKey,
-                title: props.options.title,
-                displayType: props.displayType,
+                title: props.context.options.title,
+                displayType: props.context.displayType,
                 showGlobalSearchFilter: globalFilters.length > 0,
                 "onUpdate:globalSearch": onGlobalSearch
             }),
@@ -373,7 +374,7 @@ const renderTable = () => {
 </script>
 
 <template>
-    <component class="app-table" :class="{ 'table-card': props.displayType == 'card' }" :is="renderTable()" />
+    <component class="app-table" :class="{ 'table-card': props.context.displayType == 'card' }" :is="renderTable()" />
 </template>
 
 

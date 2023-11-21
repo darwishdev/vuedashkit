@@ -2,7 +2,7 @@
 
 <script setup lang="ts">
 import { h, resolveComponent, inject, ref } from 'vue';
-import type { TableActionsProps } from '@/types/types'
+import type { TableActionsProps, AppFormDialogProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router';
 import { useDialogStore } from '@/stores/dialog';
@@ -35,6 +35,15 @@ const renderCreateBtn = () => {
         icon: "plus",
         class: "success",
         onClick: (_e: Event) => {
+            if (props.formSections) {
+                console.log("hola")
+                const params: AppFormDialogProps = {
+                    sections: props.formSections,
+                    handler: props.options.createHandler!
+                }
+                dialogStore.openForm(params)
+                return
+            }
             router.push({ name: props.options!.createHandler!.routeName })
         },
         label: t("create")
