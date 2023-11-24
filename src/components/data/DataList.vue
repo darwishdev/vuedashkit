@@ -33,7 +33,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQ
     tableFilters: Record<string, DataTableFilterMetaData>,
     activeFilters: Record<string, (string | number | Date)>,
     filterFormValue: Record<string, (string | number | undefined)>
-    tableColumns: { props: ColumnProps, slots: ColumnSlots | null }[]
+    tableColumns: { props: ColumnProps, slots: ColumnSlots | null, key: string }[]
     deletedFilter: boolean,
     globalFilters: string[],
     searchKey: string,
@@ -49,11 +49,12 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQ
         const inputsSchema: FormKitSchemaNode[] = []
         const filterFormValue: Record<string, (string | number | null)> = {}
         const tableFilters: Record<string, DataTableFilterMetaData> = {}
-        const tableColumns: { props: ColumnProps, slots: ColumnSlots | null }[] = []
+        const tableColumns: { props: ColumnProps, slots: ColumnSlots | null, key: string }[] = []
         const activeFilters: Record<string, (string | number | Date)> = {}
         const deletedFilter = deletedFilterStr ? deletedFilterStr == 'true' : false
         const searchKey = searchKeyParam ? searchKeyParam : ""
         const globalFilters: string[] = []
+
         for (const key of keys) {
             const currentValue = headers[key]
             const inputFilter = currentValue.filter
@@ -92,7 +93,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQ
                     body: (slotProps) => [renderFunc(slotProps.data)],
                 }
             }
-            tableColumns.push({ props: columnProps, slots: columnSlots })
+            tableColumns.push({ props: columnProps, slots: columnSlots, key })
         }
 
 
@@ -145,7 +146,7 @@ const slots = defineSlots<{
     start(props: { data: any }): any
     end(props: { data: any }): any
     expansion(props: { data: any }): any
-}>()
+} & any>()
 const props = defineProps<DataListProps<any, any>>();
 
 const { inputsSchema,
@@ -215,14 +216,15 @@ const renderDeleteRestoreBtn = (data: any) => {
 
 
 const renderCardColumns = () => {
-    const selectAllColumn = renderSelectAllColumn()
     const startColumn = h(Column, { class: 'card-start' }, { body: (props) => slots.start(props) })
     const endColumn = h(Column, { class: 'card-end' }, { body: (props) => slots.end(props) })
     const columns: VNode[] = [
         startColumn,
         endColumn,
-        selectAllColumn
     ]
+    if (!props.context.options.hideSelectCheckbox) {
+        columns.push(renderSelectAllColumn())
+    }
     const actionsColumn = renderActionsColumn()
     if (actionsColumn) columns.push(actionsColumn)
 
@@ -251,14 +253,16 @@ const renderExpander = () => {
 const renderColumns = () => {
 
     if (props.context.displayType == 'card') return renderCardColumns()
-    const selectAllColumn = renderSelectAllColumn()
     const expanderColumn = renderExpander()
-    const columns: VNode[] = [
-        selectAllColumn,
-    ]
+    const columns: VNode[] = []
+    if (!props.context.options.hideSelectCheckbox) {
+        columns.push(renderSelectAllColumn())
+    }
 
     tableColumns.forEach((columnObj) => {
-        const columnNode = h(Column, columnObj.props, columnObj.slots ? { body: columnObj.slots.body } : {})
+        const isSlotPassed = ObjectKeys(slots).includes(`items.${columnObj.key}`)
+        const bodySlot = isSlotPassed ? slots[`items.${columnObj.key}`] : columnObj.slots ? columnObj.slots.body : undefined
+        const columnNode = h(Column, columnObj.props, { body: bodySlot })
         columns.push(columnNode)
     })
     const actionsColumn = renderActionsColumn()
@@ -272,7 +276,7 @@ const renderActionsColumn = () => {
     if (!props.context.options.updateHandler && !props.context.options.deleteRestoreHandler && !props.context.viewRouter) return
 
     const actionsColumn = h(Column, {
-        header: 'actions',
+        header: t('actions'),
         class: "actions-btns",
         headerStyle: {
             width: "3rem"
@@ -317,17 +321,19 @@ const modelExpansionRef = ref([])
 const renderTable = () => {
 
 
+
     return h(DataTable, {
         value: tableStore.data,
         rows: 10,
         maxHeight: 200,
         ref: (el) => tableStore.dataListElementRef = el,
-        // scrollable: false,
-        paginator: true,
         selection: tableStore.modelSelectionRef,
         globalFilterFields: globalFilters,
         filters: tableStore.tableFiltersRef,
         expandedRows: modelExpansionRef.value,
+        paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
+        currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
+        paginator: (props.context.paginationOptions && props.context.paginationOptions.paginator),
         "onUpdate:selection": (e: any) => {
             tableStore.modelSelectionRef = e
             emit('update:selection', e)
@@ -340,8 +346,7 @@ const renderTable = () => {
             console.log('upadat filters', e)
         },
 
-        paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
-        currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
+
     }, {
         default: slots.default ? slots.default : () => renderColumns(),
         expansion: slots.expansion,
@@ -350,6 +355,7 @@ const renderTable = () => {
             h(TableHeader, {
                 deletedFilter,
                 searchKey,
+                hideDeleteFilter: props.context.options.hideDeleteFilter,
                 title: props.context.options.title,
                 displayType: props.context.displayType,
                 showGlobalSearchFilter: globalFilters.length > 0,

@@ -47,7 +47,7 @@ const renderGlobalSearchFilter = () => {
 
 }
 const renderDeletedFilter = () => {
-    if (!tableStore.deletedRecords) return
+    if (!tableStore.deletedRecords || props.hideDeleteFilter) return
     return h(formkitComp, {
         type: "toggle",
         value: deletedFilter,

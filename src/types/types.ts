@@ -75,13 +75,15 @@ export interface ITableHeader {
 
 
 // table options types
+
 export type InputUnitQtyProps = {
     context: {
         node: FormKitNode
-        buyUnit: string
-        sellUnit: string
-        buyUnitValue: number
-        sellUnitValue: number
+        unitBuy: string
+        unitSell: string
+        rowIndex?: number
+        unitRatio: number,
+        initialValues: { unitBuy?: number, unitSell?: number }
     },
 }
 type CreateHandler = {
@@ -117,6 +119,8 @@ type ImportHandler = {
 export type ApiListOptions = {
     title: string
     description: string
+    hideSelectCheckbox?: boolean
+    hideDeleteFilter?: boolean,
     createHandler?: CreateHandler
     updateHandler?: UpdateHandler
     deleteRestoreHandler?: DeleteRestoreHandler
@@ -135,6 +139,7 @@ export type TableActionsProps = {
 export type TableHeaderProps = {
     deletedFilter: boolean,
     displayType?: 'card' | 'table'
+    hideDeleteFilter?: boolean
     searchKey: string,
     title: string,
     showGlobalSearchFilter: boolean
@@ -158,6 +163,12 @@ export interface DataListProps<TResp, TRecord> {
         deletedRecords?: TRecord[]
         viewRouter?: TableRouter
         options: ApiListOptions
+        paginationOptions?: {
+            paginatorTemplate?: string,
+            currentPageReportTemplate?: string,
+            paginator: boolean,
+        }
+
         displayType?: 'card' | 'table'
         headers: Record<string, ITableHeader>
 

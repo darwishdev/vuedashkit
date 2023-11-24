@@ -2,40 +2,49 @@
  
 <script setup lang="ts">
 import type { InputUnitQtyProps } from '@/types/types';
-import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
 const props = defineProps<InputUnitQtyProps>();
-const { t } = useI18n()
-// const nodeElementsRef = ref<any>([])
-// const dependentDropdownMethods: IDropDownInputMethods = props.context.data ? new DependentDropdownMethodsLocal(props) : new DependentDropdownMethodsNetwork(props)
-// const formData = ref({
-//     loadOptions: async (input: { id: string }) => {
-//         return dependentDropdownMethods.loadInputOptions(input.id)
-//     },
-//     setInputValue: async (value: any, node: FormKitNode) => {
-//         console.log(value)
-//         if (!value) return
-//         if (dependentDropdownMethods.activeInputs[node.name]) {
-//             if (dependentDropdownMethods.activeInputs[node.name].value == value) return
-//         }
-//         return dependentDropdownMethods.setInputValue(node.name, value, nodeElementsRef.value)
-//     },
-// })
-
+const buyUnitElementRef = ref()
+const onUnitSellInput = (e, node) => {
+    if (!buyUnitElementRef.value.node.value && !e) return
+    const { sellValue, ratio, buyValue } = emitUpdate(e, node)
+    if (sellValue < ratio) {
+        return
+    }
+    const increseAmount = Math.floor(sellValue / ratio)
+    buyUnitElementRef.value.node.input(buyValue + increseAmount)
+    node.input(sellValue - increseAmount * ratio)
+}
+const emitUpdate = (e, node) => {
+    const buyValue = buyUnitElementRef.value.node.value ? parseFloat(buyUnitElementRef.value.node.value) : 0
+    const sellValue = e ? parseFloat(e) : 0
+    const ratio = props.context.unitRatio
+    const totalQuantity = buyValue * ratio + sellValue
+    props.context.node.input(totalQuantity)
+    return { buyValue, sellValue, ratio }
+}
+const onUnitBuyInput = (e, node) => {
+    if (!e) return
+    emitUpdate(e, node)
+}
 </script>
 <template>
-    <div class="unit-qty success-border  disabled">
+    <div class="unit-qty ">
         <!-- {{ props.context }} -->
         <div class="top">
             <div class="start">
-                Shrink
+                {{ props.context.unitBuy }}
             </div>
             <div class="end">
-                Can
+                {{ props.context.unitSell }}
             </div>
         </div>
         <div class="bottom">
-            <FormKit type="text" value="1" outerClass="start" />
-            <FormKit type="text" value="2" outerClass="end" />
+            <FormKit type="number" :onInput="onUnitBuyInput" ref="buyUnitElementRef" outerClass="start"
+                :value="props.context.initialValues.unitBuy ? props.context.initialValues.unitBuy.toString() : undefined" />
+            <FormKit type="number" :onInput="onUnitSellInput"
+                :value="props.context.initialValues.unitSell ? props.context.initialValues.unitSell.toString() : undefined"
+                outerClass="end" />
         </div>
     </div>
 </template> 

@@ -13,7 +13,7 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
         props: ['path', 'size'],
     })
     const unitQtyInput = createInput(InputUnitQty, {
-        props: ['buyUnit', 'sellUnit', 'buyUnitValue', 'sellUnitValue'],
+        props: ['unitBuy', 'unitSell', 'initialValues', 'unitRatio', 'sellUnitValue', 'rowIndex'],
     })
     const dependentDropdown = createInput(InputDependentDropdown, {
         props: ['dropDownSchema', 'data', 'groupName', 'levels'],

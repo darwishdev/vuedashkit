@@ -10,7 +10,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
 
   const modelSelectionRef = ref<any[]>([])
   const deleteRestoreHandler = ref<DeleteRestoreHandler | undefined>()
-  const records = ref<unknown[]>([])
+  const records = ref<any[]>([])
   const deletedRecords = ref<unknown[] | undefined>([])
   let fetchFn: tableFetchFn<ApiResponseList<TRecordDefault>, TRecordDefault> | undefined
   let dataKey: string = ""
@@ -33,6 +33,9 @@ export const useTableNewStore = defineStore('tablenew', () => {
     return modelSelectionRef.value.length === records.value.length
 
   })
+  const updateCellValue = (cellNumber: number, cellKey: string, cellValue: any) => {
+    records.value[cellNumber][cellKey] = cellValue
+  }
   const deleteRestoreVaraints = computed(() => {
     if (showDeletedRef.value) return { icon: 'replay', label: 'restore', empty: "empty_records_deleted" }
     return { icon: 'trash', label: 'delete', empty: "empty_records" }
@@ -92,6 +95,7 @@ export const useTableNewStore = defineStore('tablenew', () => {
     isAllRecordsSelected,
     modelSelectionRef,
     dataListElementRef,
+    updateCellValue,
     deleteRestoreHandler,
     fetchFn,
     tableFiltersRef,

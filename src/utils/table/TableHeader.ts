@@ -78,4 +78,25 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 
         return h('div', convertDateRedable(data))
     }
+}
+
+
+
+export class TableHeaderUnitInput extends TableHeaderText implements ITableHeader {
+    renderHtml = (value: any) => {
+        const formkitComp = resolveComponent('FormKit')
+
+        return h(formkitComp, {
+            type: "unitQty",
+            unitBuy: value['unitBuy'],
+            unitSell: value['unitSell'],
+            unitRatio: value['unitRatio'],
+            initialValues: {},
+            onInput: (v: any) => {
+                value.valuation = v * value['productCost']
+            }
+
+
+        })
+    }
 } 
