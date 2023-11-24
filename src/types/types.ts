@@ -81,10 +81,16 @@ export type InputUnitQtyProps = {
         node: FormKitNode
         unitBuy: string
         unitSell: string
-        rowIndex?: number
         unitRatio: number,
         initialValues: { unitBuy?: number, unitSell?: number }
     },
+}
+export type UnitPriceProps = {
+    headers: {
+        label: string,
+        value: string,
+        background?: string
+    }[],
 }
 type CreateHandler = {
     title: string

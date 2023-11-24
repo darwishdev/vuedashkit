@@ -29,7 +29,7 @@ const onUnitBuyInput = (e, node) => {
 }
 </script>
 <template>
-    <div class="unit-qty ">
+    <div class="unit-qty">
         <!-- {{ props.context }} -->
         <div class="top">
             <div class="start">
@@ -60,6 +60,8 @@ const onUnitBuyInput = (e, node) => {
             & .bottom {
                 &>div {
                     border-color: var(--color-danger);
+
+
                 }
             }
         }
@@ -79,6 +81,8 @@ const onUnitBuyInput = (e, node) => {
                 border: 1px solid #fff;
 
             }
+
+
 
 
         }

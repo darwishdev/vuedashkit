@@ -3,7 +3,7 @@ import { h, resolveComponent } from 'vue'
 import Tag from 'primevue/tag';
 import { type ColumnProps } from 'primevue/column';
 import { convertDateRedable } from '@/utils/date/date';
-
+import { UnitPriceParse } from '../currency/currency';
 export class TableHeaderText implements ITableHeader {
     columnProps: ColumnProps = {}
     columnName: string
@@ -88,6 +88,7 @@ export class TableHeaderUnitInput extends TableHeaderText implements ITableHeade
 
         return h(formkitComp, {
             type: "unitQty",
+            innerClass: "justify-content-center",
             unitBuy: value['unitBuy'],
             unitSell: value['unitSell'],
             unitRatio: value['unitRatio'],
@@ -97,6 +98,55 @@ export class TableHeaderUnitInput extends TableHeaderText implements ITableHeade
             }
 
 
+        })
+    }
+}
+
+
+export class TableHeaderUnitPrice extends TableHeaderText implements ITableHeader {
+    renderHtml = (value: any) => {
+        const unitPrice = resolveComponent('UnitPrice')
+
+        return h(unitPrice, {
+            headers: [
+                {
+                    label: value['unitBuy'],
+                    value: value['unitRatio'] * value['productCost'],
+
+                },
+                {
+                    label: value['unitSell'],
+                    value: value['unitRatio'],
+
+                }
+            ]
+        })
+    }
+}
+export class TableHeaderUnitPriceTotal extends TableHeaderText implements ITableHeader {
+    renderHtml = (value: any) => {
+        const unitPrice = resolveComponent('UnitPrice')
+        const { unitBuyPrice, unitSellPrice, totalPrice } = UnitPriceParse(value['valuation'], value['productCost'], value['unitRatio'])
+        return h(unitPrice, {
+
+            headers: [
+                {
+                    label: value['unitBuy'],
+                    value: unitBuyPrice
+
+                },
+                {
+                    label: value['unitSell'],
+                    value: unitSellPrice
+
+                },
+                {
+                    label: 'total',
+                    value: totalPrice,
+                    background: 'var(--color-background)'
+
+                }
+            ]
         })
     }
 } 

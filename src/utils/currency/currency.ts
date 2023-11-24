@@ -21,3 +21,14 @@ export const FormatCurrency = (value: string | number, currency: string = 'EGP')
     const formattedValue = parts.join('.') + ' ' + currency;
     return formattedValue;
 };
+
+
+
+export const UnitPriceParse = (totalPrice: number, cost: number, ratio: number): { unitBuyPrice: number, unitSellPrice: number, totalPrice: number } => {
+    const unitSellQuantityWhole = totalPrice / cost
+    const unitBuyQuantity = Math.floor(unitSellQuantityWhole / ratio)
+    const unitSellQuantity = unitSellQuantityWhole - unitBuyQuantity * ratio
+    const unitBuyPrice = unitBuyQuantity * ratio * cost
+    const unitSellPrice = unitSellQuantity * cost
+    return { unitBuyPrice, unitSellPrice, totalPrice };
+};
