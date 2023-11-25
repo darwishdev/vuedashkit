@@ -1,31 +1,46 @@
 
  
 <script setup lang="ts">
-import type { InputUnitQtyProps } from '@/types/types';
+import type { InputUnitQtyProps, UnitValues } from '@/types/types';
+import { UnitSellShift, UnitParseWholeQty } from '@/utils/currency/currency'
+import { Debounce } from '@/utils/debounce/debounce';
 import { ref } from 'vue';
 const props = defineProps<InputUnitQtyProps>();
+const { unitRatio } = props.context
+const blockListners = ref(false)
+const debounceDelay = 300
 const buyUnitElementRef = ref()
-const onUnitSellInput = (e, node) => {
-    if (!buyUnitElementRef.value.node.value && !e) return
-    const { sellValue, ratio, buyValue } = emitUpdate(e, node)
-    if (sellValue < ratio) {
-        return
-    }
-    const increseAmount = Math.floor(sellValue / ratio)
-    buyUnitElementRef.value.node.input(buyValue + increseAmount)
-    node.input(sellValue - increseAmount * ratio)
-}
-const emitUpdate = (e, node) => {
-    const buyValue = buyUnitElementRef.value.node.value ? parseFloat(buyUnitElementRef.value.node.value) : 0
-    const sellValue = e ? parseFloat(e) : 0
-    const ratio = props.context.unitRatio
-    const totalQuantity = buyValue * ratio + sellValue
+const sellUnitElementRef = ref()
+const emitUpdate = (values?: UnitValues) => {
+    const unitValues = values ? values : parseValues()
+    const totalQuantity = UnitParseWholeQty(unitValues, unitRatio)
     props.context.node.input(totalQuantity)
-    return { buyValue, sellValue, ratio }
 }
-const onUnitBuyInput = (e, node) => {
-    if (!e) return
-    emitUpdate(e, node)
+const parseValues = (): UnitValues => {
+    const buyValue = buyUnitElementRef.value.node.value
+    const sellValue = sellUnitElementRef.value.node.value
+    const buyValueConverted = buyValue ? parseFloat(buyValue) : 0
+    const sellValueConverted = sellValue ? parseFloat(sellValue) : 0
+    return { unitBuy: buyValueConverted, unitSell: sellValueConverted }
+}
+const onUnitSellInput = (e: unknown, node: any) => {
+    if ((!buyUnitElementRef.value.node.value && !e) || blockListners.value) return
+    blockListners.value = true
+    const values = parseValues()
+    const { unitBuyQuantityIncreaseAmount, unitSellQuantity } = UnitSellShift(values, unitRatio)
+    values.unitBuy = values.unitBuy + unitBuyQuantityIncreaseAmount
+    buyUnitElementRef.value.node.input(values.unitBuy)
+    node.input(unitSellQuantity)
+    const debouncedEvent = Debounce(() => {
+        console.log('debounces')
+        emitUpdate(values)
+        blockListners.value = false
+    }, debounceDelay)
+    debouncedEvent()
+}
+const onUnitBuyInput = () => {
+    const debouncedEvent = Debounce(emitUpdate, debounceDelay)
+    debouncedEvent()
 }
 </script>
 <template>
@@ -40,10 +55,10 @@ const onUnitBuyInput = (e, node) => {
             </div>
         </div>
         <div class="bottom">
-            <FormKit type="number" :onInput="onUnitBuyInput" ref="buyUnitElementRef" outerClass="start"
-                :value="props.context.initialValues.unitBuy ? props.context.initialValues.unitBuy.toString() : undefined" />
-            <FormKit type="number" :onInput="onUnitSellInput"
-                :value="props.context.initialValues.unitSell ? props.context.initialValues.unitSell.toString() : undefined"
+            <FormKit type="number" ref="buyUnitElementRef" :onInput="onUnitBuyInput" outerClass="start"
+                :value="props.context.initialValues ? props.context.initialValues.unitBuy.toString() : undefined" />
+            <FormKit type="number" ref="sellUnitElementRef" :onInput="onUnitSellInput"
+                :value="props.context.initialValues ? props.context.initialValues.unitSell.toString() : undefined"
                 outerClass="end" />
         </div>
     </div>

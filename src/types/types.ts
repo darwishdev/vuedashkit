@@ -75,14 +75,17 @@ export interface ITableHeader {
 
 
 // table options types
-
+export type UnitValues = {
+    unitBuy: number
+    unitSell: number
+}
 export type InputUnitQtyProps = {
     context: {
         node: FormKitNode
         unitBuy: string
         unitSell: string
         unitRatio: number,
-        initialValues: { unitBuy?: number, unitSell?: number }
+        initialValues?: UnitValues
     },
 }
 export type UnitPriceProps = {

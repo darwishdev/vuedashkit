@@ -1,3 +1,4 @@
+import type { UnitValues } from "@/types/types";
 
 
 export const FormatCurrency = (value: string | number, currency: string = 'EGP'): string => {
@@ -31,4 +32,18 @@ export const UnitPriceParse = (totalPrice: number, cost: number, ratio: number):
     const unitBuyPrice = unitBuyQuantity * ratio * cost
     const unitSellPrice = unitSellQuantity * cost
     return { unitBuyPrice, unitSellPrice, totalPrice };
+};
+
+export const UnitParseWholeQty = (values: UnitValues, ratio: number): number => {
+    return values.unitBuy * ratio + values.unitSell
+};
+
+
+export const UnitSellShift = (values: UnitValues, ratio: number): { unitBuyQuantityIncreaseAmount: number, unitSellQuantity: number } => {
+    if (values.unitSell < ratio) {
+        return { unitBuyQuantityIncreaseAmount: 0, unitSellQuantity: values.unitSell }
+    }
+    const unitBuyQuantityIncreaseAmount = Math.floor(values.unitSell / ratio)
+    const unitSellQuantity = values.unitSell - unitBuyQuantityIncreaseAmount * ratio
+    return { unitBuyQuantityIncreaseAmount, unitSellQuantity };
 };

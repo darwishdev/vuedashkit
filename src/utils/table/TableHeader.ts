@@ -85,19 +85,15 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
 export class TableHeaderUnitInput extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         const formkitComp = resolveComponent('FormKit')
-
         return h(formkitComp, {
             type: "unitQty",
             innerClass: "justify-content-center",
             unitBuy: value['unitBuy'],
             unitSell: value['unitSell'],
             unitRatio: value['unitRatio'],
-            initialValues: {},
             onInput: (v: any) => {
                 value.valuation = v * value['productCost']
             }
-
-
         })
     }
 }
@@ -112,7 +108,6 @@ export class TableHeaderUnitPrice extends TableHeaderText implements ITableHeade
                 {
                     label: value['unitBuy'],
                     value: value['unitRatio'] * value['productCost'],
-
                 },
                 {
                     label: value['unitSell'],
