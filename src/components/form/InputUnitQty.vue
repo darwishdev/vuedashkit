@@ -21,24 +21,35 @@ const parseValues = (): UnitValues => {
     const sellValue = sellUnitElementRef.value.node.value
     const buyValueConverted = buyValue ? parseFloat(buyValue) : 0
     const sellValueConverted = sellValue ? parseFloat(sellValue) : 0
-    return { unitBuy: buyValueConverted, unitSell: sellValueConverted }
+    const unitBuy = buyValueConverted < 0 ? 0 : buyValueConverted
+    const unitSell = sellValueConverted < 0 ? 0 : sellValueConverted
+    return { unitBuy, unitSell }
 }
-const onUnitSellInput = (e: unknown, node: any) => {
+const onUnitSellInput = (e: any, node: any) => {
     if ((!buyUnitElementRef.value.node.value && !e) || blockListners.value) return
     blockListners.value = true
     const values = parseValues()
     const { unitBuyQuantityIncreaseAmount, unitSellQuantity } = UnitSellShift(values, unitRatio)
     values.unitBuy = values.unitBuy + unitBuyQuantityIncreaseAmount
-    buyUnitElementRef.value.node.input(values.unitBuy)
-    node.input(unitSellQuantity)
+    if (unitBuyQuantityIncreaseAmount > 0) {
+        buyUnitElementRef.value.node.input(values.unitBuy)
+        node.input(unitSellQuantity)
+    }
+    if (parseFloat(e) < 0) {
+        node.input(0)
+    }
     const debouncedEvent = Debounce(() => {
-        console.log('debounces')
         emitUpdate(values)
         blockListners.value = false
     }, debounceDelay)
     debouncedEvent()
 }
-const onUnitBuyInput = () => {
+const onUnitBuyInput = (e: any, node: any) => {
+    if ((!sellUnitElementRef.value.node.value && !e) || blockListners.value) return
+    if (parseFloat(e) < 0) {
+        node.input(0)
+    }
+    const values = parseValues()
     const debouncedEvent = Debounce(emitUpdate, debounceDelay)
     debouncedEvent()
 }

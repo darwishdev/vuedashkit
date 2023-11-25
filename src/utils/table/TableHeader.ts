@@ -111,7 +111,7 @@ export class TableHeaderUnitPrice extends TableHeaderText implements ITableHeade
                 },
                 {
                     label: value['unitSell'],
-                    value: value['unitRatio'],
+                    value: value['productCost'],
 
                 }
             ]
