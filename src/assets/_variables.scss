@@ -42,8 +42,7 @@
   --color-info: #0f8bfd;
   --color-danger: #fc6161;
   --fk-margin-outer: 0;
-  --fk-border-box-shadow: transparent;
-  --fk-border-box-shadow-focus: transparent !important;
+  
   --fk-bg-input: rgba(230, 17, 17, 0.02) !important;
   --fk-font-family-label: var(--font-family);
   --fk-bg-decorator: rgba(0, 0, 0, 0.05);
@@ -60,12 +59,13 @@
   --fk-color-tag: #256029;
   --fk-day-bg: var(--color-card);
   --fk-day-bg-hover : rgba(23,255,255,1)
+  --fk-border-box-shadow: transparent;
+  --fk-border-box-shadow-focus: transparent !important;
   --fk-color-primary: transparent;
   --fk-color-tag-background: #c8e6c9;
   --fk-day-bg-selected:var(--color-primary);
-  --fk-dropdown-active-bg:var(--color-primary);
   --fk-border-width: 0; 
-    --fk-font-family: "Cairo", sans-serif !important;
+  --fk-font-family: "Cairo", sans-serif !important;
 }
 
 body .dark,

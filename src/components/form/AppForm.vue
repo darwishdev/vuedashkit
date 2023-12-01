@@ -239,7 +239,6 @@ const submitHandler = async (req: any, node: FormKitNode) => {
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
-
     await new Promise((resolve, reject) => {
         handler.endpoint(req)
             .then(async (res: any) => {

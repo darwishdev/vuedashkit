@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { useTableNewStore } from "@/stores/tablenew";
+import { useTableStore } from "@/stores/table";
 import { useNotificationStore } from "@/stores/notification";
 
 
 // const props = defineProps<TableHeaderProps>();
 const dialogRef = inject("dialogRef") as any;
 const apiClient = inject("apiClient") as any;
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 const notificationStore = useNotificationStore()
 const close = (e: any) => {
     dialogRef.value.close(e);
@@ -97,4 +97,4 @@ const confirm = () => {
         }
     }
 }
-</style>
+</style>@/stores/table

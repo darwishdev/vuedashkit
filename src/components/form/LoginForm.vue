@@ -217,7 +217,7 @@ const formProps: AppFormProps<any, any> = {
             margin: 20px 10px;
 
             &:hover {
-                color: var(--color-secondary);
+                color: #fff;
             }
         }
     }

@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
 
-export const useTableNewStore = defineStore('tablenew', () => {
+export const useTableStore = defineStore('table', () => {
   const showDeletedRef = ref<Boolean>(false)
   const dataListElementRef = ref()
 

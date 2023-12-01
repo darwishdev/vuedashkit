@@ -277,7 +277,9 @@
 .formkit-outer .formkit-icon.formkit-prefix-icon {
   background: var(--color-background);
 }
-
+.formkit-selector {
+  color: var(--color-white);
+}
 .p-panel .p-panel-header .p-panel-header-icon {
   border-radius: 6px;
   &:focus {

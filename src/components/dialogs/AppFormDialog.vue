@@ -3,18 +3,30 @@ import { inject } from "vue";
 import type { AppFormDialogProps, AppFormProps } from "@/types/types";
 import AppForm from '@/components/form/AppForm.vue';
 import { useI18n } from 'vue-i18n';
+import AppLoading from '@/components/loading/AppLoading.vue';
 const { t } = useI18n()
 const props = defineProps<AppFormDialogProps>();
+const apiClient = inject("apiClient") as any;
 
 const dialogRef = inject("dialogRef") as any;
-const close = (e: any) => {
-    dialogRef.value.close(e);
-};
 
-const testFn = (req) => {
-    console.log(req);
-    close(req)
-}
+
+const submitHandler = (req: any) => {
+    return new Promise((resolve, reject) => {
+        const func = apiClient[props.handler.endpoint]
+
+        console.log('gunc', props.handler, apiClient[props.handler.endpoint])
+        if (typeof func == 'function') {
+
+            func(req).then((_) => {
+                dialogRef.value.close()
+
+            })
+        }
+        resolve(null)
+    })
+
+};
 
 const formProps: AppFormProps<any, any> = {
     context: {
@@ -25,7 +37,7 @@ const formProps: AppFormProps<any, any> = {
             isFormTransparent: true,
         },
         submitHandler: {
-            endpoint: testFn,
+            endpoint: submitHandler,
         },
         sections: props.sections
     }
@@ -40,13 +52,9 @@ const formProps: AppFormProps<any, any> = {
                 <app-form :context="formProps.context" />
             </template>
             <template #fallback>
-                <div class="loading">
-                    loo
-                </div>
+                <AppLoading type="form" />
             </template>
         </Suspense>
-
-
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 {
   "name": "v-dashkit",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "private": false,
   "type": "module",
   "module": "dist/src/vdashkit.js",

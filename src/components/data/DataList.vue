@@ -125,7 +125,7 @@ import TableActions from './TableActions.vue';
 import TableHeader from './TableHeader.vue';
 import TableFilter from './TableFilter.vue';
 import { useDialogStore } from '@/stores/dialog';
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import Column from 'primevue/column';
 import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
 import DataTable from 'primevue/datatable';
@@ -145,6 +145,7 @@ const slots = defineSlots<{
     default(): any
     start(props: { data: any }): any
     end(props: { data: any }): any
+    actions(props: { data: any }): any
     expansion(props: { data: any }): any
 } & any>()
 const props = defineProps<DataListProps<any, any>>();
@@ -171,7 +172,7 @@ const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordD
     fetchFn: props.context.fetchFn,
     deletedFilter
 }
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 tableStore.initTable(initTableParams)
 // const tableFiltersRef = ref(tableFilters)
 
@@ -261,6 +262,7 @@ const renderColumns = () => {
 
     tableColumns.forEach((columnObj) => {
         const isSlotPassed = ObjectKeys(slots).includes(`items.${columnObj.key}`)
+        console.log("hola", slots[`items.${columnObj.key}`])
         const bodySlot = isSlotPassed ? slots[`items.${columnObj.key}`] : columnObj.slots ? columnObj.slots.body : undefined
         const columnNode = h(Column, columnObj.props, { body: bodySlot })
         columns.push(columnNode)
@@ -282,7 +284,7 @@ const renderActionsColumn = () => {
             width: "3rem"
         },
     }, {
-        body: ({ data }) => h('div', {
+        body: ({ data }) => slots.actions ? slots.actions({ data }) : h('div', {
             class: "flex "
         }, [
             renderViewBtn(data),
@@ -366,14 +368,13 @@ const renderTable = () => {
                 tableFilters,
                 activeFilters,
                 filterFormValue,
-                "onUpdate:tableFilters": onFiltersFormUpdated
             })
         ]),
         empty: () => h('div', {
             class: "empty-table"
         }, [
             h("h3", t(tableStore.deleteRestoreVaraints.empty)),
-            // h("p", t(`breif_${router.currentRoute.value.name as string}`)),
+            h("p", t(`breif_${router.currentRoute.value.name as string}`)),
         ]),
     })
 }
@@ -454,7 +455,7 @@ const renderTable = () => {
         & p {
             max-width: 800px;
             padding: 25px;
-            background: rgba(255, 255, 255, .9);
+            background: var(--color-card);
             margin: 20px auto;
             border-radius: 6px;
         }
@@ -669,4 +670,4 @@ const renderTable = () => {
 </style>
 
 
-@/types/types@/types/types
+@/types/types@/types/types@/stores/table

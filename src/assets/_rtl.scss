@@ -130,17 +130,16 @@
     margin-right: 0;
     margin-left: 0.5rem;
   }
-  .layout-sidebar-active {
-    .p-panelmenu .p-menuitem .material-symbols-outlined {
-      margin-inline-end: 0px;
-      margin-inline-start: 15px;
-    }
-    .p-panelmenu .p-panelmenu-header .material-symbols-outlined {
-      margin-inline-end: 0px;
-      margin-inline-start: 20px;
+
+  & .app-panel .p-panel-header .p-panel-icons .pi-filter-slash {
+    right: auto !important;
+    left: 50px;
+  }
+  & .app-layout:not(.active-menu) {
+    & .p-panelmenu .p-menuitem .material-symbols-outlined {
+      margin-inline-end: 0;
     }
   }
-
   .app-table .p-panel-icons {
     transform: translateX(20px) !important;
   }

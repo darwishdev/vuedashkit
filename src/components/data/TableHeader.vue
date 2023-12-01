@@ -4,9 +4,9 @@ import type { TableHeaderProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import { Debounce } from '@/utils/debounce/debounce'
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import { useNotificationStore } from '@/stores/notification';
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 const notificationStore = useNotificationStore()
 
 
@@ -149,4 +149,4 @@ const renderHeader = () => {
 
     }
 }
-</style>@/types/types
+</style>@/types/types@/stores/table

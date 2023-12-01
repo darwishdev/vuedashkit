@@ -1,4 +1,3 @@
-import { FilterMatchMode, type FilterMatchModeOptions } from "primevue/api"
 import type { ColumnProps } from 'primevue/column'
 import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
 import type { VNode } from "vue"

@@ -82,12 +82,12 @@ import DataList from '@/components/data/DataList.vue';
 import { ref, inject, watch } from 'vue'
 import AppPanel from '../base/AppPanel.vue';
 import { TableHeaderText, TableHeaderHidden } from '@/utils/table/TableHeader'
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import Column from 'primevue/column';
 import type { DataListProps, InputPermissionsProps, Permission, PermissionsHandler } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 themeStore.startProgressBar()
 const props = defineProps<InputPermissionsProps>();
 const isModelSelectionBlocing = ref(false)
@@ -375,4 +375,4 @@ const onGlobalSearch = (v: any) => {
 .app-card .start {
     background-color: transparent !important;
 }
-</style>@/types/types@/types/types
+</style>@/types/types@/types/types@/stores/table

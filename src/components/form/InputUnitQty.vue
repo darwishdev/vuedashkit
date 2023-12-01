@@ -8,7 +8,7 @@ import { ref } from 'vue';
 const props = defineProps<InputUnitQtyProps>();
 const { unitRatio } = props.context
 const blockListners = ref(false)
-const debounceDelay = 300
+const debounceDelay = 5
 const buyUnitElementRef = ref()
 const sellUnitElementRef = ref()
 const emitUpdate = (values?: UnitValues) => {

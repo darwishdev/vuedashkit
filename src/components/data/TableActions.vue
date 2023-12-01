@@ -9,12 +9,12 @@ import { useDialogStore } from '@/stores/dialog';
 import { saveAs } from 'file-saver';
 import Menu from 'primevue/menu';
 import { useNotificationStore } from "@/stores/notification";
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import { useThemeStore } from '@/stores/theme';
 import { ObjectKeys } from '@/utils/object/object';
 const themeStore = useThemeStore()
 
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 const notificationStore = useNotificationStore()
 const props = defineProps<TableActionsProps>();
 const emit = defineEmits<{
@@ -214,4 +214,4 @@ const renderTableActions = () => {
         }
     }
 }
-</style>@/types/types
+</style>@/types/types@/stores/table
