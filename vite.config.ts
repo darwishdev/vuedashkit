@@ -24,6 +24,8 @@ const buildObjectMap: Record<string, buildObject> = {
   stores: { dtsFile: 'src/stores/stores.ts', entryFile: "src/stores/stores.js", isTs2: true },
   TableHeader: { dtsFile: 'src/utils/table/TableHeader.ts', entryFile: "src/utils/table/TableHeader.js", isTs2: true },
   object: { dtsFile: "src/utils/object/object.ts", entryFile: "src/utils/object/object.js", isTs2: true },
+  currency: { dtsFile: "src/utils/currency/currency.ts", entryFile: "src/utils/currency/currency.js", isTs2: true },
+  date: { dtsFile: "src/utils/date/date.ts", entryFile: "src/utils/date/date.js", isTs2: true },
   AppLayout: { dtsFile: "src/components/theme/AppLayout.vue", entryFile: "src/components/theme/AppLayout.vue.js", isTs2: true },
   AppForm: { dtsFile: "src/components/form/AppForm.vue", entryFile: "src/components/form/AppForm.vue.js", isTs2: true },
   DataList: { dtsFile: "src/components/data/DataList.vue", entryFile: "src/components/data/DataList.vue.js", isTs2: true },

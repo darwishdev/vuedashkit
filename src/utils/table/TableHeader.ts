@@ -40,7 +40,6 @@ export class TableHeaderHidden extends TableHeaderText implements ITableHeader {
         return h('div', null)
     }
 }
-
 export class TableHeaderTag extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         return h(Tag, {
@@ -48,10 +47,6 @@ export class TableHeaderTag extends TableHeaderText implements ITableHeader {
         })
     }
 }
-
-
-
-
 export class TableHeaderLink extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         if (!this.tableRouter || !this.tableRouter) {
@@ -62,16 +57,12 @@ export class TableHeaderLink extends TableHeaderText implements ITableHeader {
         return h(ruterLink, { to: { name: this.tableRouter!.name, params } }, () => [h('span', value[this.columnName])])
     }
 }
-
-
 export class TableHeaderImage extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         const appImage = resolveComponent('app-image')
         return h(appImage, { src: value[this.columnName], size: 75 })
     }
 }
-
-
 export class TableHeaderDate extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         const data = value[this.columnName]
@@ -79,8 +70,6 @@ export class TableHeaderDate extends TableHeaderText implements ITableHeader {
         return h('div', convertDateRedable(data))
     }
 }
-
-
 
 export class TableHeaderUnitInput extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
@@ -121,7 +110,7 @@ export class TableHeaderUnitPrice extends TableHeaderText implements ITableHeade
 export class TableHeaderUnitPriceTotal extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         const unitPrice = resolveComponent('UnitPrice')
-        const { unitBuyPrice, unitSellPrice, totalPrice } = UnitPriceParse(value['valuation'], value['productCost'], value['unitRatio'])
+        const { unitBuyPrice, unitSellPrice, totalPrice } = UnitPriceParse(value['valuation'], value['transactionPrice'], value['unitRatio'])
         return h(unitPrice, {
 
             headers: [

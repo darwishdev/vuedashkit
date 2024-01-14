@@ -1,6 +1,6 @@
 {
   "name": "v-dashkit",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "private": false,
   "type": "module",
   "module": "dist/src/vdashkit.js",
@@ -36,6 +36,10 @@
     "./loading/AppLayoutLoading.d.ts": "./dist/src/components/loading/AppLayoutLoading.vue.d.ts",
     "./utils/table": "./dist/src/utils/table/TableHeader.js",
     "./utils/table.d.ts": "./dist/src/utils/table/TableHeader.d.ts",
+    "./utils/currency": "./dist/src/utils/currency/currency.js",
+    "./utils/currency.d.ts": "./dist/src/utils/currency/currency.d.ts",
+    "./utils/date": "./dist/src/utils/date/date.js",
+    "./utils/date.d.ts": "./dist/src/utils/date/date.d.ts",
     "./utils/object": "./dist/src/utils/object/object.js",
     "./utils/object.d.ts": "./dist/src/utils/object/object.d.ts"
   },

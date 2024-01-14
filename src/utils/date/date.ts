@@ -7,6 +7,19 @@ export const convertApiDate = (apiDate: { nanos: Number, seconds: number }) => {
 
 }
 
+
+export const checkExpiry = (date: string): boolean => {
+    return new Date(date) > new Date()
+}
+
+
+export const getExpiryByPeriod = (hours: number): Date => {
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + hours); // Set expiration to two hours from now
+    return expirationDate
+
+}
+
 export const convertDateRedable = (date: Date) => {
 
     // if (typeof date.getTime == 'function')

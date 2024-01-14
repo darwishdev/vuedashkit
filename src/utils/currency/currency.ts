@@ -1,7 +1,7 @@
 import type { UnitValues } from "@/types/types";
 
 
-export const FormatCurrency = (value: string | number, currency: string = 'EGP'): string => {
+export const FormateCurrency = (value: string | number, currency: string = 'ج.م'): string => {
     let numericValue: number;
     if (typeof value == 'string') {
         numericValue = parseFloat(value);
@@ -10,6 +10,9 @@ export const FormatCurrency = (value: string | number, currency: string = 'EGP')
         }
     } else {
         numericValue = value;
+    }
+    if (!numericValue) {
+        return `0 ${currency}`
     }
     // Round the numeric value to 2 decimals
     const roundedValue = numericValue.toFixed(2);

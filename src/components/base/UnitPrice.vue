@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import type { UnitPriceProps } from '@/types/types';
 import { ref } from 'vue';
-import { FormatCurrency } from '@/utils/currency/currency';
+import { FormateCurrency } from '@/utils/currency/currency';
 const props = defineProps<UnitPriceProps>();
 
 </script>
@@ -13,14 +13,14 @@ const props = defineProps<UnitPriceProps>();
         <div class="top">
             <div class="header" v-for="(header, index ) in props.headers" :key="index"
                 :style="`background: ${header.background}`">
-                {{ header.label }}
+                {{ $t(header.label) }}
             </div>
 
         </div>
         <div class="bottom">
             <div class="header" v-for="(header, index ) in props.headers" :key="index"
                 :style="`background: ${header.background}`">
-                {{ FormatCurrency(header.value, $t('currency')) }}
+                {{ FormateCurrency(header.value, $t('currency')) }}
             </div>
         </div>
     </div>

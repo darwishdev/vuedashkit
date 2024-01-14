@@ -68,8 +68,13 @@ export interface ITableHeader {
     columnProps?: ColumnProps
     filter?: AppTableFilter
     tableRouter?: TableRouter
+    unitAttributes?: {
+        unitSellHeader: string,
+        unitBuyHeader: string,
+        unitValueHeader: string,
+    }
     isGlobalFilter?: boolean
-    renderHtml?: (value: any) => VNode
+    renderHtml?: (value: any) => any
 }
 
 
@@ -94,9 +99,23 @@ export type UnitPriceProps = {
         background?: string
     }[],
 }
+export type UnitHeaderProps = {
+    class?: string,
+    headers: {
+        label: string,
+        is_currency: boolean,
+        value: string,
+        background?: string
+    }[],
+}
+export type RedirectRouteParam = {
+    paramName: string,
+    responseValueKey: string,
+}
 type CreateHandler = {
     title: string
     redirectRoute: string
+    redirectRouteParam?: RedirectRouteParam,
     routeName: string
     endpoint: string
 }
@@ -107,6 +126,7 @@ type UpdateHandler = {
     title: string
     redirectRoute: string
     routeName: string
+    redirectRouteParam?: RedirectRouteParam,
     endpoint: string
     findEndpoint: string
     findRequestProperty: string
@@ -185,6 +205,7 @@ export interface DataListProps<TResp, TRecord> {
 export type AppFormDialogProps = {
     sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
     handler: CreateHandler | UpdateHandler
+    size?: Size
 }
 export type TableHeaderFilter = {
     mode: string
@@ -217,6 +238,10 @@ export type SubmitHandler<TReq, TResp> = {
     mapFunction?: (formReq: any) => TReq
     callback?: (formResp: TResp) => any
     redirectRoute?: string
+    redirectRouteParam?: {
+        paramName: string,
+        responseValueKey: string
+    }
 }
 
 export type FindHandler<TReq, TResp> = {

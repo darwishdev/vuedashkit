@@ -23,7 +23,7 @@ const debouncedGlobalSearchEmit = Debounce((value: string) => {
     emit('update:globalSearch', value);
     // tableFiltersRef.value = { ...value }
 
-}, 500);
+}, 10);
 
 const renderGlobalSearchFilter = () => {
     if (!props.showGlobalSearchFilter) {

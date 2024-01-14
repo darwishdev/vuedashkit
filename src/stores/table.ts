@@ -84,9 +84,22 @@ export const useTableStore = defineStore('table', () => {
     return
   }
 
+
+
+
+  const appendRow = (row: any) => {
+    records.value.push(row)
+  }
+
+  const prependRow = (row: any) => {
+    records.value.unshift(row)
+  }
+
   return {
     initTable,
     data,
+    appendRow,
+    prependRow,
     records,
     deletedRecords,
     selectedIds,

@@ -146,6 +146,7 @@ const slots = defineSlots<{
     start(props: { data: any }): any
     end(props: { data: any }): any
     actions(props: { data: any }): any
+    header(): any
     expansion(props: { data: any }): any
 } & any>()
 const props = defineProps<DataListProps<any, any>>();
@@ -323,7 +324,25 @@ const modelExpansionRef = ref([])
 const renderTable = () => {
 
 
-
+    const headerChildren = [
+        renderTableActions(),
+        h(TableHeader, {
+            deletedFilter,
+            searchKey,
+            hideDeleteFilter: props.context.options.hideDeleteFilter,
+            title: props.context.options.title,
+            displayType: props.context.displayType,
+            showGlobalSearchFilter: globalFilters.length > 0,
+            "onUpdate:globalSearch": onGlobalSearch
+        }),
+        h(TableFilter, {
+            inputsSchema,
+            tableFilters,
+            activeFilters,
+            filterFormValue,
+        }),
+    ]
+    if (slots.header) headerChildren.push(slots.header())
     return h(DataTable, {
         value: tableStore.data,
         rows: 10,
@@ -352,24 +371,7 @@ const renderTable = () => {
     }, {
         default: slots.default ? slots.default : () => renderColumns(),
         expansion: slots.expansion,
-        header: () => h('div', null, [
-            renderTableActions(),
-            h(TableHeader, {
-                deletedFilter,
-                searchKey,
-                hideDeleteFilter: props.context.options.hideDeleteFilter,
-                title: props.context.options.title,
-                displayType: props.context.displayType,
-                showGlobalSearchFilter: globalFilters.length > 0,
-                "onUpdate:globalSearch": onGlobalSearch
-            }),
-            h(TableFilter, {
-                inputsSchema,
-                tableFilters,
-                activeFilters,
-                filterFormValue,
-            })
-        ]),
+        header: () => h('div', null, headerChildren),
         empty: () => h('div', {
             class: "empty-table"
         }, [

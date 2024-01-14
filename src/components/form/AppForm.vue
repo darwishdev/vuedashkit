@@ -90,9 +90,6 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
         const request: any = {}
         const requestValue = params[findHandler.paramName || 'id'] as string
 
-        console.log("requestValue", isNaN(parseInt('asd')))
-
-
         if (!requestValue) {
             resolve(null)
             return
@@ -102,7 +99,7 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
             resolve(null)
             return
         }
-        request[findHandler.requestPropertyName || 'rcordId'] = parseInt(requestValue as string)
+        request[findHandler.requestPropertyName || 'recordId'] = parseInt(requestValue as string)
         findHandler.endpoint(request)
             .then((resp: any) => resolve(resp)).catch((e: any) => {
                 reject(e)
@@ -121,7 +118,7 @@ import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/
 import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
 import { useFormStore } from "@/stores/form";
-import { useRouter, type RouteParams } from 'vue-router';
+import { useRouter, type RouteParams, type RouteParamsRaw } from 'vue-router';
 
 
 const { push, currentRoute } = useRouter()
@@ -218,15 +215,28 @@ const renderTitle = () => {
 }
 
 const handleError = (node: FormKitNode, error: any) => {
-    console.log("error is", error.message)
     try {
         const errorObject: ApiFormError = JSON.parse(error.rawMessage)
-        node.setErrors(
-            errorObject.globalErrors,
-            errorObject.fieldErrors
-        )
-        console.log(errorObject)
+        if (errorObject.globalErrors.length > 0) {
+            errorObject.globalErrors[0] = t(errorObject.globalErrors[0] as string)
+            node.setErrors(
+                errorObject.globalErrors,
+                {}
+            )
+
+        }
+        if (Object.keys(errorObject.fieldErrors).length > 0) {
+            const key = Object.keys(errorObject.fieldErrors)[0]
+            errorObject.fieldErrors[key] = t(errorObject.fieldErrors[key] as string)
+            node.setErrors(
+                [],
+                errorObject.fieldErrors
+            )
+        }
+
+
     } catch (_err: any) {
+        console.log('error captured', _err)
         node.setErrors(
             [error.message],
         )
@@ -236,8 +246,14 @@ const handleError = (node: FormKitNode, error: any) => {
 
 const submitHandler = async (req: any, node: FormKitNode) => {
     const handler = props.context.submitHandler
+    const findHandler = props.context.findHandler
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
+    }
+    if (findHandler) {
+        // const request: any = {}
+        const requestValue = currentRoute.value.params[findHandler.paramName || 'id'] as string
+        req[findHandler.requestPropertyName || 'recordId'] = parseInt(requestValue as string)
     }
     await new Promise((resolve, reject) => {
         handler.endpoint(req)
@@ -254,7 +270,11 @@ const submitHandler = async (req: any, node: FormKitNode) => {
 
                 if (!isBulkCreateRef.value) {
                     if (handler.redirectRoute != "") {
-                        push({ name: handler.redirectRoute })
+                        let params: RouteParamsRaw | undefined = {}
+                        if (handler.redirectRouteParam) {
+                            params[handler.redirectRouteParam.paramName] = res[handler.redirectRouteParam.responseValueKey]
+                        }
+                        push({ name: handler.redirectRoute, params })
                     }
                 }
                 node.clearErrors()
@@ -265,6 +285,7 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                 }
                 resolve(null)
             }).catch((error: any) => {
+                console.log("from rof", error)
                 handleError(node, error)
                 resolve(null)
             })

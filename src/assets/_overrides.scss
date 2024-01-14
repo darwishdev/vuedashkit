@@ -274,6 +274,18 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+[data-type="dropdownCustom"] .formkit-wrapper {
+  height: 100%;
+  & .formkit-inner {
+    height: 100%;
+    & .p-dropdown.p-component {
+      height: 100%;
+      border-radius: 6px 0 0 6px;
+      background-color: var(--color-card);
+    }
+  }
+}
+
 .formkit-outer .formkit-icon.formkit-prefix-icon {
   background: var(--color-background);
 }
@@ -348,4 +360,8 @@
 
 .p-datatable .p-column-title {
   margin: auto;
+}
+
+[data-type="toggle"] input:checked ~ .formkit-track {
+  background: var(--color-primary) !important;
 }

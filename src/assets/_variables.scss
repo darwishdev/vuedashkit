@@ -43,7 +43,6 @@
   --color-danger: #fc6161;
   --fk-margin-outer: 0;
   
-  --fk-bg-input: rgba(230, 17, 17, 0.02) !important;
   --fk-font-family-label: var(--font-family);
   --fk-bg-decorator: rgba(0, 0, 0, 0.05);
   --fk-day-bg: var(--color-card);
@@ -77,7 +76,7 @@ body.dark {
   --color-icon-btn: rgba(255, 255, 255, 0.05);
   --color-hover: rgba(255, 255, 255, 0.07);
   --menu-border-color: rgba(22, 22, 22, 0.85);
-  --fk-bg-input: rgba(0, 0, 0, 0.126) !important;
+  --fk-bg-input: var(--color-card);
   --color-border: var(--color-card);
   --fk-color-input: #fff !important;
   --color-white: #fff;

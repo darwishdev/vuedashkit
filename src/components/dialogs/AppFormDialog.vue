@@ -7,6 +7,11 @@ import AppLoading from '@/components/loading/AppLoading.vue';
 const { t } = useI18n()
 const props = defineProps<AppFormDialogProps>();
 const apiClient = inject("apiClient") as any;
+type styleSizeObj = { width: string, minHeight?: string }
+const defailSizeObj: styleSizeObj = { width: '500px', minHeight: 'auto' }
+const sizeObj: styleSizeObj | undefined = typeof props.size == 'undefined' ? defailSizeObj : typeof props.size === 'number' ?
+    { width: `${props.size}px`, minHeight: `${props.size}px` } :
+    { width: `${props.size.width}px`, minHeight: `${props.size.height}px` }
 
 const dialogRef = inject("dialogRef") as any;
 
@@ -14,16 +19,17 @@ const dialogRef = inject("dialogRef") as any;
 const submitHandler = (req: any) => {
     return new Promise((resolve, reject) => {
         const func = apiClient[props.handler.endpoint]
-
-        console.log('gunc', props.handler, apiClient[props.handler.endpoint])
         if (typeof func == 'function') {
-
-            func(req).then((_) => {
+            func(req).then((resp: any) => {
                 dialogRef.value.close()
-
+                resolve(resp)
+            }).catch(e => {
+                reject(e)
             })
         }
-        resolve(null)
+        else {
+            reject('no api function with this endpoint')
+        }
     })
 
 };
@@ -38,6 +44,8 @@ const formProps: AppFormProps<any, any> = {
         },
         submitHandler: {
             endpoint: submitHandler,
+            redirectRoute: props.handler.redirectRoute,
+            redirectRouteParam: props.handler.redirectRouteParam,
         },
         sections: props.sections
     }
@@ -46,7 +54,7 @@ const formProps: AppFormProps<any, any> = {
 </script>
 
 <template>
-    <div class="form-dialog">
+    <div class="form-dialog" :style="sizeObj">
         <Suspense timeout="0">
             <template #default>
                 <app-form :context="formProps.context" />
