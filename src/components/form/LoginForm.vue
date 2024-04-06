@@ -1,4 +1,3 @@
- 
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
 import type { AppFormProps, LoginHandler, UserLoginResponse } from '@/types/types';
@@ -28,7 +27,7 @@ onMounted(() => {
 
 const signInWithOTP = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.senedOTPEndpoint({ email: formStore.formValue.email }).then(_ => {
+        loginHandler.senedOTPEndpoint({ email: formStore.defaultFormValue.email }).then(_ => {
             notificationStore.showSuccess("otp_email_sent", "otp_email_sent_detail")
             resolve()
         }).catch(e => {
@@ -41,7 +40,7 @@ const signInWithOTP = async (): Promise<void> => {
 
 const resetPasswordForEmail = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.sendResetLinkEndpoint({ email: formStore.formValue.email }).then(_ => {
+        loginHandler.sendResetLinkEndpoint({ email: formStore.defaultFormValue.email }).then(_ => {
             notificationStore.showSuccess("reset_email_sent", "reset_email_sent_detail")
             resolve()
         }).catch(e => {

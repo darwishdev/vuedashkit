@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { type FormKitSchemaNode, type FormKitNode } from '@formkit/core'
 import { ObjectKeys } from '@/utils/object/object';
@@ -137,11 +136,20 @@ const formkitComp = resolveComponent('FormKit')
 const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
 const schema = await loadElemetnsPromise(props.context.sections, t)
+const storeKey = props.context.storeKey ? props.context.storeKey : 'default'
 const value = await loadValue(currentRoute.value.params, props.context.findHandler)
+
+
+const initFormStore = () => {
+    if (value) {
+        formStore.formValueRef[storeKey] = value
+    }
+}
+initFormStore()
 
 const renderFormSchema = () => {
     return h(formkitComp, {
-        ref: (el) => formStore.formElementRef = el,
+        ref: (el) => formStore.formElementRef[storeKey] = el,
         type: "form",
         outerClass: "card",
         id: 'app-form',
@@ -150,7 +158,7 @@ const renderFormSchema = () => {
         onSubmitInvalid: () => {
             console.log("error captured")
         },
-        value: value,
+        value: formStore.formValueRef[storeKey],
         actions: formStore.showActions,
     },
         () => h(formkitSchemaComp, {
@@ -193,12 +201,16 @@ const renderHeaderSubmitBtn = () => {
         class: 'primary',
         label: t('save'),
         onClick: () => {
-            formStore.formElementRef.node.submit()
+            formStore.formElementRef[storeKey].node.submit()
         }
     })
 }
 const renderTitle = () => {
-
+    if (props.context.options) {
+        if (props.context.options.isFormHeaderHidden) {
+            return null
+        }
+    }
     return h('div', {
         class: 'form-title'
     },

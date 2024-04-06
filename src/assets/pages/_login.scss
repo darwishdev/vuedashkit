@@ -1,0 +1,40 @@
+.login-wrapper {
+  width: 100vw;
+  height: 100vh;
+
+  & .login-image {
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    background-size: cover;
+    // background-image: url(http://localhost:54321/storage/v1/object/public/images/initial/login.webp );
+  }
+
+  & .login-form {
+    width: 70%;
+    margin-left: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-repeat: no-repeat;
+
+    & .app-form {
+      max-width: 600px;
+      min-width: 400px;
+    }
+
+    & .forgot-password {
+      cursor: pointer;
+      background: transparent !important;
+      margin: 20px 10px;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+
+
+}

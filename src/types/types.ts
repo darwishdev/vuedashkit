@@ -259,6 +259,8 @@ export type AppFormSection = {
 }
 
 export type AppFormOptions = {
+    isSubmitHidden?: boolean
+    isFormHeaderHidden?: boolean
     isBulkCreateHidden?: boolean
     isHeaderSubmitHidden?: boolean
     successMessageSummary?: string
@@ -269,6 +271,7 @@ export type AppFormOptions = {
 export type AppFormProps<TReq, TResp> = {
     context: {
         title: string
+        storeKey?: string
         options?: AppFormOptions
         submitHandler: SubmitHandler<TReq, TResp>,
         findHandler?: FindHandler<any, TReq>,
