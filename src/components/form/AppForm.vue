@@ -290,10 +290,13 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                     }
                 }
                 node.clearErrors()
-                try {
-                    node.reset()
-                } catch (e: any) {
-                    console.log("reset form has error", e)
+
+                if (!props.context.keepStateAlive) {
+                    try {
+                        node.reset()
+                    } catch (e: any) {
+                        console.log("reset form has error", e)
+                    }
                 }
                 resolve(null)
             }).catch((error: any) => {

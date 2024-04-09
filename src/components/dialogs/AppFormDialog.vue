@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { inject } from "vue";
+import { useTableStore } from "@/stores/table";
 import type { AppFormDialogProps, AppFormProps } from "@/types/types";
 import AppForm from '@/components/form/AppForm.vue';
 import { useI18n } from 'vue-i18n';
@@ -7,6 +8,7 @@ import AppLoading from '@/components/loading/AppLoading.vue';
 const { t } = useI18n()
 const props = defineProps<AppFormDialogProps>();
 const apiClient = inject("apiClient") as any;
+const tableStore = useTableStore()
 type styleSizeObj = { width: string, minHeight?: string }
 const defailSizeObj: styleSizeObj = { width: '500px', minHeight: 'auto' }
 const sizeObj: styleSizeObj | undefined = typeof props.size == 'undefined' ? defailSizeObj : typeof props.size === 'number' ?
@@ -22,6 +24,7 @@ const submitHandler = (req: any) => {
         if (typeof func == 'function') {
             func(req).then((resp: any) => {
                 dialogRef.value.close()
+                tableStore.refetchData()
                 resolve(resp)
             }).catch(e => {
                 reject(e)

@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import Image, { type ImageSlots } from 'primevue/image';
 import { h, ref, inject } from 'vue';
@@ -26,7 +25,7 @@ const renderImage = () => {
         },
         width: sizeObj ? sizeObj.width : defaultWidth,
         height: sizeObj ? sizeObj.height : undefined
-    }, slots)
+    }, () => slots)
 }
 const update = (src: string) => {
     imageSrc.value = `${baseImageUrl}${src}`

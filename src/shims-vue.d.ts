@@ -16,5 +16,10 @@ export declare interface FormKitRuntimeProps<Props extends FormKitInputs<Props>>
 declare module 'formkit' {
     export interface FormKitRuntimeProps<Props> {
         modelValue: string | number; // Allowing both string and number types
+        type: string
     }
 }
+type FormKitProps = {
+    type: string
+    // other props
+};

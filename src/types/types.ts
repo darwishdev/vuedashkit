@@ -271,6 +271,7 @@ export type AppFormOptions = {
 export type AppFormProps<TReq, TResp> = {
     context: {
         title: string
+        keepStateAlive?: boolean
         storeKey?: string
         options?: AppFormOptions
         submitHandler: SubmitHandler<TReq, TResp>,
