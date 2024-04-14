@@ -6,23 +6,19 @@ export const useFormStore = defineStore('form', () => {
   const formElementRef = ref({
     default: {}
   })
-  const formValueRef = ref<Record<string, any>>({
-    step1: {
-      roleName: "asd",
-    },
-    step2: {
-      roleDescription: "asd",
-    }
-  })
+  const formValueRef = ref<Record<string, any>>({})
   const showActions = ref(true)
   const getFormValue = (storeKey: string) => {
     return formElementRef.value[storeKey].node._value || null
   }
 
+  const setFormValue = (value: any) => {
+    formValueRef.value = value
+  }
 
   const defaultFormValue = computed(() => {
     return getFormValue('default')
   })
 
-  return { formData, showActions, formElementRef, getFormValue, formValueRef, defaultFormValue }
+  return { formData, showActions, formElementRef, getFormValue, formValueRef, defaultFormValue, setFormValue }
 })
