@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import PanelMenu from 'primevue/panelmenu';
@@ -7,7 +6,7 @@ const authStore = useAuthStore()
 const expandedKeys = ref();
 </script>
 <template>
-    <PanelMenu exact :model="authStore.sidebar" :expandedKeys="expandedKeys">
+    <PanelMenu exact :model="authStore.sidebarRef" :expandedKeys="expandedKeys">
         <template #headericon="{ item }">
             <span class="material-symbols-outlined">{{ item.icon }}</span>
         </template>

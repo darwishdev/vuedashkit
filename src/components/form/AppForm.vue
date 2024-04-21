@@ -125,6 +125,7 @@ const { t } = useI18n()
 const props = defineProps<AppFormProps<any, any>>();
 
 const slots = defineSlots<{
+    title?(): any
     prepend?(): any
     append?(): any
 }>()

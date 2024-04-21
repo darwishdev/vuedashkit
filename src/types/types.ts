@@ -263,6 +263,7 @@ export type AppFormOptions = {
     isFormHeaderHidden?: boolean
     isBulkCreateHidden?: boolean
     isHeaderSubmitHidden?: boolean
+    isHeaderTitleHidden?: boolean
     successMessageSummary?: string
     successMessageDetail?: string
     isSuccessNotificationHidden?: boolean
@@ -340,7 +341,7 @@ export type SideBarItem = {
     key: string
     label: string
     icon: string
-    to: string
+    route: string
     items: SideBarItem[]
 }
 export type User = {
@@ -352,17 +353,16 @@ export type User = {
     createdAt: string
     updatedAt: string
 }
+
+export type UserRole = {
+    role_id: number
+    role_name: string
+}
 export type UserLoginResponse = {
-    userId: number
-    userName: string
-    userImage: string
-    userEmail: string
-    userPhone: string
-    createdAt: string
-    updatedAt: string
-    permissions: string[]
+    user: User
     sideBar: SideBarItem[]
-    loginInfo?: LoginInfo
+    roles: UserRole[]
+    loginInfo: LoginInfo
 }
 
 
@@ -370,7 +370,7 @@ export type UserLoginResponse = {
 export type LoginHandler<TResp> = {
     redirectRoute?: string | 'home_view'
     loginEndpoint: (req: {
-        email: string
+        login_code: string
         password: string
     }
     ) => Promise<TResp>

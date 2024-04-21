@@ -3,17 +3,15 @@
   --color-background-light: linear-gradient(180deg, #f6f9fc 0%, #ececf9 100%);
   --color-background: var(--color-background-light);
   --color-dropdown: #2e323f;
-  --color-primary: linear-gradient(to bottom, #fc6c85 0%, #ed5d76 100%);
-  --color-primary-darken: #aa3f52;
+  --color-primary: #0F8BFD;
+  --color-primary-darken: #0b70cf;
   --menu-width-opened: 19rem;
   --menu-width-closed: 6.571em;
   --menu-width: var(--menu-width-closed);
   --primary-color: var(--color-primary);
-  --color-card: radial-gradient(
-    circle at 18.7% 37.8%,
-    rgb(250, 250, 250) 0%,
-    rgb(225, 234, 238) 90%
-  );
+  --color-card: radial-gradient(circle at 18.7% 37.8%,
+      rgb(250, 250, 250) 0%,
+      rgb(225, 234, 238) 90%);
   --color-card-darken: var(--color-background-light);
   --secondary-color: #44486d;
   --text-color: var(--color-text);
@@ -42,7 +40,7 @@
   --color-info: #0f8bfd;
   --color-danger: #fc6161;
   --fk-margin-outer: 0;
-  
+
   --fk-font-family-label: var(--font-family);
   --fk-bg-decorator: rgba(0, 0, 0, 0.05);
   --fk-day-bg: var(--color-card);
@@ -57,13 +55,12 @@
   --fk-font-size-label: 16px;
   --fk-color-tag: #256029;
   --fk-day-bg: var(--color-card);
-  --fk-day-bg-hover : rgba(23,255,255,1)
-  --fk-border-box-shadow: transparent;
+  --fk-day-bg-hover: rgba(23, 255, 255, 1) --fk-border-box-shadow: transparent;
   --fk-border-box-shadow-focus: transparent !important;
   --fk-color-primary: transparent;
   --fk-color-tag-background: #c8e6c9;
-  --fk-day-bg-selected:var(--color-primary);
-  --fk-border-width: 0; 
+  --fk-day-bg-selected: var(--color-primary);
+  --fk-border-width: 0;
   --fk-font-family: "Cairo", sans-serif !important;
 }
 

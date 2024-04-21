@@ -77,11 +77,12 @@ const formProps: AppFormProps<any, any> = {
         title: 'login',
         options: {
             isBulkCreateHidden: true,
-            isFormTransparent: false,
+            isFormTransparent: true,
             isSuccessNotificationHidden: false,
             successMessageSummary: 'logged_in',
             successMessageDetail: 'logged_in_details',
-            isHeaderSubmitHidden: true
+            isHeaderSubmitHidden: true,
+            isFormHeaderHidden: true
         },
         submitHandler: {
             endpoint: loginHandler.loginEndpoint,
@@ -161,32 +162,37 @@ const formProps: AppFormProps<any, any> = {
     <div class="login-wrapper">
         <div class="login-image"></div>
         <div class="login-form">
-            <h2>
-                <Suspense>
-                    <template #default>
+            <Suspense>
+                <template #default>
 
-                        <app-form ref="appFormElementRef" :context="formProps.context">
-                            <template #prepend>
-                                <div class="flex justify-content-center">
-                                    <LanguageToggler />
-                                    <ThemeToggler />
-                                </div>
-                            </template>
-                        </app-form>
-                    </template>
-                    <template #fallback>
-                        <h2>loading from login</h2>
-                    </template>
-                </Suspense>
+                    <app-form ref="appFormElementRef" :context="formProps.context">
+                        <template #prepend>
+                            <div class="flex justify-content-center">
+                                <LanguageToggler />
+                                <ThemeToggler />
+                            </div>
+                            <app-logo class="all-logo" />
 
-            </h2>
+                        </template>
+                    </app-form>
+                </template>
+                <template #fallback>
+                    <h2>loading from login</h2>
+                </template>
+            </Suspense>
+
         </div>
+        <footer>
+            <app-logo iconOnly class="icon-logo" />
+            | {{ t('copyrights') }} - {{ new Date().getFullYear() }}
+        </footer>
     </div>
 </template>
 <style lang="scss">
 .login-wrapper {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 9rem;
 
     & .login-image {
         width: 30%;
@@ -201,7 +207,7 @@ const formProps: AppFormProps<any, any> = {
         width: 70%;
         margin-left: 30%;
         display: flex;
-        justify-content: center;
+        padding-left: 10%;
         align-items: center;
         height: 100%;
 
@@ -221,6 +227,16 @@ const formProps: AppFormProps<any, any> = {
         }
     }
 
+    & footer {
+        position: absolute;
+        bottom: 50px;
+        left: 40%;
+        display: flex;
+        align-items: center;
+        font-size: 2rem;
+        color: var(--color-white);
+    }
+
 
 }
-</style>@/types/types
+</style>
