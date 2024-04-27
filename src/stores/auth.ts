@@ -21,11 +21,14 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.setItem('token', response.loginInfo.accessToken)
   }
 
-  const translateSidebarLabel = (items: SideBarItem[]) => {
+  const processSideBar = (items: SideBarItem[]) => {
     return items.map(item => {
-      item.label = t(item.label)
-      if (item.items.length > 0) {
-        item.items = translateSidebarLabel(item.items)
+      if (item.items) {
+        if (item.items.length) {
+          item.items = processSideBar(item.items)
+        } else {
+          delete item['items']
+        }
       }
       return item
     })
@@ -38,7 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
     const userObj = JSON.parse(user) as User
     const sidebarObj = JSON.parse(sidebar) as SideBarItem[]
     const rolesObj = JSON.parse(roles) as UserRole[]
-    sidebarRef.value = translateSidebarLabel(sidebarObj)
+    sidebarRef.value = processSideBar(sidebarObj)
     userRef.value = userObj
     userRolesRef.value = rolesObj
 

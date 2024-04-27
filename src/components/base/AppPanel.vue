@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { h } from 'vue';
 import type { AppPanelProps } from '@/types/types'
@@ -80,9 +79,10 @@ const renderPanel = () => {
             justify-content: flex-end;
             text-align: end;
             align-items: center;
-            z-index: 1;
+            z-index: 3;
             transform: translateX(-20px);
             height: 100%;
+            top: 0;
 
             .pi-filter-slash {
                 position: absolute;

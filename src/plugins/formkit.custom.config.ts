@@ -31,7 +31,7 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
     defaultConfig.inputs = defaultConfig.inputs ? { ...defaultConfig.inputs, ...inputs } : inputs
     defaultConfig.plugins = defaultConfig.plugins ? defaultConfig.plugins.concat(customPlugins as any) as typeof defaultConfig.plugins : customPlugins as any
     defaultConfig.locales = { ar, en }
-    defaultConfig.locale = 'ar'
+    defaultConfig.locale = 'en'
     return defaultConfig
 
 }
