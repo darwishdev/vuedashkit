@@ -29,6 +29,12 @@
 nav a {
   margin-right: 15px !important;
 }
+.app-layout .desktop-menu .sidebar-label{
+  opacity: 0;
+}
+.app-layout .desktop-menu:hover .sidebar-label{
+  opacity: 1;
+}
 .p-menuitem{
   margin: 0 5px !important;
 }
