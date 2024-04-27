@@ -192,7 +192,7 @@ const formProps: AppFormProps<any, any> = {
 .login-wrapper {
     width: 100vw;
     height: 100dvh;
-    min-height: 9rem;
+    min-height: 12rem;
 
     & .login-image {
         width: 30%;

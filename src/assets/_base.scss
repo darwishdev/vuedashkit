@@ -20,6 +20,7 @@ body {
   text-rendering: optimizeLegibility;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
   & .app-wrapper {
     background: var(--color-background);
     transition: color 0.5s, background-color 0.5s;
@@ -32,9 +33,11 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
+
   .p-component {
     font-family: var(--font-family);
   }
+
   & h1,
   h2,
   h3 {
@@ -45,18 +48,22 @@ body {
   & label {
     color: var(--color-white);
   }
+
   a {
     text-decoration: none;
   }
+
   & main.page-content {
     padding: 20px;
   }
+
   & .card {
     background: var(--color-card);
     padding: 16px;
     border-radius: 6px;
   }
 }
+
 .card-dark {
   background-color: var(--color-card-darken) !important;
   padding: 16px;
@@ -81,6 +88,7 @@ body {
   background-color: var(--color-card) !important;
   border-radius: 6px;
 }
+
 hr {
   background: var(--color-card);
   color: rgba(255, 255, 255, 0.1);
@@ -93,8 +101,10 @@ nav {
   justify-content: center;
 
   align-items: center;
+
   & a {
     margin-right: 20px;
+
     & span {
       color: var(--color-text) !important;
     }
@@ -107,6 +117,7 @@ nav {
 
 .disabled {
   cursor: not-allowed;
+
   &::after {
     content: "";
     z-index: 2;
@@ -151,10 +162,38 @@ nav {
 .absolute {
   position: absolute;
 }
+
 .flex {
   display: flex;
 }
 
 .pa-4 {
   padding: 10px 20px;
+}
+
+
+
+.formkit-outer {
+  // max-height: 80px;
+  height: max-content;
+}
+
+
+.formkit-input,
+.p-dropdown {
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.sidebar-toggler {
+  margin-right: .8rem !important;
+}
+
+.p-sidebar {
+  height: 100%;
+}
+
+.p-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  padding-left: 0;
 }

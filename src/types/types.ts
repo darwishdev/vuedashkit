@@ -340,9 +340,11 @@ export type LoginInfo = {
 export type SideBarItem = {
     key: string
     label: string
-    icon: string
+    labelAr: string
+    iconName: string
+    iconContnet: string
     route: string
-    items: SideBarItem[]
+    items?: SideBarItem[]
 }
 export type User = {
     userId: number
