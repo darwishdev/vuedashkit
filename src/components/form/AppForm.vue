@@ -161,6 +161,8 @@ const renderFormSchema = () => {
         },
         value: formStore.formValueRef[storeKey],
         actions: formStore.showActions,
+        'submit-label' : props.context.options?.submitLabel ? props.context.options?.submitLabel : t('Submit'),
+        'submit-attrs' : props.context.options?.submitAttrs ? props.context.options?.submitAttrs : {}
     },
         () => h(formkitSchemaComp, {
             data: formStore.formData,

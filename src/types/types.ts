@@ -268,6 +268,8 @@ export type AppFormOptions = {
     successMessageDetail?: string
     isSuccessNotificationHidden?: boolean
     isFormTransparent?: boolean
+    submitLabel? : string
+    submitAttrs? : any
 }
 export type AppFormProps<TReq, TResp> = {
     context: {
