@@ -10,7 +10,7 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
         props: ['permissions', 'toggleable', 'groupCollapsed', 'inputCollapsed'],
     })
     const imageInput = createInput(InputImage, {
-        props: ['path', 'size'],
+        props: ['path', 'size', 'multiple'],
     })
     const unitQtyInput = createInput(InputUnitQty, {
         props: ['unitBuy', 'unitSell', 'initialValues', 'unitRatio', 'sellUnitValue', 'rowIndex'],

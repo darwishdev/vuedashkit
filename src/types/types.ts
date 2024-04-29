@@ -319,6 +319,7 @@ export type InputImageProps = {
     context: {
         node: FormKitNode
         path: string
+        multiple?: boolean
         size?: Size
     },
 }

@@ -17,3 +17,7 @@ build-types:
 
 build:
 	npm run build &&  npx vue-tsc --declaration --emitDeclarationOnly --outDir dist -p tsconfig.app.json --target esnext  
+
+
+buildt:
+ 	npx vue-tsc --declaration --emitDeclarationOnly --outDir dist -p tsconfig.app.json --target esnext  
