@@ -5,12 +5,14 @@ import type { AppFormDialogProps, AppFormProps } from "@/types/types";
 import AppForm from '@/components/form/AppForm.vue';
 import { useI18n } from 'vue-i18n';
 import AppLoading from '@/components/loading/AppLoading.vue';
+
+
 const { t } = useI18n()
 const props = defineProps<AppFormDialogProps>();
 const apiClient = inject("apiClient") as any;
 const tableStore = useTableStore()
 type styleSizeObj = { width: string, minHeight?: string }
-const defailSizeObj: styleSizeObj = { width: '500px', minHeight: 'auto' }
+const defailSizeObj: styleSizeObj = { width: '800px', minHeight: 'auto' }
 const sizeObj: styleSizeObj | undefined = typeof props.size == 'undefined' ? defailSizeObj : typeof props.size === 'number' ?
     { width: `${props.size}px`, minHeight: `${props.size}px` } :
     { width: `${props.size.width}px`, minHeight: `${props.size.height}px` }
@@ -26,7 +28,7 @@ const submitHandler = (req: any) => {
                 dialogRef.value.close()
                 tableStore.refetchData()
                 resolve(resp)
-            }).catch(e => {
+            }).catch((e: any) => {
                 reject(e)
             })
         }
@@ -50,6 +52,7 @@ const formProps: AppFormProps<any, any> = {
             redirectRoute: props.handler.redirectRoute,
             redirectRouteParam: props.handler.redirectRouteParam,
         },
+        findHandler: props.findForUpdateHandler,
         sections: props.sections
     }
 

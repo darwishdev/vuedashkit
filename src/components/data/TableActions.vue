@@ -1,5 +1,3 @@
- 
-
 <script setup lang="ts">
 import { h, resolveComponent, inject, ref } from 'vue';
 import type { TableActionsProps, AppFormDialogProps } from '@/types/types'
@@ -36,7 +34,6 @@ const renderCreateBtn = () => {
         class: "success",
         onClick: (_e: Event) => {
             if (props.formSections) {
-                console.log("hola")
                 const params: AppFormDialogProps = {
                     sections: props.formSections,
                     handler: props.options.createHandler!
@@ -62,6 +59,20 @@ const renderDeleteRestoreBtn = () => {
             dialogStore.openDeleteRestore()
         },
         label: t(variant.label)
+    })
+}
+const renderDeleteBtn = () => {
+    if (!props.options.deleteHandler || !tableStore.showDeletedRef) {
+        return
+    }
+    return h(appBtnComponent, {
+        icon: 'trash',
+        class: "danger",
+        disabled: tableStore.modelSelectionRef.length == 0,
+        onClick: (_e: Event) => {
+            dialogStore.openDelete()
+        },
+        label: t('delete')
     })
 }
 
@@ -152,7 +163,8 @@ const renderTableActions = () => {
             class: 'start'
         }, [
             renderCreateBtn(),
-            renderDeleteRestoreBtn()
+            renderDeleteRestoreBtn(),
+            renderDeleteBtn()
         ]),
         h('div', {
             class: 'end'

@@ -1,11 +1,13 @@
 <script lang="ts">
 import type { ITableHeader } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
+import type { TableActionsProps, AppFormDialogProps } from '@/types/types'
 import type { FormKitSchemaNode } from '@formkit/core';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
 import { FilterMatchMode } from 'primevue/api';
+import { findAncestor } from 'typescript';
 
 
 
@@ -118,7 +120,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQ
 
     })
 }
-</script> 
+</script>
 
 <script setup lang="ts">
 import TableActions from './TableActions.vue';
@@ -168,6 +170,7 @@ const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordD
     deletedRecords: newDeletedRecords,
     initiallySelectedItems: props.context.initiallySelectedItems,
     deleteRestoreHandler: props.context.options.deleteRestoreHandler,
+    deleteHandler: props.context.options.deleteHandler,
     tableFiltersRef: tableFilters,
     dataKey: props.context.dataKey as string,
     fetchFn: props.context.fetchFn,
@@ -200,6 +203,21 @@ const renderUpdateBtn = (data: any) => {
         class: "warning",
         icon: "pencil",
         onClick: () => {
+            if (!props.context.options.updateHandler) {
+                console.log("no_update_handler")
+                return
+            }
+            props.context.options.findForUpdateHandler!['recordId'] = data[props.context.dataKey]
+            if (props.context.formSections) {
+                const params: AppFormDialogProps = {
+                    sections: props.context.formSections,
+                    handler: props.context.options.updateHandler,
+                    findForUpdateHandler: props.context.options.findForUpdateHandler,
+
+                }
+                dialogStore.openForm(params)
+                return
+            }
             router.push({ name: routeName, params })
         }
     })
@@ -387,7 +405,7 @@ const renderTable = () => {
 </template>
 
 
-<style   lang="scss">
+<style lang="scss">
 .app-table {
     & .p-datatable-header {
         background-color: transparent !important;
@@ -670,6 +688,3 @@ const renderTable = () => {
     width: 3rem;
 }
 </style>
-
-
-@/types/types@/types/types@/stores/table

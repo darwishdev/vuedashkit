@@ -3,16 +3,16 @@ import { ref, computed, toRef, inject } from 'vue'
 import type { InputImageProps, UploadHandler } from '@/types/types'
 import Skeleton from 'primevue/skeleton';
 import { useNotificationStore } from '@/stores/notification';
+import { useFormStore } from '@/stores/form';
 const props = defineProps<InputImageProps>();
-const pathes = toRef(props.context.node._value as string)
-const appImageElementRef = ref()
-const uploading = ref(false)
+// const pathes = toRef(props.context.node._value as string)
+const formStore = useFormStore()
 const files = ref()
 const notificationStore = useNotificationStore()
 
 const uploadHandler: UploadHandler = inject('uploadHandler') as UploadHandler
 const images = computed(() => {
-    return pathes.value ? pathes.value.split(',') : []
+    return props.context._value ? props.context._value.split(',') : []
 })
 type styleSizeObj = { minWidth: string, minHeight?: string }
 const defailSizeObj: styleSizeObj = props.context.multiple ? { minWidth: '100%', minHeight: '150px' } : { minWidth: '150px', minHeight: '150px' }
@@ -22,7 +22,7 @@ const sizeObj: styleSizeObj | undefined = typeof props.context.size == 'undefine
 
 const handleUpload = async (evt: any) => {
     files.value = evt.target.files
-    uploading.value = true
+    formStore.isUploading = true
     let filePathes = ""
     for (let fileIndex = 0; fileIndex < evt.target.files.length; fileIndex++) {
         const file = evt.target.files[fileIndex];
@@ -32,12 +32,10 @@ const handleUpload = async (evt: any) => {
             notificationStore.showError('upload_error', error.message)
             console.log(error, "error")
         }).finally(() => {
-
-            setTimeout(() => uploading.value = false, 50)
+            setTimeout(() => formStore.isUploading = false, 50)
         })
     }
-    pathes.value = filePathes.substring(1)
-    props.context.node._value = filePathes
+    props.context.node._value = filePathes.substring(1)
     props.context.node.input(props.context.node._value)
 
 }
@@ -46,17 +44,17 @@ const handleUpload = async (evt: any) => {
 
 <template>
     <div class="img-input" :style="sizeObj">
-        <Skeleton v-show="uploading" :style="sizeObj" class="mr-2">
+        <Skeleton v-show="formStore.isUploading" :style="sizeObj" class="mr-2">
         </Skeleton>
-
-        <div class="no-image" v-if="!uploading && images.length == 0">
+        <div class="no-image" v-if="!formStore.isUploading && images.length == 0">
             <app-image src="/initial/noimg.webp" :size="props.context.size">
             </app-image>
             <div class="upload" :style="`width : ${props.context.size || '150'}px`">
                 <span>{{ $t('replace') }}</span>
             </div>
         </div>
-        <div class="grid" v-if="!uploading && images.length > 0">
+        <div class="grid" v-if="!formStore.isUploading && images.length > 0"
+            :style="`width : ${props.context.size || '150'}px`">
             <app-image v-for="path in images" class="mr-2" :src="path" :size="props.context.size" />
             <div class="upload w-full">
                 <span>{{ $t('replace') }}</span>

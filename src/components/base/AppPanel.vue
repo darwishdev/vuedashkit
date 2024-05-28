@@ -62,8 +62,12 @@ const renderPanel = () => {
         & .app-panel-header {
             display: flex;
             align-items: center;
-            z-index: 2;
             gap: 10px;
+
+            & .active-filter {
+                z-index: 5;
+
+            }
 
         }
 

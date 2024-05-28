@@ -60,7 +60,7 @@ export class TableHeaderLink extends TableHeaderText implements ITableHeader {
 export class TableHeaderImage extends TableHeaderText implements ITableHeader {
     renderHtml = (value: any) => {
         const appImage = resolveComponent('app-image')
-        return h(appImage, { src: value[this.columnName], size: 75 })
+        return h(appImage, { src: value[this.columnName], size: 75, key: value[this.columnName] })
     }
 }
 export class TableHeaderDate extends TableHeaderText implements ITableHeader {

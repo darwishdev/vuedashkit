@@ -2,6 +2,8 @@
 import { InputPicker, InputImage, InputPermissions, InputUnitQty, InputDependentDropdown } from "@/components/form/index"
 import { createInput } from '@formkit/vue'
 import type { DefaultConfigOptions } from '@formkit/vue'
+import InputSelect from "@/components/form/dropdown/InputSelect.vue"
+import InputIcons from "@/components/form/dropdown/InputIcons.vue"
 import customPlugins from './formkitPlugins'
 import { ar, en } from '@formkit/i18n'
 
@@ -15,6 +17,38 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
     const unitQtyInput = createInput(InputUnitQty, {
         props: ['unitBuy', 'unitSell', 'initialValues', 'unitRatio', 'sellUnitValue', 'rowIndex'],
     })
+
+    const iconsInput = createInput(InputIcons, {
+        props: [
+            'primeProps',
+            'options',
+            'loading',
+            'loadOptions',
+            'iconsList'
+        ]
+    })
+    const selectInput = createInput(InputSelect, {
+        props: [
+            'primeProps',
+            'requestPropertyName',
+            'requestPropertyValue',
+            'isMultiple',
+            'loading',
+            'translateLabel',
+            'convertToFlat',
+            'requestPropertyParamName',
+            'filter',
+            'options',
+            'readCache',
+            'hasGroup',
+            'createRoute',
+            'customOptions',
+            'cacheKey',
+            'cacheTimeout',
+            'loadOptions',
+            'lazyLoad'
+        ]
+    })
     const dependentDropdown = createInput(InputDependentDropdown, {
         props: ['dropDownSchema', 'data', 'groupName', 'levels'],
     })
@@ -24,6 +58,8 @@ const formKitConfigWrapper = (defaultConfig: DefaultConfigOptions) => {
     const inputs = {
         'permissions': permissionsInput,
         'image': imageInput,
+        'selectBox': selectInput,
+        'icons': iconsInput,
         'unitQty': unitQtyInput,
         'dependentDropdown': dependentDropdown,
         'picker': pickerInput,

@@ -7,9 +7,10 @@ export const useFormStore = defineStore('form', () => {
     default: {}
   })
   const formValueRef = ref<Record<string, any>>({})
+  const isUploading = ref(false)
   const showActions = ref(true)
   const getFormValue = (storeKey: string) => {
-    return formElementRef.value[storeKey].node._value || null
+    return formElementRef.value[storeKey].value || null
   }
 
   const setFormValue = (value: any) => {
@@ -20,5 +21,5 @@ export const useFormStore = defineStore('form', () => {
     return getFormValue('default')
   })
 
-  return { formData, showActions, formElementRef, getFormValue, formValueRef, defaultFormValue, setFormValue }
+  return { formData, isUploading, showActions, formElementRef, getFormValue, formValueRef, defaultFormValue, setFormValue }
 })

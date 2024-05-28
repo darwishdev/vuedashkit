@@ -1,5 +1,5 @@
 
-import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault, DeleteRestoreHandler } from '@/types/types'
+import type { InitTableParams, tableFetchFn, ApiResponseList, TRecordDefault, DeleteHandler, DeleteRestoreHandler } from '@/types/types'
 import { defineStore } from 'pinia'
 import type { DataTableFilterMetaData } from 'primevue/datatable'
 import { ref, computed } from 'vue'
@@ -10,6 +10,7 @@ export const useTableStore = defineStore('table', () => {
 
   const modelSelectionRef = ref<any[]>([])
   const deleteRestoreHandler = ref<DeleteRestoreHandler | undefined>()
+  const deleteHandler = ref<DeleteHandler | undefined>()
   const records = ref<any[]>([])
   const deletedRecords = ref<unknown[] | undefined>([])
   let fetchFn: tableFetchFn<ApiResponseList<TRecordDefault>, TRecordDefault> | undefined
@@ -48,15 +49,27 @@ export const useTableStore = defineStore('table', () => {
     deletedRecords.value = undefined
     fetchFn = undefined
   }
-
+  const prepareRecords = async (records?: any[]): Promise<any[]> => {
+    if (!records) return []
+    const newRecords: any[] = []
+    records.forEach(r => {
+      if (r.createdAt) {
+        r.createdAt = new Date(r.createdAt)
+      }
+      if (r.deletedAt) {
+        r.deletedAt = new Date(r.deletedAt)
+      }
+      newRecords.push(r)
+    })
+    return newRecords
+  }
   const refetchData = async () => {
     if (!fetchFn) return
-    fetchFn({}).then((response) => {
-      records.value = response.records
-      deletedRecords.value = response.deletedRecords
-    })
-
-
+    const response = await fetchFn({})
+    const newRecords = await prepareRecords(response.records)
+    const newDeletedRecords = await prepareRecords(response.records)
+    records.value = newRecords
+    deletedRecords.value = newDeletedRecords
   }
   const initTable = (params: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault>) => {
     reset()
@@ -64,6 +77,7 @@ export const useTableStore = defineStore('table', () => {
     records.value = params.records
     deletedRecords.value = params.deletedRecords
     deleteRestoreHandler.value = params.deleteRestoreHandler
+    deleteHandler.value = params.deleteHandler
     tableFiltersRef.value = params.tableFiltersRef
     showDeletedRef.value = params.deletedFilter
     fetchFn = params.fetchFn
@@ -80,6 +94,14 @@ export const useTableStore = defineStore('table', () => {
       deletedRecords.value = deletedRecords.value.concat(modelSelectionRef.value)
       records.value = records.value.filter(r => !modelSelectionRef.value.includes(r))
     }
+    modelSelectionRef.value = []
+    return
+  }
+  const hardDeleteSelectedRows = () => {
+    if (!deletedRecords.value) return
+
+    deletedRecords.value = deletedRecords.value.filter(r => !modelSelectionRef.value.includes(r))
+
     modelSelectionRef.value = []
     return
   }
@@ -104,12 +126,14 @@ export const useTableStore = defineStore('table', () => {
     deletedRecords,
     selectedIds,
     deleteSelectedRows,
+    hardDeleteSelectedRows,
     refetchData,
     isAllRecordsSelected,
     modelSelectionRef,
     dataListElementRef,
     updateCellValue,
     deleteRestoreHandler,
+    deleteHandler,
     fetchFn,
     tableFiltersRef,
     deleteRestoreVaraints,

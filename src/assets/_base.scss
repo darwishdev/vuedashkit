@@ -180,7 +180,7 @@ nav {
 
 
 .formkit-input,
-.p-dropdown {
+.p-dropdown .p-multiselect {
   border-radius: 0 6px 6px 0 !important;
 }
 
@@ -196,4 +196,26 @@ nav {
   display: flex;
   align-items: center;
   padding-left: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.app-icon {
+  position: relative;
+
+  & .top {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+.dropdown-header {
+  padding: 10px;
+
+  & button {
+    width: 50%;
+  }
 }

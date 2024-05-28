@@ -1,10 +1,11 @@
 import type { ColumnProps } from 'primevue/column'
 import type { FormKitNode, FormKitSchemaNode } from '@formkit/core'
-import type { VNode } from "vue"
 import type { DataTableFilterMetaData } from "primevue/datatable"
 import type { DefaultConfigOptions } from '@formkit/vue'
 import type { ImageProps } from "primevue/image"
 import type { LocaleMessageObject } from 'vue-i18n/dist/vue-i18n.js'
+import type { VNode } from 'vue'
+import type { DropdownProps } from 'primevue/dropdown'
 
 
 // table types
@@ -25,7 +26,8 @@ export type AppLogoProps = {
 }
 export type AppBtnProps = {
     label?: string
-    icon?: string
+    icon?: string | number
+    iconType?: 'svg' | 'primevue'
     disabled?: boolean
 }
 export type ApiFormError = {
@@ -136,7 +138,14 @@ export type DeleteRestoreHandler = {
     endpoint: (req: any) => Promise<any> | string
     requestProperty: string
 }
-
+export type DeleteHandler = {
+    endpoint: (req: any) => Promise<any> | string
+    requestProperty: string
+}
+export type FindForUpdateHandler = {
+    endpoint: (req: any) => Promise<any> | string
+    requestProperty: string
+}
 type ImportHandler = {
     endpoint: string
     importTemplateLink: string
@@ -151,7 +160,9 @@ export type ApiListOptions = {
     hideDeleteFilter?: boolean,
     createHandler?: CreateHandler
     updateHandler?: UpdateHandler
+    findForUpdateHandler?: FindForUpdateHandler
     deleteRestoreHandler?: DeleteRestoreHandler
+    deleteHandler?: DeleteHandler
     importHandler?: ImportHandler
 }
 
@@ -205,6 +216,8 @@ export interface DataListProps<TResp, TRecord> {
 export type AppFormDialogProps = {
     sections: Record<string, (AppFormSection | FormKitSchemaNode[])>
     handler: CreateHandler | UpdateHandler
+    findForUpdateHandler?: FindForUpdateHandler
+    recordId?: number
     size?: Size
 }
 export type TableHeaderFilter = {
@@ -226,6 +239,7 @@ export type InitTableParams<TResp, TRecord> = {
     deletedRecords?: Record<string, any>[]
     dataKey: string
     deleteRestoreHandler?: DeleteRestoreHandler,
+    deleteHandler?: DeleteHandler,
     initiallySelectedItems?: any[]
     tableFiltersRef?: Record<string, DataTableFilterMetaData>
     deletedFilter: boolean
@@ -245,9 +259,10 @@ export type SubmitHandler<TReq, TResp> = {
 }
 
 export type FindHandler<TReq, TResp> = {
-    endpoint: (req: TReq) => any
+    endpoint: (req: TReq) => any | string
+    recordId?: number
     mapFunction?: (formReq: any) => TReq
-    requestPropertyName?: keyof TReq,
+    requestProperty?: keyof TReq,
     paramName?: string | 'id',
     callback?: (formResp: TResp) => any
 }
@@ -268,8 +283,8 @@ export type AppFormOptions = {
     successMessageDetail?: string
     isSuccessNotificationHidden?: boolean
     isFormTransparent?: boolean
-    submitLabel? : string
-    submitAttrs? : any
+    submitLabel?: string
+    submitAttrs?: any
 }
 export type AppFormProps<TReq, TResp> = {
     context: {
@@ -318,6 +333,7 @@ export type Size = SizeObj | number
 export type InputImageProps = {
     context: {
         node: FormKitNode
+        _value?: string
         path: string
         multiple?: boolean
         size?: Size
@@ -329,13 +345,24 @@ export type InputPickerProps = {
     },
 }
 
+
 export type AppImageProps = {
     src: string
     imageProps?: ImageProps
     size?: Size
 }
 
+export type AppIconProps = {
+    icon: number | string
+    size?: 'small' | 'medium' | 'large'
+    iconType?: 'primevue' | 'svg'
+    color?: string
+}
 
+
+export type AppIconSlots = {
+    top(): VNode;
+}
 export type LoginInfo = {
     accessToken: string
     accessTokenExpiresAt?: { nanos: number, seconds: number }
@@ -344,8 +371,7 @@ export type SideBarItem = {
     key: string
     label: string
     labelAr: string
-    iconName: string
-    iconContnet: string
+    iconId: number
     route: string
     items?: SideBarItem[]
 }
@@ -397,6 +423,7 @@ export interface VueDashKitConfig<TApi = any> {
     baseImageUrl?: string
     baseImportDataUrl?: string
     fallBackImageUrl?: string
+    iconsListMethodName?: string
     loginHandler?: LoginHandler<any>
 }
 
@@ -448,4 +475,51 @@ export type InputDependentDropdownProps = {
         data?: DependentDropdownInut | DependentDropdownOptionsListFn,
         levels: DependentDropdownLevels
     }
+}
+
+
+
+export type SelectOption = {
+    value: number
+    label: string
+    note?: string
+    icon?: string
+}
+export type SelectOptionWithGroup = {
+    group_icon: string
+    group_name?: string
+    items: SelectOption[]
+}
+
+export type InputSelectOptionsResponseType = any[] | { options: any[] }
+export type InputSelectOptionsPropType = string | Function | SelectOption[] | SelectOptionWithGroup[]
+export type InputSelectProps = {
+    context: {
+        node: FormKitNode
+        primeProps: DropdownProps
+        customOptions: InputSelectOptionsPropType
+        options: SelectOption[] | SelectOptionWithGroup[]
+        translateLabel?: boolean,
+        cacheKey?: string
+        requestPropertyName?: string
+        requestPropertyValue?: any
+        convertToFlat?: boolean
+        loading: boolean
+        hasGroup?: boolean
+        createRoute?: string
+        isMultiple?: boolean
+        requestPropertyParamName?: string
+        filter?: boolean,
+        cacheTimeout?: number
+        lazyLoad?: boolean
+        loadOptions: Function
+        readCache: Function
+    },
+}
+export type InputIconsProps = {
+    context: {
+        node: FormKitNode
+        primeProps: DropdownProps
+        loading: boolean
+    },
 }

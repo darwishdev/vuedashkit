@@ -29,7 +29,9 @@ export default {
         app.provide("permissionsHandler", config.permissionsHandler)
         app.provide("baseImageUrl", config.baseImageUrl)
         app.provide("fallBackImageUrl", config.fallBackImageUrl)
-        app.provide("fallBackImageUrl", config.fallBackImageUrl)
         app.provide("baseImportDataUrl", config.baseImportDataUrl)
+        app.provide("iconsListMethodName", config.iconsListMethodName)
+
+
     }
 }

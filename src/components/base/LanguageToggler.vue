@@ -6,12 +6,10 @@ const appBtnComponent = resolveComponent('app-btn')
 
 const renderLanguageToggler = () => {
     return h(appBtnComponent, {
-
         onClick: () => {
             languageStore.toggleRtl()
         },
         icon: 'globe'
-
     })
 }
 </script>

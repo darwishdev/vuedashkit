@@ -1,6 +1,6 @@
+import { fetchOptionsPlugin } from '@/plugins/inputOptionsPlugin'
 
-import type { FormKitPlugin } from '@formkit/core';
-const isCheckboxAndRadioMultiple: FormKitPlugin = (node: any) => (node.props.type === 'checkbox' || node.props.type === 'radio') && node.props.options
+import type { FormKitPlugin } from '@formkit/core'; const isCheckboxAndRadioMultiple: FormKitPlugin = (node: any) => (node.props.type === 'checkbox' || node.props.type === 'radio') && node.props.options
 const addAsteriskPlugin = (node: any) => {
     node.on('created', () => {
         const isRequired = node.props.parsedRules.some((rule: any) => rule.name === 'required');
@@ -25,6 +25,8 @@ const addAsteriskPlugin = (node: any) => {
         }
     })
 }
+
+
 const scrollToErrors: FormKitPlugin = (node: any) => {
     if (node.props.type === 'form') {
         const scrollTo = (node: any) => {
@@ -59,6 +61,8 @@ const scrollToErrors: FormKitPlugin = (node: any) => {
 const plugins: FormKitPlugin[] = [
     addAsteriskPlugin,
     scrollToErrors,
+    fetchOptionsPlugin,
+
 
 ]
 export default plugins

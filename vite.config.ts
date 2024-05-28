@@ -30,6 +30,8 @@ const buildObjectMap: Record<string, buildObject> = {
   AppForm: { dtsFile: "src/components/form/AppForm.vue", entryFile: "src/components/form/AppForm.vue.js", isTs2: true },
   DataList: { dtsFile: "src/components/data/DataList.vue", entryFile: "src/components/data/DataList.vue.js", isTs2: true },
   LoginForm: { dtsFile: "src/components/form/LoginForm.vue", entryFile: "src/components/form/LoginForm.vue.js", isTs2: true },
+  AppIcon: { dtsFile: "src/components/base/AppIcon.vue", entryFile: "src/components/base/AppIcon.vue.js", isTs2: true },
+  AppImage: { dtsFile: "src/components/base/AppImage.vue", entryFile: "src/components/base/AppImage.vue.js", isTs2: true },
   AppLayoutLoading: { dtsFile: "src/components/loading/AppLayoutLoading.vue", entryFile: "src/components/loading/AppLayoutLoading.vue.js", isTs2: true },
 }
 

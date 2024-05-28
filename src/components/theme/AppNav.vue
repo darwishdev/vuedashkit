@@ -1,6 +1,3 @@
- 
-
-
 <script lang="ts" setup>
 import Menu from 'primevue/menu';
 import { useBreadcrumbStore } from '@/stores/breadcrumb';
@@ -33,19 +30,29 @@ const toggleProfileMenu = (event: Event) => {
             <app-btn class="sidebar-toggler" @click="menuStore.toggleSidebar" icon="bars"></app-btn>
             <app-logo iconOnly />
             <Breadcrumb :home="breadcrumbStore.breadcrumbHome" :model="breadcrumbStore.breadcrumbs"
-                v-if="breadcrumbStore.breadcrumbs.length > 0" />
-
+                v-if="breadcrumbStore.breadcrumbs.length > 0">
+                <template #item="{ item, props }">
+                    <router-link v-if="item.url" v-slot="{ href, navigate }" :to="item.url" custom>
+                        <a :href="href" v-bind="props.action" @click="navigate">
+                            <span :class="[item.icon, 'text-color']" />
+                            <span class="text-primary font-semibold">{{ item.label }}</span>
+                        </a>
+                    </router-link>
+                    <a v-else :href="item.url" :target="item.target" v-bind="props.action">
+                        <span class="text-color">{{ item.label }}</span>
+                    </a>
+                </template>
+            </Breadcrumb>
         </div>
 
         <div class="end">
             <LanguageToggler />
             <ThemeToggler />
-            <app-btn @click="toggleProfileMenu" icon="user"></app-btn>
+            <app-btn @click="toggleProfileMenu" icon="users"></app-btn>
             <Menu v-if="!$slots['end']" ref="profileMenu" id="overlay-menu" :popup="true">
                 <template #start>
                     <router-link :to="{ name: 'profile_view' }"
                         class="w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-
                         <div class="flex flex-column align">
                             <span class="text-sm">{{ $t('profile') }}</span>
                         </div>

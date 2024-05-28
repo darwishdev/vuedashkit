@@ -2,14 +2,12 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 // import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
 import type { User, SideBarItem, UserLoginResponse, UserRole } from '@/types/types'
-import { useI18n } from 'vue-i18n'
 
 export const useAuthStore = defineStore('auth', () => {
   const loginHandler = ref<UserLoginResponse | null>(null)
   const userRef = ref<User | null>()
   const sidebarRef = ref<SideBarItem[]>([])
   const userRolesRef = ref<UserRole[]>([])
-  const { t } = useI18n()
 
   const saveLoginData = (response?: UserLoginResponse) => {
     if (!response) return

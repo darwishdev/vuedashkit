@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useTableStore } from '@/stores/table';
 import { h, computed, resolveComponent, ref } from 'vue';
@@ -10,7 +9,6 @@ import { ObjectKeys } from '@/utils/object/object';
 import AppPanel from '../base/AppPanel.vue';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { VNode } from 'vue';
-import { url } from 'inspector';
 const tableStore = useTableStore()
 const props = defineProps<TableFilterProps>();
 

@@ -79,30 +79,44 @@ const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitS
 
 
 
-const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Promise<Record<string, any> | null> => {
+const loadValue = (apiClient: any, params: RouteParams, findHandler?: FindHandler<any, any>): Promise<Record<string, any> | null> => {
     return new Promise((resolve, reject) => {
 
         if (!findHandler) {
             resolve(null)
             return
         }
+
         const request: any = {}
-        const requestValue = params[findHandler.paramName || 'id'] as string
+        let requestValue = 0
+        console.log("recordId", findHandler.recordId)
+        if (findHandler.recordId) {
+            requestValue = findHandler.recordId
+        } else {
+            requestValue = parseInt(params[findHandler.paramName || 'id'] as string)
+        }
+        console.log("requestValue", requestValue)
 
-        if (!requestValue) {
+        if (requestValue == 0 || isNaN(requestValue)) {
             resolve(null)
             return
         }
-
-        if (isNaN(parseInt(requestValue))) {
-            resolve(null)
+        request[findHandler.requestProperty || 'recordId'] = requestValue
+        if (typeof findHandler.endpoint != 'string') {
+            findHandler.endpoint(request)
+                .then((resp: any) => resolve(resp)).catch((e: any) => {
+                    reject(e)
+                })
             return
         }
-        request[findHandler.requestPropertyName || 'recordId'] = parseInt(requestValue as string)
-        findHandler.endpoint(request)
-            .then((resp: any) => resolve(resp)).catch((e: any) => {
-                reject(e)
-            })
+
+        const func = apiClient[findHandler.endpoint]
+        console.log("func", func)
+        if (typeof func == 'function') {
+            func(request).then((resp: any) => resolve(resp)).catch((e: any) => reject(e))
+        }
+
+
     })
 }
 </script>
@@ -112,14 +126,13 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
 
 
 <script setup lang="ts">
-import { h, ref, resolveComponent } from 'vue';
+import { h, ref, resolveComponent, inject } from 'vue';
 import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/types';
 import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
 import { useFormStore } from "@/stores/form";
 import { useRouter, type RouteParams, type RouteParamsRaw } from 'vue-router';
-
-
+const apiClient = inject("apiClient") as any;
 const { push, currentRoute } = useRouter()
 const { t } = useI18n()
 const props = defineProps<AppFormProps<any, any>>();
@@ -138,7 +151,7 @@ const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
 const schema = await loadElemetnsPromise(props.context.sections, t)
 const storeKey = props.context.storeKey ? props.context.storeKey : 'default'
-const value = await loadValue(currentRoute.value.params, props.context.findHandler)
+const value = await loadValue(apiClient, currentRoute.value.params, props.context.findHandler)
 
 
 const initFormStore = () => {
@@ -161,8 +174,8 @@ const renderFormSchema = () => {
         },
         value: formStore.formValueRef[storeKey],
         actions: formStore.showActions,
-        'submit-label' : props.context.options?.submitLabel ? props.context.options?.submitLabel : t('Submit'),
-        'submit-attrs' : props.context.options?.submitAttrs ? props.context.options?.submitAttrs : {}
+        'submit-label': props.context.options?.submitLabel ? props.context.options?.submitLabel : t('Submit'),
+        'submit-attrs': props.context.options?.submitAttrs ? props.context.options?.submitAttrs : {}
     },
         () => h(formkitSchemaComp, {
             data: formStore.formData,
@@ -262,6 +275,7 @@ const handleError = (node: FormKitNode, error: any) => {
 const submitHandler = async (req: any, node: FormKitNode) => {
     const handler = props.context.submitHandler
     const findHandler = props.context.findHandler
+    formStore.isUploading = true
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
@@ -273,7 +287,7 @@ const submitHandler = async (req: any, node: FormKitNode) => {
     await new Promise((resolve, reject) => {
         handler.endpoint(req)
             .then(async (res: any) => {
-                console.log(res)
+
                 if (handler.callback) await handler.callback!(res)
                 if (props.context.options) {
                     if (!props.context.options.isSuccessNotificationHidden) {
@@ -284,6 +298,7 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                 }
 
                 if (!isBulkCreateRef.value) {
+                    formStore.isUploading = false
                     if (handler.redirectRoute != "") {
                         let params: RouteParamsRaw | undefined = {}
                         if (handler.redirectRouteParam) {
@@ -301,9 +316,11 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                         console.log("reset form has error", e)
                     }
                 }
+                formStore.isUploading = false
+
                 resolve(null)
             }).catch((error: any) => {
-                console.log("from rof", error)
+                formStore.isUploading = false
                 handleError(node, error)
                 resolve(null)
             })

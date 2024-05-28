@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import DeleteRestoreDialog from '@/components/dialogs/DeleteRestoreDialog.vue'
-import { ref, h } from 'vue'
+import DeleteDialog from '@/components/dialogs/DeleteDialog.vue'
+import { ref, h, Suspense } from 'vue'
 import type { AppFormDialogProps } from '@/types/types';
 import AppFormDialog from '@/components/dialogs/AppFormDialog.vue'
 import type { DynamicDialogInstance, DynamicDialogOptions } from 'primevue/dynamicdialogoptions';
@@ -11,11 +12,21 @@ export const useDialogStore = defineStore('dialog', () => {
   const init = (dialogParam: dialogService) => {
     dialog.value = dialogParam
   }
-  const openDeleteRestore = (ids: number[] = []) => {
-    console.log("ids", ids)
-    console.log("ids", dialog.value)
+  const openDeleteRestore = () => {
+
     if (!dialog.value) return
     dialog.value.open(DeleteRestoreDialog, {
+      props: {
+        dismissableMask: true,
+        closable: false,
+        modal: true,
+      },
+    })
+  }
+  const openDelete = () => {
+
+    if (!dialog.value) return
+    dialog.value.open(DeleteDialog, {
       props: {
         dismissableMask: true,
         closable: false,
@@ -26,9 +37,12 @@ export const useDialogStore = defineStore('dialog', () => {
 
 
 
+
   const openForm = (props: AppFormDialogProps) => {
     if (!dialog.value) return
-    const comp = h(AppFormDialog, props)
+    const comp = h(Suspense, null, {
+      default: () => h(AppFormDialog, props)
+    })
 
     dialog.value.open(comp, {
       props: {
@@ -39,5 +53,5 @@ export const useDialogStore = defineStore('dialog', () => {
     })
   }
 
-  return { dialog, openDeleteRestore, openForm, init }
+  return { dialog, openDelete, openDeleteRestore, openForm, init }
 })

@@ -1,23 +1,18 @@
- 
-
 <script lang="ts" setup>
 import AppNav from './AppNav.vue'
 import { useMenuStore } from '@/stores/menu';
-// import { useLanguageStore } from '@/stores/language';
-
 import { useThemeStore } from '@/stores/theme';
 import ProgressBar from 'primevue/progressbar';
 import Sidebar from 'primevue/sidebar';
 import AppMenu from './AppMenu.vue';
 import { useAuthStore } from '@/stores/auth';
 import AppLoading from '@/components/loading/AppLoading.vue';
-
+import { onMounted } from 'vue'
 const authStore = useAuthStore()
 const menuStore = useMenuStore()
-// const languageStore = useLanguageStore()
 const themeStore = useThemeStore()
-// themeStore.init()
 authStore.init()
+// themeStore.init()
 const routeResolved = () => {
     themeStore.stopProgressBar()
     menuStore.closeSidebar()
@@ -35,21 +30,27 @@ const toggleDesktopMenu = () => {
             <div class="desktop-menu-header">
                 <app-logo class="all-logo" />
                 <app-logo iconOnly class="icon-logo" />
-                <app-btn class="desktop-menu-toggler" :icon="themeStore.isMenuOpened ? 'lock' : 'lock-open'"
+                <app-btn class="desktop-menu-toggler" v-if="themeStore.isMenuOpened" icon='lock'
                     @click.prevent="toggleDesktopMenu" />
+                <app-btn class="desktop-menu-toggler" v-else icon='lock-open' @click.prevent="toggleDesktopMenu" />
             </div>
             <KeepAlive>
                 <app-menu />
             </KeepAlive>
         </aside>
         <div class="pa-4">
+
+
+
             <app-nav />
         </div>
         <main class="page-content">
             <RouterView v-slot="props">
                 <Suspense @resolve="routeResolved" timeout="0">
                     <template #default>
-                        <component :is="props.Component" />
+                        <div class="wrap">
+                            <component :is="props.Component" />
+                        </div>
                     </template>
                     <template #fallback>
                         <div class="loading">
@@ -69,8 +70,8 @@ const toggleDesktopMenu = () => {
         </Sidebar>
     </div>
 </template>
- 
-<style lang="scss" >
+
+<style lang="scss">
 @mixin flex-center {
     display: flex;
     justify-content: center;

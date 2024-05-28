@@ -10,7 +10,7 @@ const renderThemeToggler = () => {
         onClick: () => {
             themeStore.changeTheme()
         },
-        icon: 'moon'
+        icon: 'night'
 
     })
 }

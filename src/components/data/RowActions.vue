@@ -1,5 +1,3 @@
- 
-
 <script setup lang="ts">
 import { h, resolveComponent, inject, ref } from 'vue';
 import type { TableActionsProps } from '@/types/types'
@@ -56,6 +54,20 @@ const renderDeleteRestoreBtn = () => {
     })
 }
 
+const renderDeleteBtn = () => {
+    // if (!props.options.deleteHandler || tableStore.showDeletedRef) {
+    //     return
+    // }
+    return h(appBtnComponent, {
+        icon: 'trash',
+        label: t('delete'),
+        class: "danger",
+        disabled: tableStore.modelSelectionRef.length == 0,
+        onClick: (_e: Event) => {
+            dialogStore.openDelete()
+        },
+    })
+}
 
 const importDataFromFile = (value: any) => {
     themeStore.startProgressBar()
@@ -143,7 +155,8 @@ const renderTableActions = () => {
             class: 'start'
         }, [
             renderCreateBtn(),
-            renderDeleteRestoreBtn()
+            renderDeleteRestoreBtn(),
+            renderDeleteBtn()
         ]),
         h('div', {
             class: 'end'
