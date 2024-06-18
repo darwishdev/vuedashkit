@@ -1,13 +1,12 @@
 <script lang="ts">
 import type { ITableHeader } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
-import type { TableActionsProps, AppFormDialogProps } from '@/types/types'
+import type { AppFormDialogProps } from '@/types/types'
 import type { FormKitSchemaNode } from '@formkit/core';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
 import { FilterMatchMode } from 'primevue/api';
-import { findAncestor } from 'typescript';
 
 
 
@@ -189,6 +188,8 @@ const renderViewBtn = (data: any) => {
     return h(appBtnComponent, {
         class: "info",
         icon: "eye",
+        iconColor: "white",
+
         onClick: () => {
             router.push({ name, params })
         }
@@ -201,24 +202,34 @@ const renderUpdateBtn = (data: any) => {
     const params = { id: data[props.context.dataKey] }
     return h(appBtnComponent, {
         class: "warning",
-        icon: "pencil",
+        icon: "edit",
+        iconColor: "white",
+
         onClick: () => {
             if (!props.context.options.updateHandler) {
                 console.log("no_update_handler")
                 return
             }
-            props.context.options.findForUpdateHandler!['recordId'] = data[props.context.dataKey]
-            if (props.context.formSections) {
-                const params: AppFormDialogProps = {
-                    sections: props.context.formSections,
-                    handler: props.context.options.updateHandler,
-                    findForUpdateHandler: props.context.options.findForUpdateHandler,
-
+            if (props.context.options.findForUpdateHandler) {
+                props.context.options.findForUpdateHandler!['recordId'] = data[props.context.dataKey]
+                const formSections = props.context.updateFormSections ? props.context.updateFormSections : props.context.createFormSections
+                if (formSections) {
+                    const params: AppFormDialogProps = {
+                        sections: formSections,
+                        handler: props.context.options.updateHandler,
+                        findForUpdateHandler: props.context.options.findForUpdateHandler,
+                    }
+                    dialogStore.openForm(params)
+                    return
                 }
-                dialogStore.openForm(params)
-                return
             }
-            router.push({ name: routeName, params })
+            const query = {}
+            if (props.context.options.updateHandler!.routeQuery) {
+                props.context.options.updateHandler!.routeQuery.forEach(q => {
+                    query[q.queryName] = q.queryValue
+                })
+            }
+            router.push({ name: routeName, params, query })
         }
     })
 }
@@ -226,6 +237,8 @@ const renderDeleteRestoreBtn = (data: any) => {
     if (!props.context.options.deleteRestoreHandler) return
     return h(appBtnComponent, {
         icon: tableStore.deleteRestoreVaraints.icon,
+        iconColor: "white",
+
         class: "danger",
         onClick: () => {
             tableStore.modelSelectionRef = [data]
@@ -304,7 +317,7 @@ const renderActionsColumn = () => {
         },
     }, {
         body: ({ data }) => slots.actions ? slots.actions({ data }) : h('div', {
-            class: "flex "
+            class: "flex table-row-btns"
         }, [
             renderViewBtn(data),
             renderUpdateBtn(data),
@@ -322,7 +335,7 @@ const renderTableActions = () => {
     if (notExportable && noActionsInsideOptions) return
     return h(TableActions, {
         exportable: props.context.exportable,
-        formSections: props.context.formSections,
+        formSections: props.context.formSections ? props.context.formSections : props.context.createFormSections,
         options: props.context.options
     })
 }

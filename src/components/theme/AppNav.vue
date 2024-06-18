@@ -8,6 +8,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import LanguageToggler from '@/components/base/LanguageToggler.vue';
 import ThemeToggler from '@/components/base/ThemeToggler.vue';
+import AppIcon from '../base/AppIcon.vue';
 const localSetterElementRef = ref()
 const router = useRouter()
 const menuStore = useMenuStore()
@@ -32,15 +33,14 @@ const toggleProfileMenu = (event: Event) => {
             <Breadcrumb :home="breadcrumbStore.breadcrumbHome" :model="breadcrumbStore.breadcrumbs"
                 v-if="breadcrumbStore.breadcrumbs.length > 0">
                 <template #item="{ item, props }">
-                    <router-link v-if="item.url" v-slot="{ href, navigate }" :to="item.url" custom>
-                        <a :href="href" v-bind="props.action" @click="navigate">
-                            <span :class="[item.icon, 'text-color']" />
-                            <span class="text-primary font-semibold">{{ item.label }}</span>
-                        </a>
-                    </router-link>
-                    <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-                        <span class="text-color">{{ item.label }}</span>
+                    <a href="#" v-if="item.to" v-bind="props.action" @click.prevent="router.push(item.to)">
+                        <AppIcon color="mr-3" v-if="item.icon" :icon="item.icon" />
+                        <span class="text-color ">{{ item.label }}</span>
                     </a>
+                    <div v-else class="cursor-text" :href="item.to" :target="item.target" v-bind="props.action">
+                        <AppIcon color="text-primary mr-3" v-if="item.icon" :icon="item.icon" />
+                        <span class="text-primary">{{ item.label }}</span>
+                    </div>
                 </template>
             </Breadcrumb>
         </div>
@@ -92,6 +92,12 @@ const toggleProfileMenu = (event: Event) => {
 
         & .end {
             min-width: auto;
+        }
+    }
+
+    & .p-menuitem-link {
+        & svg {
+            margin-right: 1rem;
         }
     }
 

@@ -214,6 +214,7 @@ const renderHeaderSubmitBtn = () => {
     }
     return h(appBtnComponent, {
         icon: 'plus',
+        iconColor: 'white',
         class: 'primary',
         label: t('save'),
         onClick: () => {
@@ -282,7 +283,7 @@ const submitHandler = async (req: any, node: FormKitNode) => {
     if (findHandler) {
         // const request: any = {}
         const requestValue = currentRoute.value.params[findHandler.paramName || 'id'] as string
-        req[findHandler.requestPropertyName || 'recordId'] = parseInt(requestValue as string)
+        req[findHandler.requestProperty || 'recordId'] = parseInt(requestValue as string)
     }
     await new Promise((resolve, reject) => {
         handler.endpoint(req)

@@ -30,9 +30,9 @@ const toggleDesktopMenu = () => {
             <div class="desktop-menu-header">
                 <app-logo class="all-logo" />
                 <app-logo iconOnly class="icon-logo" />
-                <app-btn class="desktop-menu-toggler" v-if="themeStore.isMenuOpened" icon='lock'
+                <app-btn class="desktop-menu-toggler" v-if="themeStore.isMenuOpened" icon='padlock'
                     @click.prevent="toggleDesktopMenu" />
-                <app-btn class="desktop-menu-toggler" v-else icon='lock-open' @click.prevent="toggleDesktopMenu" />
+                <app-btn class="desktop-menu-toggler" v-else icon='unlock' @click.prevent="toggleDesktopMenu" />
             </div>
             <KeepAlive>
                 <app-menu />

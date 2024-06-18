@@ -55,7 +55,7 @@ export const useIconsValueSlot = (value: any) => {
     return !value.value ? h('span', value.placeholder) : h('div', {
         class: 'flex align-items-center gap-3',
     }, [
-        value.value.icon ? h(AppIcon, { icon: value.value.icon }) : null,
+        value.value.iconName ? h(AppIcon, { icon: value.value.iconName }) : null,
         value.value.iconName ? h('span', value.value.iconName) : null,
     ])
 }

@@ -26,8 +26,7 @@ const renderIcon = () => {
     return props.iconType == 'primevue' ? h('span', {
         class: `pi pi-${icon}`,
     }) : themeStore.isLoading ? null : h('span', {
-        class: `app-icon ${props.size}`,
-        attrs: props.color,
+        class: `app-icon ${props.size ? props.size : ''} ${props.color ? props.color : ''}`,
         innerHTML: icon,
     },)
 }

@@ -27,7 +27,7 @@ onMounted(() => {
 
 const signInWithOTP = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.senedOTPEndpoint({ email: formStore.defaultFormValue.email }).then(_ => {
+        loginHandler.sendOTPEndpoint({ email: formStore.defaultFormValue.loginCode }).then(_ => {
             notificationStore.showSuccess("otp_email_sent", "otp_email_sent_detail")
             resolve()
         }).catch(e => {
@@ -40,7 +40,7 @@ const signInWithOTP = async (): Promise<void> => {
 
 const resetPasswordForEmail = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.sendResetLinkEndpoint({ email: formStore.defaultFormValue.email }).then(_ => {
+        loginHandler.sendResetLinkEndpoint({ email: formStore.defaultFormValue.loginCode }).then(_ => {
             notificationStore.showSuccess("reset_email_sent", "reset_email_sent_detail")
             resolve()
         }).catch(e => {
@@ -99,7 +99,7 @@ const formProps: AppFormProps<any, any> = {
                         prefixIcon: "email",
                         outerClass: "col-12",
                         validation: "required:email",
-                        name: "email",
+                        name: "loginCode",
                         placeholder: t("email"),
                         label: t("email")
                     },
@@ -109,7 +109,7 @@ const formProps: AppFormProps<any, any> = {
                         if: "$isResetPassword == false",
                         outerClass: "col-12",
                         validation: "required",
-                        name: "password",
+                        name: "userPassword",
                         placeholder: t("password"),
                         label: t("password")
                     },

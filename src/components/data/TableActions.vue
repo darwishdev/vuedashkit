@@ -31,6 +31,7 @@ const renderCreateBtn = () => {
     }
     return h(appBtnComponent, {
         icon: "plus",
+        iconColor: "white",
         class: "success",
         onClick: (_e: Event) => {
             if (props.formSections) {
@@ -41,7 +42,13 @@ const renderCreateBtn = () => {
                 dialogStore.openForm(params)
                 return
             }
-            router.push({ name: props.options!.createHandler!.routeName })
+            const query = {}
+            if (props.options!.createHandler!.routeQuery) {
+                props.options!.createHandler!.routeQuery.forEach(q => {
+                    query[q.queryName] = q.queryValue
+                })
+            }
+            router.push({ name: props.options!.createHandler!.routeName, query })
         },
         label: t("create")
     })
@@ -53,6 +60,7 @@ const renderDeleteRestoreBtn = () => {
     const variant = tableStore.deleteRestoreVaraints
     return h(appBtnComponent, {
         icon: variant.icon,
+        iconColor: "white",
         class: "danger",
         disabled: tableStore.modelSelectionRef.length == 0,
         onClick: (_e: Event) => {
@@ -67,6 +75,8 @@ const renderDeleteBtn = () => {
     }
     return h(appBtnComponent, {
         icon: 'trash',
+        iconColor: "white",
+
         class: "danger",
         disabled: tableStore.modelSelectionRef.length == 0,
         onClick: (_e: Event) => {
@@ -118,6 +128,8 @@ const renderImportMenu = () => {
     }, [
         h(appBtnComponent, {
             icon: "upload",
+            iconColor: "white",
+
             class: "warning",
             label: t("import"),
             onClick: (e: Event) => importMenuRef.value.toggle(e)
@@ -146,7 +158,9 @@ const renderImportMenu = () => {
 const renderExportBtn = () => {
     if ((typeof props.exportable != 'undefined' && props.exportable == false) || !tableStore.dataListElementRef) return
     return h(appBtnComponent, {
-        icon: "download",
+        icon: "upload",
+        iconColor: "white",
+
         class: "info",
         onClick: (e: Event) => {
             console.log('fromactions', tableStore.dataListElementRef.exportCSV, ObjectKeys(tableStore.dataListElementRef))

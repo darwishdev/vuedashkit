@@ -27,6 +27,7 @@ export type AppLogoProps = {
 export type AppBtnProps = {
     label?: string
     icon?: string | number
+    iconColor?: string
     iconType?: 'svg' | 'primevue'
     disabled?: boolean
 }
@@ -114,10 +115,15 @@ export type RedirectRouteParam = {
     paramName: string,
     responseValueKey: string,
 }
+type RouteQuery = {
+    queryName: string
+    queryValue: string
+}
 type CreateHandler = {
     title: string
     redirectRoute: string
     redirectRouteParam?: RedirectRouteParam,
+    routeQuery?: RouteQuery[]
     routeName: string
     endpoint: string
 }
@@ -127,6 +133,7 @@ type CreateHandler = {
 type UpdateHandler = {
     title: string
     redirectRoute: string
+    routeQuery?: RouteQuery[]
     routeName: string
     redirectRouteParam?: RedirectRouteParam,
     endpoint: string
@@ -196,6 +203,8 @@ export interface DataListProps<TResp, TRecord> {
         dataKey: keyof TRecord
         exportable?: boolean
         formSections?: Record<string, (AppFormSection | FormKitSchemaNode[])>
+        createFormSections?: Record<string, (AppFormSection | FormKitSchemaNode[])>
+        updateFormSections?: Record<string, (AppFormSection | FormKitSchemaNode[])>
         initiallySelectedItems?: any[],
         fetchFn?: tableFetchFn<TResp, TRecord>
         records: TRecord[]
@@ -334,6 +343,7 @@ export type InputImageProps = {
     context: {
         node: FormKitNode
         _value?: string
+        bucketName?: string
         path: string
         multiple?: boolean
         size?: Size
@@ -401,16 +411,16 @@ export type UserLoginResponse = {
 export type LoginHandler<TResp> = {
     redirectRoute?: string | 'home_view'
     loginEndpoint: (req: {
-        login_code: string
-        password: string
+        loginCode: string
+        userPassword: string
     }
     ) => Promise<TResp>
-    senedOTPEndpoint: (req: { email: string }) => Promise<void>
+    sendOTPEndpoint: (req: { email: string }) => Promise<void>
     sendResetLinkEndpoint: (req: { email: string }) => Promise<void>
 }
 
 export type UploadHandler = {
-    uploadEndpoint: (file: File) => Promise<string>
+    uploadEndpoint: (file: File, bucketName: string) => Promise<string>
 }
 
 

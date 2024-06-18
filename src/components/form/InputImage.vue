@@ -11,6 +11,7 @@ const files = ref()
 const notificationStore = useNotificationStore()
 
 const uploadHandler: UploadHandler = inject('uploadHandler') as UploadHandler
+const bucketName = props.context.bucketName ? props.context.bucketName : "images"
 const images = computed(() => {
     return props.context._value ? props.context._value.split(',') : []
 })
@@ -24,9 +25,13 @@ const handleUpload = async (evt: any) => {
     files.value = evt.target.files
     formStore.isUploading = true
     let filePathes = ""
-    for (let fileIndex = 0; fileIndex < evt.target.files.length; fileIndex++) {
-        const file = evt.target.files[fileIndex];
-        await uploadHandler.uploadEndpoint(file).then((f: string) => {
+
+
+
+    const filesLength = evt.target.false.lenght
+    if (filesLength == 1) {
+        const file = evt.target.files[0];
+        await uploadHandler.uploadEndpoint(file, bucketName).then((f: string) => {
             filePathes = `${filePathes},${f}`
         }).catch((error: any) => {
             notificationStore.showError('upload_error', error.message)
@@ -35,6 +40,23 @@ const handleUpload = async (evt: any) => {
             setTimeout(() => formStore.isUploading = false, 50)
         })
     }
+
+    if(filesLength > 1) {
+        
+    }
+    for (let fileIndex = 0; fileIndex < evt.target.files.length; fileIndex++) {
+        const file = evt.target.files[fileIndex];
+        await uploadHandler.uploadEndpoint(file, bucketName).then((f: string) => {
+            filePathes = `${filePathes},${f}`
+        }).catch((error: any) => {
+            notificationStore.showError('upload_error', error.message)
+            console.log(error, "error")
+        }).finally(() => {
+            setTimeout(() => formStore.isUploading = false, 50)
+        })
+    }
+    setTimeout(() => formStore.isUploading = false, 50)
+
     props.context.node._value = filePathes.substring(1)
     props.context.node.input(props.context.node._value)
 
@@ -53,15 +75,15 @@ const handleUpload = async (evt: any) => {
                 <span>{{ $t('replace') }}</span>
             </div>
         </div>
-        <div class="grid" v-if="!formStore.isUploading && images.length > 0"
-            :style="`width : ${props.context.size || '150'}px`">
+        <div class="grid" :class="{ 'multiple': props.context.multiple }"
+            v-if="!formStore.isUploading && images.length > 0" :style="`width : ${props.context.size || '150'}px`">
             <app-image v-for="path in images" class="mr-2" :src="path" :size="props.context.size" />
             <div class="upload w-full">
                 <span>{{ $t('replace') }}</span>
             </div>
         </div>
-        <input @change="handleUpload" :multiple="props.context.multiple" type="file" id="imageUpload"
-            class="actual-input" accept="image/*">
+        <input @change="handleUpload" @blur="() => formStore.isUploading = false" :multiple="props.context.multiple"
+            type="file" id="imageUpload" class="actual-input" accept="image/*">
     </div>
 </template>
 
@@ -71,6 +93,13 @@ const handleUpload = async (evt: any) => {
     position: relative;
     padding: 20px;
     cursor: pointer;
+
+    & .grid.multiple {
+        width: 100% !important;
+        display: flex;
+        justify-content: center;
+        gap: 1rem
+    }
 
     & .actual-input {
         position: absolute;

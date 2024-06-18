@@ -12,7 +12,7 @@ const renderFunction = () => {
         disabled: props.disabled,
         icon: isPrimeVueIcon ? `pi pi-${props.icon}` : undefined,
     }, {
-        icon: () => !isPrimeVueIcon ? h(AppIcon, { icon: props.icon!, }) : undefined
+        icon: () => !isPrimeVueIcon ? h(AppIcon, { icon: props.icon!, color: props.iconColor }) : undefined
     })
 }
 

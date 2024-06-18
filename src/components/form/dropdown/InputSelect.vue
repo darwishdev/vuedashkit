@@ -16,16 +16,17 @@ const isOptionsLoaded = ref(false)
 const valueRef = ref(props.context.node._value as number)
 const router = useRouter()
 const renderSelect = () => {
-    const optionValue = props.context.primeProps.optionValue ? props.context.primeProps.optionValue as string : ''
+    const optionValue = props.context.primeProps.optionValue ? props.context.primeProps.optionValue as string : props.context.convertToFlat ? undefined : 'value'
+    const optionLabel = props.context.primeProps.optionLabel ? props.context.primeProps.optionLabel as string : 'label'
 
     let optionSlot = slots.option as any
     if (!optionSlot) {
         optionSlot = (val: any) => useOptionSlot(val, props.context, t)
     }
-    let valueSlot = slots.value as any
-    if (!valueSlot && !props.context.isMultiple) {
-        valueSlot = (val: any) => useValueSlot(val, props.context, t)
-    }
+    // let valueSlot = slots.value as any
+    // if (!valueSlot && !props.context.isMultiple) {
+    //     valueSlot = (val: any) => useValueSlot(val, props.context, t)
+    // }
     let optionGroupSlot = slots.optiongroup as any
     if (!optionGroupSlot) {
         optionGroupSlot = (val: any) => useOptionGroupSlot(props.context)
@@ -39,7 +40,8 @@ const renderSelect = () => {
         options: props.context.options,
         display: "chip",
         modelValue: valueRef.value,
-        optionLabel: props.context.primeProps.optionLabel ? props.context.primeProps.optionLabel : 'label',
+        optionLabel,
+        optionValue,
         filter: props.context.filter,
         optionGroupLabel: props.context.hasGroup ? 'groupName' : undefined,
         optionGroupChildren: props.context.hasGroup ? 'items' : undefined,
@@ -63,10 +65,16 @@ const renderSelect = () => {
         'onUpdate:modelValue': (value: any) => {
             valueRef.value = value
             if (props.context.convertToFlat) {
-                props.context.node.input(value)
+                props.context.node.input(value[optionLabel])
             } else {
                 if (value) {
-                    props.context.node.input(value[optionValue])
+                    if (typeof value == 'object') {
+                        if (optionValue && optionValue in value) {
+                            props.context.node.input(value[optionValue])
+                            return
+                        }
+                    }
+                    props.context.node.input(value)
                 }
             }
         }
@@ -74,7 +82,7 @@ const renderSelect = () => {
     }, {
         ...slots,
         option: optionSlot,
-        value: valueSlot,
+        // value: valueSlot,
         optiongroup: optionGroupSlot,
         header: (val: any) => h('div', {
             class: "flex gap-5 dropdown-header"

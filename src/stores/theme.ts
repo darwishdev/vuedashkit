@@ -33,7 +33,6 @@ export const useThemeStore = defineStore('theme', () => {
       console.log('cannot load icons', err)
       isLoading.value = false
     })
-
   }
 
   const init = () => {

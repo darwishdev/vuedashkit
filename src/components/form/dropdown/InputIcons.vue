@@ -39,6 +39,7 @@ const renderSelect = () => {
         loading: loadingRef.value,
         options: optionsRef.value,
         modelValue: valueRef.value,
+        optionLabel: 'iconName',
         filter: true,
         filterPlaceholder: t('filter_the_list'),
         class: 'w-full flex align-items-center icons-input',

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { useTableStore } from "@/stores/table";
-import type { AppFormDialogProps, AppFormProps } from "@/types/types";
+import type { ApiFormError, AppFormDialogProps, AppFormProps } from "@/types/types";
 import AppForm from '@/components/form/AppForm.vue';
 import { useI18n } from 'vue-i18n';
 import AppLoading from '@/components/loading/AppLoading.vue';
+import { ObjectKeys } from "@/utils/object/object";
 
 
 const { t } = useI18n()
@@ -23,6 +24,7 @@ const dialogRef = inject("dialogRef") as any;
 const submitHandler = (req: any) => {
     return new Promise((resolve, reject) => {
         const func = apiClient[props.handler.endpoint]
+
         if (typeof func == 'function') {
             func(req).then((resp: any) => {
                 dialogRef.value.close()
@@ -33,7 +35,8 @@ const submitHandler = (req: any) => {
             })
         }
         else {
-            reject('no api function with this endpoint')
+            const error: ApiFormError = { globalErrors: ["no api function with this endpoint"], fieldErrors: {} }
+            reject(error)
         }
     })
 
