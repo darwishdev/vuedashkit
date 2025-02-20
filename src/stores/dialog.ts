@@ -1,21 +1,21 @@
 import { defineStore } from 'pinia'
-import { h } from 'vue'
 import DeleteRestoreDialog from '@/components/dialogs/DeleteRestoreDialog.vue'
-import AppFormDialog from '@/components/dialogs/AppFormDialog.vue'
-import AppForm from '@/components/form/AppForm.vue';
-import type { DynamicDialogInstance, DynamicDialogOptions } from 'primevue/dynamicdialogoptions';
+import DeleteDialog from '@/components/dialogs/DeleteDialog.vue'
+import { ref, h, Suspense } from 'vue'
 import type { AppFormDialogProps } from '@/types/types';
+import AppFormDialog from '@/components/dialogs/AppFormDialog.vue'
+import type { DynamicDialogInstance, DynamicDialogOptions } from 'primevue/dynamicdialogoptions';
 export const useDialogStore = defineStore('dialog', () => {
-  let dialog: {
-    open: (content: any, options?: DynamicDialogOptions) => DynamicDialogInstance;
-  }
+  type dialogService = { open: (content: any, options?: DynamicDialogOptions) => DynamicDialogInstance; }
+  const dialog = ref<dialogService>()
 
-  const init = (dialogParam: { open: (content: any, options?: DynamicDialogOptions) => DynamicDialogInstance; }) => {
-    dialog = dialogParam
+  const init = (dialogParam: dialogService) => {
+    dialog.value = dialogParam
   }
   const openDeleteRestore = () => {
-    if (!dialog) return
-    dialog.open(DeleteRestoreDialog, {
+
+    if (!dialog.value) return
+    dialog.value.open(DeleteRestoreDialog, {
       props: {
         dismissableMask: true,
         closable: false,
@@ -23,24 +23,35 @@ export const useDialogStore = defineStore('dialog', () => {
       },
     })
   }
+  const openDelete = () => {
+
+    if (!dialog.value) return
+    dialog.value.open(DeleteDialog, {
+      props: {
+        dismissableMask: true,
+        closable: false,
+        modal: true,
+      },
+    })
+  }
+
+
 
 
   const openForm = (props: AppFormDialogProps) => {
-    if (!dialog) return
-    const comp = h(AppFormDialog, props)
+    if (!dialog.value) return
+    const comp = h(Suspense, null, {
+      default: () => h(AppFormDialog, props)
+    })
 
-    dialog.open(comp, {
+    dialog.value.open(comp, {
       props: {
         dismissableMask: true,
         closable: false,
-        modal: true,
-        ...props
+        modal: true
       },
     })
   }
 
-
-
-
-  return { openDeleteRestore, init, openForm }
+  return { dialog, openDelete, openDeleteRestore, openForm, init }
 })

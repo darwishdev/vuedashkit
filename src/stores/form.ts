@@ -3,13 +3,23 @@ import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 export const useFormStore = defineStore('form', () => {
   const formData = reactive({} as Record<string, any>)
-  const formElementRef = ref()
+  const formElementRef = ref({
+    default: {}
+  })
+  const formValueRef = ref<Record<string, any>>({})
+  const isUploading = ref(false)
   const showActions = ref(true)
-  const formValue = computed(() => {
-    if(!formElementRef.value) return null
-    if(!formElementRef.value.node) return null
-    return formElementRef.value.node._value || null
+  const getFormValue = (storeKey: string) => {
+    return formElementRef.value[storeKey].value || null
+  }
+
+  const setFormValue = (value: any) => {
+    formValueRef.value = value
+  }
+
+  const defaultFormValue = computed(() => {
+    return getFormValue('default')
   })
 
-  return { formData, showActions, formElementRef, formValue }
+  return { formData, isUploading, showActions, formElementRef, getFormValue, formValueRef, defaultFormValue, setFormValue }
 })

@@ -1,8 +1,8 @@
 <script lang="ts">
 import type { ITableHeader } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
+import type { AppFormDialogProps } from '@/types/types'
 import type { FormKitSchemaNode } from '@formkit/core';
-import router from '@/router';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { ColumnProps } from 'primevue/column';
 import type { VNode } from 'vue';
@@ -10,7 +10,7 @@ import { FilterMatchMode } from 'primevue/api';
 
 
 
-type ColumnSlots = { body: ({ data }) => VNode[], editor?: (props: any) => any }
+type ColumnSlots = { body: ({ data }) => VNode[] }
 
 
 
@@ -18,23 +18,18 @@ const prepareRecords = async (records?: any[]): Promise<any[]> => {
     if (!records) return []
     const newRecords: any[] = []
     records.forEach(r => {
-        try {
-            if (r.createdAt) {
-                r.createdAt = new Date(r.createdAt)
-            }
-            if (r.deletedAt) {
-                r.deletedAt = new Date(r.deletedAt)
-            }
-        } catch (error) {
-            console.error("cannot parse the response dates", error)
+        if (r.createdAt) {
+            r.createdAt = new Date(r.createdAt)
         }
-
+        if (r.deletedAt) {
+            r.deletedAt = new Date(r.deletedAt)
+        }
         newRecords.push(r)
     })
     return newRecords
 }
 // this function called while the component is on loading 
-const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promise<{
+const loadElements = (headers: Record<string, ITableHeader>, t: Function, routeQuery: Record<string, any>): Promise<{
     inputsSchema: FormKitSchemaNode[],
     tableFilters: Record<string, DataTableFilterMetaData>,
     activeFilters: Record<string, (string | number | Date)>,
@@ -45,10 +40,12 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
     searchKey: string,
 }> => {
     return new Promise((resolve: Function) => {
-        const filterFormStr: string | undefined = router.currentRoute.value.query.filterForm as string
+        const filterFormStr: string | undefined = routeQuery.filterForm as string
+        const deletedFilterStr: string | undefined = routeQuery.showDeleted as string
+        const searchKeyParam: string | undefined = routeQuery.search as string
+
+
         const filterForm = filterFormStr ? JSON.parse(filterFormStr) : {}
-        const deletedFilterStr: string | undefined = router.currentRoute.value.query.showDeleted as string
-        const searchKeyParam: string | undefined = router.currentRoute.value.query.search as string
         const keys = ObjectKeys(headers)
         const inputsSchema: FormKitSchemaNode[] = []
         const filterFormValue: Record<string, (string | number | null)> = {}
@@ -58,6 +55,7 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
         const deletedFilter = deletedFilterStr ? deletedFilterStr == 'true' : false
         const searchKey = searchKeyParam ? searchKeyParam : ""
         const globalFilters: string[] = []
+
         for (const key of keys) {
             const currentValue = headers[key]
             const inputFilter = currentValue.filter
@@ -121,22 +119,19 @@ const loadElements = (headers: Record<string, ITableHeader>, t: Function): Promi
 
     })
 }
-</script> 
+</script>
 
 <script setup lang="ts">
 import TableActions from './TableActions.vue';
-import TableRowActions from './TableRowActions.vue';
 import TableHeader from './TableHeader.vue';
 import TableFilter from './TableFilter.vue';
 import { useDialogStore } from '@/stores/dialog';
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import Column from 'primevue/column';
-import type { TRecordDefault, TableRowActionsProps, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
+import type { TRecordDefault, DataListProps, ApiResponseList, InitTableParams } from '@/types/types';
 import DataTable from 'primevue/datatable';
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router';
-import Menu from 'primevue/menu';
-
+import { useRouter } from 'vue-router';
 import { h, resolveComponent, ref } from 'vue'
 const appBtnComponent = resolveComponent('app-btn')
 const emit = defineEmits<{
@@ -144,17 +139,16 @@ const emit = defineEmits<{
 }>();
 const dialogStore = useDialogStore()
 const { t } = useI18n()
-const route = useRoute()
-const tableRefElement = ref()
+const router = useRouter()
+// const tableRefElement = ref()
 
 const slots = defineSlots<{
     default(): any
     start(props: { data: any }): any
     end(props: { data: any }): any
-    expansion(props: { data: any }): any
     actions(props: { data: any }): any
-    prependActions(props: { data: any }): any
-    appendActions(props: { data: any }): any
+    header(): any
+    expansion(props: { data: any }): any
 } & any>()
 const props = defineProps<DataListProps<any, any>>();
 
@@ -165,38 +159,37 @@ const { inputsSchema,
     globalFilters,
     tableFilters,
     deletedFilter,
-    searchKey } = await loadElements(props.context.headers, t)
+    searchKey } = await loadElements(props.context.headers, t, router.currentRoute.value.query)
 
 const newRecords = await prepareRecords(props.context.records)
 const newDeletedRecords = await prepareRecords(props.context.deletedRecords)
-
-const exportCSV = () => {
-    tableRefElement.value.exportCSV()()
-}
 
 const initTableParams: InitTableParams<ApiResponseList<TRecordDefault>, TRecordDefault> = {
     records: newRecords,
     deletedRecords: newDeletedRecords,
     initiallySelectedItems: props.context.initiallySelectedItems,
+    deleteRestoreHandler: props.context.options.deleteRestoreHandler,
+    deleteHandler: props.context.options.deleteHandler,
     tableFiltersRef: tableFilters,
     dataKey: props.context.dataKey as string,
     fetchFn: props.context.fetchFn,
     deletedFilter
 }
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 tableStore.initTable(initTableParams)
 // const tableFiltersRef = ref(tableFilters)
+
 
 const renderViewBtn = (data: any) => {
     if (!props.context.viewRouter) return
     const { name, paramColumnName, paramName } = props.context.viewRouter
     const params = {}
-
     params[paramName] = data[paramColumnName]
     return h(appBtnComponent, {
-        class: "w-full transparent",
+        class: "info",
         icon: "eye",
-        label: t("view"),
+        iconColor: "white",
+
         onClick: () => {
             router.push({ name, params })
         }
@@ -208,12 +201,35 @@ const renderUpdateBtn = (data: any) => {
     const { routeName } = props.context.options.updateHandler
     const params = { id: data[props.context.dataKey] }
     return h(appBtnComponent, {
-        class: "w-full transparent",
-        icon: "pencil",
-        label: t("update"),
+        class: "warning",
+        icon: "edit",
+        iconColor: "white",
 
         onClick: () => {
-            router.push({ name: routeName, params })
+            if (!props.context.options.updateHandler) {
+                console.log("no_update_handler")
+                return
+            }
+            if (props.context.options.findForUpdateHandler) {
+                props.context.options.findForUpdateHandler!['recordId'] = data[props.context.dataKey]
+                const formSections = props.context.updateFormSections ? props.context.updateFormSections : props.context.createFormSections
+                if (formSections) {
+                    const params: AppFormDialogProps = {
+                        sections: formSections,
+                        handler: props.context.options.updateHandler,
+                        findForUpdateHandler: props.context.options.findForUpdateHandler,
+                    }
+                    dialogStore.openForm(params)
+                    return
+                }
+            }
+            const query = {}
+            if (props.context.options.updateHandler!.routeQuery) {
+                props.context.options.updateHandler!.routeQuery.forEach(q => {
+                    query[q.queryName] = q.queryValue
+                })
+            }
+            router.push({ name: routeName, params, query })
         }
     })
 }
@@ -221,8 +237,9 @@ const renderDeleteRestoreBtn = (data: any) => {
     if (!props.context.options.deleteRestoreHandler) return
     return h(appBtnComponent, {
         icon: tableStore.deleteRestoreVaraints.icon,
-        class: "w-full transparent",
-        label: t(tableStore.deleteRestoreVaraints.label),
+        iconColor: "white",
+
+        class: "danger",
         onClick: () => {
             tableStore.modelSelectionRef = [data]
             dialogStore.openDeleteRestore()
@@ -232,14 +249,15 @@ const renderDeleteRestoreBtn = (data: any) => {
 
 
 const renderCardColumns = () => {
-    const selectAllColumn = renderSelectAllColumn()
     const startColumn = h(Column, { class: 'card-start' }, { body: (props) => slots.start(props) })
     const endColumn = h(Column, { class: 'card-end' }, { body: (props) => slots.end(props) })
     const columns: VNode[] = [
         startColumn,
         endColumn,
-        selectAllColumn
     ]
+    if (!props.context.options.hideSelectCheckbox) {
+        columns.push(renderSelectAllColumn())
+    }
     const actionsColumn = renderActionsColumn()
     if (actionsColumn) columns.push(actionsColumn)
 
@@ -268,17 +286,16 @@ const renderExpander = () => {
 const renderColumns = () => {
 
     if (props.context.displayType == 'card') return renderCardColumns()
-    const selectAllColumn = renderSelectAllColumn()
     const expanderColumn = renderExpander()
-    const columns: VNode[] = [
-        selectAllColumn,
-    ]
+    const columns: VNode[] = []
+    if (!props.context.options.hideSelectCheckbox) {
+        columns.push(renderSelectAllColumn())
+    }
 
     tableColumns.forEach((columnObj) => {
         const isSlotPassed = ObjectKeys(slots).includes(`items.${columnObj.key}`)
+        console.log("hola", slots[`items.${columnObj.key}`])
         const bodySlot = isSlotPassed ? slots[`items.${columnObj.key}`] : columnObj.slots ? columnObj.slots.body : undefined
-        console.log(isSlotPassed)
-        console.log(`items.${columnObj.key}`)
         const columnNode = h(Column, columnObj.props, { body: bodySlot })
         columns.push(columnNode)
     })
@@ -292,49 +309,19 @@ const renderColumns = () => {
 const renderActionsColumn = () => {
     if (!props.context.options.updateHandler && !props.context.options.deleteRestoreHandler && !props.context.viewRouter) return
 
-    const rowActionsProps: TableRowActionsProps = {
-        viewRouter: props.context.viewRouter,
-        dataKey: props.context.dataKey as string,
-        options: props.context.options
-
-    }
     const actionsColumn = h(Column, {
-        header: 'actions',
+        header: t('actions'),
         class: "actions-btns",
         headerStyle: {
             width: "3rem"
         },
     }, {
-        body: ({ data }) => h('div', {
-            class: "actions-wrapperr "
+        body: ({ data }) => slots.actions ? slots.actions({ data }) : h('div', {
+            class: "flex table-row-btns"
         }, [
-            h(appBtnComponent, {
-                icon: "ellipsis-v",
-                class: "warning",
-                onClick: (e: Event) => tableStore.actionsMenuRef.toggle(e)
-            }),
-            h(Menu, {
-                ref: (el) => {
-                    if (el && !tableStore.actionsMenuRef) {
-                        tableStore.actionsMenuRef = el
-                    }
-                },
-                class: "import-menu",
-                popup: true
-            },
-                {
-                    'start': () => h('div', slots.actions ? slots.actions(data) : [
-                        slots.prependActions ? slots.prependActions(data) : null,
-                        renderViewBtn(data),
-                        renderUpdateBtn(data),
-                        renderDeleteRestoreBtn(data),
-                        slots.appendActions ? slots.appendActions(data) : null,
-                    ]),
-                }
-            )
-            // renderViewBtn(data),
-            // renderUpdateBtn(data),
-            // renderDeleteRestoreBtn(data)
+            renderViewBtn(data),
+            renderUpdateBtn(data),
+            renderDeleteRestoreBtn(data)
         ])
     })
     return actionsColumn
@@ -348,10 +335,8 @@ const renderTableActions = () => {
     if (notExportable && noActionsInsideOptions) return
     return h(TableActions, {
         exportable: props.context.exportable,
-        formSections: props.context.formSections,
-        options: props.context.options, onExport: () => {
-            exportCSV()
-        }
+        formSections: props.context.formSections ? props.context.formSections : props.context.createFormSections,
+        options: props.context.options
     })
 }
 
@@ -370,17 +355,37 @@ const modelExpansionRef = ref([])
 const renderTable = () => {
 
 
+    const headerChildren = [
+        renderTableActions(),
+        h(TableHeader, {
+            deletedFilter,
+            searchKey,
+            hideDeleteFilter: props.context.options.hideDeleteFilter,
+            title: props.context.options.title,
+            displayType: props.context.displayType,
+            showGlobalSearchFilter: globalFilters.length > 0,
+            "onUpdate:globalSearch": onGlobalSearch
+        }),
+        h(TableFilter, {
+            inputsSchema,
+            tableFilters,
+            activeFilters,
+            filterFormValue,
+        }),
+    ]
+    if (slots.header) headerChildren.push(slots.header())
     return h(DataTable, {
         value: tableStore.data,
         rows: 10,
         maxHeight: 200,
-        ref: "tableRefElement",
-        // scrollable: false,
-        paginator: true,
+        ref: (el) => tableStore.dataListElementRef = el,
         selection: tableStore.modelSelectionRef,
         globalFilterFields: globalFilters,
         filters: tableStore.tableFiltersRef,
         expandedRows: modelExpansionRef.value,
+        paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
+        currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
+        paginator: (props.context.paginationOptions && props.context.paginationOptions.paginator),
         "onUpdate:selection": (e: any) => {
             tableStore.modelSelectionRef = e
             emit('update:selection', e)
@@ -393,34 +398,16 @@ const renderTable = () => {
             console.log('upadat filters', e)
         },
 
-        paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown",
-        currentPageReportTemplate: `${t('showing')} {first} ${t('to')} {last} ${t('of')} {totalRecords}`,
+
     }, {
         default: slots.default ? slots.default : () => renderColumns(),
         expansion: slots.expansion,
-        header: () => h('div', null, [
-            renderTableActions(),
-            h(TableHeader, {
-                deletedFilter,
-                searchKey,
-                title: props.context.options.title,
-                displayType: props.context.displayType,
-                showGlobalSearchFilter: globalFilters.length > 0,
-                "onUpdate:globalSearch": onGlobalSearch
-            }),
-            h(TableFilter, {
-                inputsSchema,
-                tableFilters,
-                activeFilters,
-                filterFormValue,
-                "onUpdate:tableFilters": onFiltersFormUpdated
-            })
-        ]),
+        header: () => h('div', null, headerChildren),
         empty: () => h('div', {
             class: "empty-table"
         }, [
             h("h3", t(tableStore.deleteRestoreVaraints.empty)),
-            h("p", t(`breif_${route.name as string}`)),
+            h("p", t(`breif_${router.currentRoute.value.name as string}`)),
         ]),
     })
 }
@@ -431,7 +418,7 @@ const renderTable = () => {
 </template>
 
 
-<style   lang="scss">
+<style lang="scss">
 .app-table {
     & .p-datatable-header {
         background-color: transparent !important;
@@ -501,7 +488,7 @@ const renderTable = () => {
         & p {
             max-width: 800px;
             padding: 25px;
-            background: rgba(255, 255, 255, .9);
+            background: var(--color-card);
             margin: 20px auto;
             border-radius: 6px;
         }

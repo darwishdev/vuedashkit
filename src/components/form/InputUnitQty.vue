@@ -1,41 +1,76 @@
 
  
 <script setup lang="ts">
-import type { InputUnitQtyProps } from '@/types/types';
-import { useI18n } from 'vue-i18n';
+import type { InputUnitQtyProps, UnitValues } from '@/types/types';
+import { UnitSellShift, UnitParseWholeQty } from '@/utils/currency/currency'
+import { Debounce } from '@/utils/debounce/debounce';
+import { ref } from 'vue';
 const props = defineProps<InputUnitQtyProps>();
-const { t } = useI18n()
-// const nodeElementsRef = ref<any>([])
-// const dependentDropdownMethods: IDropDownInputMethods = props.context.data ? new DependentDropdownMethodsLocal(props) : new DependentDropdownMethodsNetwork(props)
-// const formData = ref({
-//     loadOptions: async (input: { id: string }) => {
-//         return dependentDropdownMethods.loadInputOptions(input.id)
-//     },
-//     setInputValue: async (value: any, node: FormKitNode) => {
-//         console.log(value)
-//         if (!value) return
-//         if (dependentDropdownMethods.activeInputs[node.name]) {
-//             if (dependentDropdownMethods.activeInputs[node.name].value == value) return
-//         }
-//         return dependentDropdownMethods.setInputValue(node.name, value, nodeElementsRef.value)
-//     },
-// })
-
+const { unitRatio } = props.context
+const blockListners = ref(false)
+const debounceDelay = 5
+const buyUnitElementRef = ref()
+const sellUnitElementRef = ref()
+const emitUpdate = (values?: UnitValues) => {
+    const unitValues = values ? values : parseValues()
+    const totalQuantity = UnitParseWholeQty(unitValues, unitRatio)
+    props.context.node.input(totalQuantity)
+}
+const parseValues = (): UnitValues => {
+    const buyValue = buyUnitElementRef.value.node.value
+    const sellValue = sellUnitElementRef.value.node.value
+    const buyValueConverted = buyValue ? parseFloat(buyValue) : 0
+    const sellValueConverted = sellValue ? parseFloat(sellValue) : 0
+    const unitBuy = buyValueConverted < 0 ? 0 : buyValueConverted
+    const unitSell = sellValueConverted < 0 ? 0 : sellValueConverted
+    return { unitBuy, unitSell }
+}
+const onUnitSellInput = (e: any, node: any) => {
+    if ((!buyUnitElementRef.value.node.value && !e) || blockListners.value) return
+    blockListners.value = true
+    const values = parseValues()
+    const { unitBuyQuantityIncreaseAmount, unitSellQuantity } = UnitSellShift(values, unitRatio)
+    values.unitBuy = values.unitBuy + unitBuyQuantityIncreaseAmount
+    if (unitBuyQuantityIncreaseAmount > 0) {
+        buyUnitElementRef.value.node.input(values.unitBuy)
+        node.input(unitSellQuantity)
+    }
+    if (parseFloat(e) < 0) {
+        node.input(0)
+    }
+    const debouncedEvent = Debounce(() => {
+        emitUpdate(values)
+        blockListners.value = false
+    }, debounceDelay)
+    debouncedEvent()
+}
+const onUnitBuyInput = (e: any, node: any) => {
+    if ((!sellUnitElementRef.value.node.value && !e) || blockListners.value) return
+    if (parseFloat(e) < 0) {
+        node.input(0)
+    }
+    const values = parseValues()
+    const debouncedEvent = Debounce(emitUpdate, debounceDelay)
+    debouncedEvent()
+}
 </script>
 <template>
-    <div class="unit-qty success-border  disabled">
+    <div class="unit-qty">
         <!-- {{ props.context }} -->
         <div class="top">
             <div class="start">
-                Shrink
+                {{ props.context.unitBuy }}
             </div>
             <div class="end">
-                Can
+                {{ props.context.unitSell }}
             </div>
         </div>
         <div class="bottom">
-            <FormKit type="text" value="1" outerClass="start" />
-            <FormKit type="text" value="2" outerClass="end" />
+            <FormKit type="number" ref="buyUnitElementRef" :onInput="onUnitBuyInput" outerClass="start"
+                :value="props.context.initialValues ? props.context.initialValues.unitBuy.toString() : undefined" />
+            <FormKit type="number" ref="sellUnitElementRef" :onInput="onUnitSellInput"
+                :value="props.context.initialValues ? props.context.initialValues.unitSell.toString() : undefined"
+                outerClass="end" />
         </div>
     </div>
 </template> 
@@ -51,6 +86,8 @@ const { t } = useI18n()
             & .bottom {
                 &>div {
                     border-color: var(--color-danger);
+
+
                 }
             }
         }
@@ -70,6 +107,8 @@ const { t } = useI18n()
                 border: 1px solid #fff;
 
             }
+
+
 
 
         }

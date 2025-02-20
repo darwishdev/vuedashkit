@@ -1,19 +1,18 @@
- 
-
 <script setup lang="ts">
-import { h, resolveComponent, ref } from 'vue';
-import type { AppFormDialogProps, TableActionsProps } from '@/types/types'
+import { h, resolveComponent, inject, ref } from 'vue';
+import type { TableActionsProps, AppFormDialogProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router';
 import { useDialogStore } from '@/stores/dialog';
 import { saveAs } from 'file-saver';
 import Menu from 'primevue/menu';
 import { useNotificationStore } from "@/stores/notification";
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import { useThemeStore } from '@/stores/theme';
+import { ObjectKeys } from '@/utils/object/object';
 const themeStore = useThemeStore()
 
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 const notificationStore = useNotificationStore()
 const props = defineProps<TableActionsProps>();
 const emit = defineEmits<{
@@ -24,7 +23,7 @@ const appBtnComponent = resolveComponent('app-btn')
 const router = useRouter()
 const dialogStore = useDialogStore()
 const formkitComp = resolveComponent('FormKit')
-const baseImport = import.meta.env.VITE_BASE_IMPORT_URL
+const baseImport = inject('baseImportDataUrl') || '' as string
 const { t } = useI18n()
 const renderCreateBtn = () => {
     if (!props.options!.createHandler) {
@@ -32,10 +31,10 @@ const renderCreateBtn = () => {
     }
     return h(appBtnComponent, {
         icon: "plus",
+        iconColor: "white",
         class: "success",
         onClick: (_e: Event) => {
             if (props.formSections) {
-                console.log("hola")
                 const params: AppFormDialogProps = {
                     sections: props.formSections,
                     handler: props.options.createHandler!
@@ -43,7 +42,13 @@ const renderCreateBtn = () => {
                 dialogStore.openForm(params)
                 return
             }
-            router.push({ name: props.options!.createHandler!.routeName })
+            const query = {}
+            if (props.options!.createHandler!.routeQuery) {
+                props.options!.createHandler!.routeQuery.forEach(q => {
+                    query[q.queryName] = q.queryValue
+                })
+            }
+            router.push({ name: props.options!.createHandler!.routeName, query })
         },
         label: t("create")
     })
@@ -55,12 +60,29 @@ const renderDeleteRestoreBtn = () => {
     const variant = tableStore.deleteRestoreVaraints
     return h(appBtnComponent, {
         icon: variant.icon,
+        iconColor: "white",
         class: "danger",
         disabled: tableStore.modelSelectionRef.length == 0,
         onClick: (_e: Event) => {
             dialogStore.openDeleteRestore()
         },
         label: t(variant.label)
+    })
+}
+const renderDeleteBtn = () => {
+    if (!props.options.deleteHandler || !tableStore.showDeletedRef) {
+        return
+    }
+    return h(appBtnComponent, {
+        icon: 'trash',
+        iconColor: "white",
+
+        class: "danger",
+        disabled: tableStore.modelSelectionRef.length == 0,
+        onClick: (_e: Event) => {
+            dialogStore.openDelete()
+        },
+        label: t('delete')
     })
 }
 
@@ -106,12 +128,14 @@ const renderImportMenu = () => {
     }, [
         h(appBtnComponent, {
             icon: "upload",
+            iconColor: "white",
+
             class: "warning",
             label: t("import"),
             onClick: (e: Event) => importMenuRef.value.toggle(e)
         }),
         h(Menu, {
-            ref: "importMenuRef",
+            ref: (el) => importMenuRef.value = el,
             class: "import-menu",
             popup: true
         }, {
@@ -132,15 +156,15 @@ const renderImportMenu = () => {
 }
 
 const renderExportBtn = () => {
-    console.log("Asdasd", props.exportable)
-    if (typeof props.exportable != 'undefined' && props.exportable == false) return
+    if ((typeof props.exportable != 'undefined' && props.exportable == false) || !tableStore.dataListElementRef) return
     return h(appBtnComponent, {
-        icon: "download",
+        icon: "upload",
+        iconColor: "white",
+
         class: "info",
         onClick: (e: Event) => {
-            // tableRef.value.exportCSV()
-            console.log(e)
-            emit('export')
+            console.log('fromactions', tableStore.dataListElementRef.exportCSV, ObjectKeys(tableStore.dataListElementRef))
+            tableStore.dataListElementRef.exportCSV()
         },
         label: t("export")
     })
@@ -153,7 +177,8 @@ const renderTableActions = () => {
             class: 'start'
         }, [
             renderCreateBtn(),
-            renderDeleteRestoreBtn()
+            renderDeleteRestoreBtn(),
+            renderDeleteBtn()
         ]),
         h('div', {
             class: 'end'
@@ -215,4 +240,4 @@ const renderTableActions = () => {
         }
     }
 }
-</style>
+</style>@/types/types@/stores/table

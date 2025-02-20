@@ -1,6 +1,3 @@
- 
-
-
 <script lang="ts" setup>
 import Menu from 'primevue/menu';
 import { useBreadcrumbStore } from '@/stores/breadcrumb';
@@ -11,6 +8,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import LanguageToggler from '@/components/base/LanguageToggler.vue';
 import ThemeToggler from '@/components/base/ThemeToggler.vue';
+import AppIcon from '../base/AppIcon.vue';
 const localSetterElementRef = ref()
 const router = useRouter()
 const menuStore = useMenuStore()
@@ -33,19 +31,28 @@ const toggleProfileMenu = (event: Event) => {
             <app-btn class="sidebar-toggler" @click="menuStore.toggleSidebar" icon="bars"></app-btn>
             <app-logo iconOnly />
             <Breadcrumb :home="breadcrumbStore.breadcrumbHome" :model="breadcrumbStore.breadcrumbs"
-                v-if="breadcrumbStore.breadcrumbs.length > 0" />
-
+                v-if="breadcrumbStore.breadcrumbs.length > 0">
+                <template #item="{ item, props }">
+                    <a href="#" v-if="item.to" v-bind="props.action" @click.prevent="router.push(item.to)">
+                        <AppIcon color="mr-3" v-if="item.icon" :icon="item.icon" />
+                        <span class="text-color ">{{ item.label }}</span>
+                    </a>
+                    <div v-else class="cursor-text" :href="item.to" :target="item.target" v-bind="props.action">
+                        <AppIcon color="text-primary mr-3" v-if="item.icon" :icon="item.icon" />
+                        <span class="text-primary">{{ item.label }}</span>
+                    </div>
+                </template>
+            </Breadcrumb>
         </div>
 
         <div class="end">
             <LanguageToggler />
             <ThemeToggler />
-            <app-btn @click="toggleProfileMenu" icon="user"></app-btn>
+            <app-btn @click="toggleProfileMenu" icon="users"></app-btn>
             <Menu v-if="!$slots['end']" ref="profileMenu" id="overlay-menu" :popup="true">
                 <template #start>
                     <router-link :to="{ name: 'profile_view' }"
                         class="w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-
                         <div class="flex flex-column align">
                             <span class="text-sm">{{ $t('profile') }}</span>
                         </div>
@@ -85,6 +92,12 @@ const toggleProfileMenu = (event: Event) => {
 
         & .end {
             min-width: auto;
+        }
+    }
+
+    & .p-menuitem-link {
+        & svg {
+            margin-right: 1rem;
         }
     }
 

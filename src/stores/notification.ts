@@ -1,17 +1,26 @@
-import { ref, computed } from 'vue'
-import { useToast } from 'primevue/usetoast';
+import { ref } from 'vue'
+import type { ToastServiceMethods } from 'primevue/toastservice';
 import { defineStore } from 'pinia'
 import { useI18n } from 'vue-i18n';
 
 export const useNotificationStore = defineStore('notification', () => {
-  const toast = useToast()
+  type dialogService = { add: (severity?: any, options?: any, summary?: any, detail?: any, life?: any) => void }
+  const toast = ref<dialogService>()
   const { t } = useI18n()
   const showSuccess = (summary: string, detail: string) => {
-    toast.add({ severity: 'success', summary: t(summary), detail: t(detail), life: 3000 });
+
+    console.log('showSuccess', toast)
+    if (!toast.value) return
+    toast.value.add({ severity: 'success', summary: t(summary), detail: t(detail), life: 3000 });
   }
   const showError = (summary: string, detail: string) => {
-    toast.add({ severity: 'error', summary: t(summary), detail: t(detail), life: 3000 });
+    if (!toast.value) return
+    toast.value.add({ severity: 'error', summary: t(summary), detail: t(detail), life: 3000 });
   }
+  const init = (toastRef: ToastServiceMethods) => {
 
-  return { showError, showSuccess }
+    console.log('iniiting notification')
+    toast.value = toastRef
+  }
+  return { showError, init, toast, showSuccess }
 })

@@ -1,30 +1,18 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@tsconfig/node18/tsconfig.json",
   "include": [
-    "env.d.ts",
-    "src/**/*",
-    "src/vuedashkit.ts",
-    "src/**/*.vue",
-    "src/components/loading/*.vue",
-    "src/**/**/*.ts",
-    "src/**/**/**.ts",
-    "src/locales/*.json"
-  ],
-  "exclude": [
-    "src/**/__tests__/*"
+    "vite.config.*",
+    "vitest.config.*",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*"
   ],
   "compilerOptions": {
-    "composite": true,
-    "noImplicitAny": false,
-    "declaration": true,
-    "outDir": "dist",
-    // "moduleResolution": "nodenext",
-    "declarationDir": "dist",
+    "types": [
+      "node"
+    ],
     "module": "ESNext",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+    "composite": true,
+    "moduleResolution": "Bundler",
   }
 }

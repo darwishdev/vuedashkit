@@ -1,13 +1,7 @@
 export const Debounce = (fn: Function, delay: number) => {
-    let timerId;
-
-    return function (...args) {
-        if (timerId) {
-            clearTimeout(timerId);
-        }
-        timerId = setTimeout(() => {
-            fn(...args);
-            timerId = null;
-        }, delay);
+    let timer: any;
+    return (...args: any) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => { fn.apply(this, args); }, delay);
     };
 } 

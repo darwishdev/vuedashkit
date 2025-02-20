@@ -4,8 +4,10 @@ import type { TableHeaderProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
 import { RouteQueryAppend, RouteQueryRemove } from '@/utils/router/query';
 import { Debounce } from '@/utils/debounce/debounce'
-import { useTableNewStore } from '@/stores/tablenew';
-const tableStore = useTableNewStore()
+import { useTableStore } from '@/stores/table';
+import { useNotificationStore } from '@/stores/notification';
+const tableStore = useTableStore()
+const notificationStore = useNotificationStore()
 
 
 const props = defineProps<TableHeaderProps>();
@@ -21,7 +23,7 @@ const debouncedGlobalSearchEmit = Debounce((value: string) => {
     emit('update:globalSearch', value);
     // tableFiltersRef.value = { ...value }
 
-}, 500);
+}, 10);
 
 const renderGlobalSearchFilter = () => {
     if (!props.showGlobalSearchFilter) {
@@ -45,7 +47,7 @@ const renderGlobalSearchFilter = () => {
 
 }
 const renderDeletedFilter = () => {
-    if (!tableStore.deletedRecords) return
+    if (!tableStore.deletedRecords || props.hideDeleteFilter) return
     return h(formkitComp, {
         type: "toggle",
         value: deletedFilter,
@@ -71,7 +73,11 @@ const renderSelectAll = () => {
         outerClass: "deleted-toggle",
         onInput: (v: boolean) => {
             if (v) {
-                tableStore.modelSelectionRef = tableStore.records
+                if (tableStore.data) {
+                    tableStore.modelSelectionRef = tableStore.data
+                } else {
+                    notificationStore.showError('select_all_empty', 'select_all_detail')
+                }
                 return
             }
             if (tableStore.modelSelectionRef.length == tableStore.data?.length) {
@@ -143,4 +149,4 @@ const renderHeader = () => {
 
     }
 }
-</style>
+</style>@/types/types@/stores/table

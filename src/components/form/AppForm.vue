@@ -1,4 +1,3 @@
-
 <script lang="ts">
 import { type FormKitSchemaNode, type FormKitNode } from '@formkit/core'
 import { ObjectKeys } from '@/utils/object/object';
@@ -80,33 +79,44 @@ const loadElemetnsPromise = (sections: Record<string, (AppFormSection | FormKitS
 
 
 
-const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Promise<Record<string, any> | null> => {
+const loadValue = (apiClient: any, params: RouteParams, findHandler?: FindHandler<any, any>): Promise<Record<string, any> | null> => {
     return new Promise((resolve, reject) => {
 
         if (!findHandler) {
             resolve(null)
             return
         }
+
         const request: any = {}
-        const requestValue = params[findHandler.paramName || 'id'] as string
+        let requestValue = 0
+        console.log("recordId", findHandler.recordId)
+        if (findHandler.recordId) {
+            requestValue = findHandler.recordId
+        } else {
+            requestValue = parseInt(params[findHandler.paramName || 'id'] as string)
+        }
+        console.log("requestValue", requestValue)
 
-        console.log("requestValue", isNaN(parseInt('asd')))
-
-
-        if (!requestValue) {
+        if (requestValue == 0 || isNaN(requestValue)) {
             resolve(null)
             return
         }
-
-        if (isNaN(parseInt(requestValue))) {
-            resolve(null)
+        request[findHandler.requestProperty || 'recordId'] = requestValue
+        if (typeof findHandler.endpoint != 'string') {
+            findHandler.endpoint(request)
+                .then((resp: any) => resolve(resp)).catch((e: any) => {
+                    reject(e)
+                })
             return
         }
-        request[findHandler.requestPropertyName || 'rcordId'] = parseInt(requestValue as string)
-        findHandler.endpoint(request)
-            .then((resp: any) => resolve(resp)).catch((e: any) => {
-                reject(e)
-            })
+
+        const func = apiClient[findHandler.endpoint]
+        console.log("func", func)
+        if (typeof func == 'function') {
+            func(request).then((resp: any) => resolve(resp)).catch((e: any) => reject(e))
+        }
+
+
     })
 }
 </script>
@@ -116,19 +126,19 @@ const loadValue = (params: RouteParams, findHandler?: FindHandler<any, any>): Pr
 
 
 <script setup lang="ts">
-import { h, ref, resolveComponent } from 'vue';
+import { h, ref, resolveComponent, inject } from 'vue';
 import type { AppFormProps, AppFormSection, ApiFormError, FindHandler } from '@/types/types';
 import { useI18n } from 'vue-i18n';
 import { useNotificationStore } from "@/stores/notification";
 import { useFormStore } from "@/stores/form";
-import { useRouter, type RouteParams } from 'vue-router';
-
-
+import { useRouter, type RouteParams, type RouteParamsRaw } from 'vue-router';
+const apiClient = inject("apiClient") as any;
 const { push, currentRoute } = useRouter()
 const { t } = useI18n()
 const props = defineProps<AppFormProps<any, any>>();
 
 const slots = defineSlots<{
+    title?(): any
     prepend?(): any
     append?(): any
 }>()
@@ -140,11 +150,20 @@ const formkitComp = resolveComponent('FormKit')
 const appBtnComponent = resolveComponent('app-btn')
 const formkitSchemaComp = resolveComponent('FormKitSchema')
 const schema = await loadElemetnsPromise(props.context.sections, t)
-const value = await loadValue(currentRoute.value.params, props.context.findHandler)
+const storeKey = props.context.storeKey ? props.context.storeKey : 'default'
+const value = await loadValue(apiClient, currentRoute.value.params, props.context.findHandler)
+
+
+const initFormStore = () => {
+    if (value) {
+        formStore.formValueRef[storeKey] = value
+    }
+}
+initFormStore()
 
 const renderFormSchema = () => {
     return h(formkitComp, {
-        ref: (el) => formStore.formElementRef = el,
+        ref: (el) => formStore.formElementRef[storeKey] = el,
         type: "form",
         outerClass: "card",
         id: 'app-form',
@@ -153,8 +172,10 @@ const renderFormSchema = () => {
         onSubmitInvalid: () => {
             console.log("error captured")
         },
-        value: value,
+        value: formStore.formValueRef[storeKey],
         actions: formStore.showActions,
+        'submit-label': props.context.options?.submitLabel ? props.context.options?.submitLabel : t('Submit'),
+        'submit-attrs': props.context.options?.submitAttrs ? props.context.options?.submitAttrs : {}
     },
         () => h(formkitSchemaComp, {
             data: formStore.formData,
@@ -193,15 +214,20 @@ const renderHeaderSubmitBtn = () => {
     }
     return h(appBtnComponent, {
         icon: 'plus',
+        iconColor: 'white',
         class: 'primary',
         label: t('save'),
         onClick: () => {
-            formStore.formElementRef.node.submit()
+            formStore.formElementRef[storeKey].node.submit()
         }
     })
 }
 const renderTitle = () => {
-
+    if (props.context.options) {
+        if (props.context.options.isFormHeaderHidden) {
+            return null
+        }
+    }
     return h('div', {
         class: 'form-title'
     },
@@ -218,15 +244,28 @@ const renderTitle = () => {
 }
 
 const handleError = (node: FormKitNode, error: any) => {
-    console.log("error is", error.message)
     try {
         const errorObject: ApiFormError = JSON.parse(error.rawMessage)
-        node.setErrors(
-            errorObject.globalErrors,
-            errorObject.fieldErrors
-        )
-        console.log(errorObject)
+        if (errorObject.globalErrors.length > 0) {
+            errorObject.globalErrors[0] = t(errorObject.globalErrors[0] as string)
+            node.setErrors(
+                errorObject.globalErrors,
+                {}
+            )
+
+        }
+        if (Object.keys(errorObject.fieldErrors).length > 0) {
+            const key = Object.keys(errorObject.fieldErrors)[0]
+            errorObject.fieldErrors[key] = t(errorObject.fieldErrors[key] as string)
+            node.setErrors(
+                [],
+                errorObject.fieldErrors
+            )
+        }
+
+
     } catch (_err: any) {
+        console.log('error captured', _err)
         node.setErrors(
             [error.message],
         )
@@ -236,14 +275,20 @@ const handleError = (node: FormKitNode, error: any) => {
 
 const submitHandler = async (req: any, node: FormKitNode) => {
     const handler = props.context.submitHandler
+    const findHandler = props.context.findHandler
+    formStore.isUploading = true
     if (handler.mapFunction) {
         req = handler.mapFunction!(req)
     }
-
+    if (findHandler) {
+        // const request: any = {}
+        const requestValue = currentRoute.value.params[findHandler.paramName || 'id'] as string
+        req[findHandler.requestProperty || 'recordId'] = parseInt(requestValue as string)
+    }
     await new Promise((resolve, reject) => {
         handler.endpoint(req)
             .then(async (res: any) => {
-                console.log(res)
+
                 if (handler.callback) await handler.callback!(res)
                 if (props.context.options) {
                     if (!props.context.options.isSuccessNotificationHidden) {
@@ -254,18 +299,29 @@ const submitHandler = async (req: any, node: FormKitNode) => {
                 }
 
                 if (!isBulkCreateRef.value) {
+                    formStore.isUploading = false
                     if (handler.redirectRoute != "") {
-                        push({ name: handler.redirectRoute })
+                        let params: RouteParamsRaw | undefined = {}
+                        if (handler.redirectRouteParam) {
+                            params[handler.redirectRouteParam.paramName] = res[handler.redirectRouteParam.responseValueKey]
+                        }
+                        push({ name: handler.redirectRoute, params })
                     }
                 }
                 node.clearErrors()
-                try {
-                    node.reset()
-                } catch (e: any) {
-                    console.log("reset form has error", e)
+
+                if (!props.context.keepStateAlive) {
+                    try {
+                        node.reset()
+                    } catch (e: any) {
+                        console.log("reset form has error", e)
+                    }
                 }
+                formStore.isUploading = false
+
                 resolve(null)
             }).catch((error: any) => {
+                formStore.isUploading = false
                 handleError(node, error)
                 resolve(null)
             })
@@ -296,4 +352,4 @@ const renderForm = () => {
 
 <style lang="scss">
 @import url("@/assets/form.scss");
-</style>
+</style>@/types/types

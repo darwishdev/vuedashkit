@@ -1,7 +1,7 @@
 
 <script lang="ts">
 import { type FormKitSchemaNode } from '@formkit/core'
-import type { PermissionGroup } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
+import type { PermissionGroup } from '@/types/types'
 import { ObjectKeys } from '@/utils/object/object';
 type searchablePermission = {
     searchPermissions: string
@@ -77,25 +77,23 @@ const loadElemetns = (groups: PermissionGroup[], value: any): Promise<{ schema: 
 
 
 <script setup lang="ts">
-import type { ITableHeader } from '@/types/types';
+import type { ITableHeader, PermissionsListResponse } from '@/types/types';
 import DataList from '@/components/data/DataList.vue';
-import type { PermissionsListResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_role_definitions_pb'
-import apiClient from '@/api/ApiClient';
-import { ref, watch } from 'vue'
+import { ref, inject, watch } from 'vue'
 import AppPanel from '../base/AppPanel.vue';
 import { TableHeaderText, TableHeaderHidden } from '@/utils/table/TableHeader'
-import { useTableNewStore } from '@/stores/tablenew';
+import { useTableStore } from '@/stores/table';
 import Column from 'primevue/column';
-import type { DataListProps, InputPermissionsProps, Permission } from '@/types/types';
+import type { DataListProps, InputPermissionsProps, Permission, PermissionsHandler } from '@/types/types';
 import { useThemeStore } from '@/stores/theme';
 const themeStore = useThemeStore()
-const tableStore = useTableNewStore()
+const tableStore = useTableStore()
 themeStore.startProgressBar()
 const props = defineProps<InputPermissionsProps>();
 const isModelSelectionBlocing = ref(false)
 const isInputsFormBlocing = ref(false)
-
-const { records } = await apiClient.permissionsList({})
+const permissionHandler = inject('permissionsHandler') as PermissionsHandler
+const { records } = await permissionHandler.permissionsListAllEndpoint({})
 const { modelValues, initiallySelectedItems, searchablePermission } = await loadElemetns(records, props.context.node._value)
 const modelValuesRef = ref(modelValues)
 
@@ -116,16 +114,19 @@ const headers: Record<string, ITableHeader> = {
 
 
 const tableProps: DataListProps<PermissionsListResponse, searchablePermission> = {
-    title: "permissions",
-    dataKey: "permissionGroup",
-    records: searchablePermission,
-    initiallySelectedItems: initiallySelectedItems,
-    displayType: "table",
-    options: {
+    context: {
+
         title: "permissions",
-        description: "permissions_description"
-    },
-    headers
+        dataKey: "permissionGroup",
+        records: searchablePermission,
+        initiallySelectedItems: initiallySelectedItems,
+        displayType: "table",
+        options: {
+            title: "permissions",
+            description: "permissions_description"
+        },
+        headers
+    }
 }
 const emitEvent = () => {
     const keys = ObjectKeys(modelValuesRef.value)
@@ -135,11 +136,11 @@ const emitEvent = () => {
         const group = modelValuesRef.value[key]
         group.forEach(permission => {
             if (permission) permissions.push(permission)
-            // console.log('permission', permission)
+            console.log('permission', permission)
 
         })
     }
-    // console.log("ana", modelValuesRef.value)
+    console.log("ana", modelValuesRef.value)
     props.context.node.input(permissions)
 }
 const permissionGroupUpdated = (v: any, data: any) => {
@@ -169,7 +170,7 @@ const permissionGroupUpdated = (v: any, data: any) => {
     emitEvent()
     setTimeout(() => isInputsFormBlocing.value = false, 100)
 
-    // console.log("updated group", selectedItems.length, data.permissions.length)
+    console.log("updated group", selectedItems.length, data.permissions.length)
 }
 const modelSelectionRef = ref([])
 
@@ -186,7 +187,7 @@ watch(modelSelectionRef, async (newValue, oldValue) => {
         return
     }
     if (newValue.length > oldValue.length) {
-        // console.log("attaching pemissions")
+        console.log("attaching pemissions")
         newValue.forEach((group: any) => {
             const permissions: any[] = []
             group.permissions.forEach((permission: any) => {
@@ -208,18 +209,18 @@ const onUpdateModelSelection = (v: any) => {
     if (isInputsFormBlocing.value) return
 
     isModelSelectionBlocing.value = true
-    // console.log("selection val", v)
+    console.log("selection val", v)
     modelSelectionRef.value = v
     setTimeout(() => isModelSelectionBlocing.value = false, 100)
 }
 
 const searchKey = ""
 const onGlobalSearch = (v: any) => {
-    // console.log(Object.keys(dataListElementRef.value))
+    console.log(Object.keys(dataListElementRef.value))
     if (!tableStore.tableFiltersRef) return
     tableStore.tableFiltersRef['global'].value = v ? v : null
 
-    // console.log("global search", v)
+    console.log("global search", v)
 }
 </script>
 <template>
@@ -231,11 +232,8 @@ const onGlobalSearch = (v: any) => {
                 prefixIcon="search" @input="onGlobalSearch" />
 
         </template>
-        <DataList :initiallySelectedItems="tableProps.initiallySelectedItems" ref="dataListElementRef"
-            @update:selection="onUpdateModelSelection" class="sm-column " :displayType="tableProps.displayType"
-            :fetchFn="tableProps.fetchFn" :viewRouter="tableProps.viewRouter" :title="tableProps.title"
-            :dataKey="tableProps.dataKey" :records="tableProps.records" :options="tableProps.options"
-            :deletedRecords="tableProps.deletedRecords" :headers="tableProps.headers">
+        <DataList ref="dataListElementRef" @update:selection="onUpdateModelSelection" class="sm-column "
+            :context="tableProps.context">
             <template #default>
                 <Column style="width:100%;" header="permissionGroup" field="permissionGroup">
 
@@ -248,8 +246,8 @@ const onGlobalSearch = (v: any) => {
                                     :name="data.permissionGroup">
 
                                     <form-kit v-for="(permission, index) in data.permissions"
-                                        :label="permission.permissionName" :onValue="permission.permissionId" :key="index"
-                                        type="toggle" @input="null"></form-kit>
+                                        :label="$t(permission.permissionName)" :onValue="permission.permissionId"
+                                        :key="index" type="toggle" @input="null"></form-kit>
                                 </form-kit>
 
                             </div>
@@ -274,7 +272,7 @@ const onGlobalSearch = (v: any) => {
     &>.p-toggleable-content {
         & .p-panel-content {
             padding: 0;
-            background-color: var(--color-card);
+            background: var(--color-card);
         }
     }
 
@@ -282,7 +280,8 @@ const onGlobalSearch = (v: any) => {
     & .permission-group-panel {
         & .p-panel-content {
             padding: 0;
-            background-color: transparent !important;
+            background: var(--color-card) !important;
+            transform: translateY(9px);
         }
     }
 
@@ -376,4 +375,4 @@ const onGlobalSearch = (v: any) => {
 .app-card .start {
     background-color: transparent !important;
 }
-</style>@/types/types
+</style>@/types/types@/types/types@/stores/table

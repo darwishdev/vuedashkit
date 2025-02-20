@@ -1,6 +1,7 @@
+import type { UnitValues } from "@/types/types";
 
 
-export const FormatCurrency = (value: string | number, currency: string = 'EGP'): string => {
+export const FormateCurrency = (value: string | number, currency: string = 'ج.م'): string => {
     let numericValue: number;
     if (typeof value == 'string') {
         numericValue = parseFloat(value);
@@ -9,6 +10,9 @@ export const FormatCurrency = (value: string | number, currency: string = 'EGP')
         }
     } else {
         numericValue = value;
+    }
+    if (!numericValue) {
+        return `0 ${currency}`
     }
     // Round the numeric value to 2 decimals
     const roundedValue = numericValue.toFixed(2);
@@ -20,4 +24,29 @@ export const FormatCurrency = (value: string | number, currency: string = 'EGP')
     // Combine the formatted value with the currency
     const formattedValue = parts.join('.') + ' ' + currency;
     return formattedValue;
+};
+
+
+
+export const UnitPriceParse = (totalPrice: number, cost: number, ratio: number): { unitBuyPrice: number, unitSellPrice: number, totalPrice: number } => {
+    const unitSellQuantityWhole = totalPrice / cost
+    const unitBuyQuantity = Math.floor(unitSellQuantityWhole / ratio)
+    const unitSellQuantity = unitSellQuantityWhole - unitBuyQuantity * ratio
+    const unitBuyPrice = unitBuyQuantity * ratio * cost
+    const unitSellPrice = unitSellQuantity * cost
+    return { unitBuyPrice, unitSellPrice, totalPrice };
+};
+
+export const UnitParseWholeQty = (values: UnitValues, ratio: number): number => {
+    return values.unitBuy * ratio + values.unitSell
+};
+
+
+export const UnitSellShift = (values: UnitValues, ratio: number): { unitBuyQuantityIncreaseAmount: number, unitSellQuantity: number } => {
+    if (values.unitSell < ratio) {
+        return { unitBuyQuantityIncreaseAmount: 0, unitSellQuantity: values.unitSell }
+    }
+    const unitBuyQuantityIncreaseAmount = Math.floor(values.unitSell / ratio)
+    const unitSellQuantity = values.unitSell - unitBuyQuantityIncreaseAmount * ratio
+    return { unitBuyQuantityIncreaseAmount, unitSellQuantity };
 };

@@ -1,21 +1,18 @@
 @import "https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Montserrat:wght@400;500;700&display=swap&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
-@import "primeicons/primeicons.css";
 :root {
   --color-background-dark: linear-gradient(180deg, #2e323f 0%, #0a061a 100%);
   --color-background-light: linear-gradient(180deg, #f6f9fc 0%, #ececf9 100%);
   --color-background: var(--color-background-light);
   --color-dropdown: #2e323f;
-  --color-primary: linear-gradient(to bottom, #fc6c85 0%, #ed5d76 100%);
-  --color-primary-darken: #aa3f52;
+  --color-primary: #0F8BFD;
+  --color-primary-darken: #0b70cf;
   --menu-width-opened: 19rem;
   --menu-width-closed: 6.571em;
   --menu-width: var(--menu-width-closed);
   --primary-color: var(--color-primary);
-  --color-card: radial-gradient(
-    circle at 18.7% 37.8%,
-    rgb(250, 250, 250) 0%,
-    rgb(225, 234, 238) 90%
-  );
+  --color-card: radial-gradient(circle at 18.7% 37.8%,
+      rgb(250, 250, 250) 0%,
+      rgb(225, 234, 238) 90%);
   --color-card-darken: var(--color-background-light);
   --secondary-color: #44486d;
   --text-color: var(--color-text);
@@ -44,13 +41,27 @@
   --color-info: #0f8bfd;
   --color-danger: #fc6161;
   --fk-margin-outer: 0;
-  --fk-border-box-shadow: transparent;
-  --fk-border-box-shadow-focus: transparent !important;
-  --fk-bg-input: rgba(230, 17, 17, 0.02) !important;
   --fk-font-family-label: var(--font-family);
   --fk-bg-decorator: rgba(0, 0, 0, 0.05);
   --fk-day-bg: var(--color-card);
   --color-error: rgba(199, 44, 65, 0.3);
+  --fk-color-input: var(--color-white);
+  --fk-margin-help: 15px 0;
+  --fk-color-help: var(--color-white);
+  --fk-bg-input: rgba(108, 117, 125, 0.2);
+  --fk-padding-label: 15px 0;
+  --fk-max-width-input: 100%;
+  --fk-font-size-message: 16px;
+  --fk-font-size-label: 16px;
+  --fk-color-tag: #256029;
+  --fk-day-bg: var(--color-card);
+  --fk-day-bg-hover: rgba(23, 255, 255, 1) --fk-border-box-shadow: transparent;
+  --fk-border-box-shadow-focus: transparent !important;
+  --fk-color-primary: transparent;
+  --fk-color-tag-background: #c8e6c9;
+  --fk-day-bg-selected: var(--color-primary);
+  --fk-border-width: 0;
+  --fk-font-family: "Cairo", sans-serif !important;
 }
 
 body .dark,
@@ -62,7 +73,7 @@ body.dark {
   --color-icon-btn: rgba(255, 255, 255, 0.05);
   --color-hover: rgba(255, 255, 255, 0.07);
   --menu-border-color: rgba(22, 22, 22, 0.85);
-  --fk-bg-input: rgba(0, 0, 0, 0.126) !important;
+  --fk-bg-input: var(--color-card);
   --color-border: var(--color-card);
   --fk-color-input: #fff !important;
   --color-white: #fff;
@@ -126,7 +137,7 @@ body main.page-content {
   padding: 20px;
 }
 body .card {
-  background-color: var(--color-card);
+  background: var(--color-card);
   padding: 16px;
   border-radius: 6px;
 }
@@ -235,11 +246,61 @@ nav a span {
   padding: 10px 20px;
 }
 
+.formkit-outer {
+  height: -moz-max-content;
+  height: max-content;
+}
+
+.formkit-input,
+.p-dropdown {
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.sidebar-toggler {
+  margin-right: 0.8rem !important;
+}
+
+.p-sidebar {
+  height: 100%;
+}
+
+.p-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  padding-left: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.app-icon {
+  position: relative;
+}
+.app-icon .top {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .rtl {
   --fk-font-family-label: "Cairo";
   direction: rtl;
-  --font-family: "Cairo", sans-serif;
-  --fk-font-family-input: "Cairo", sans-serif;
+  --font-family: "Cairo",
+  sans-serif;
+  --fk-font-family-input: "Cairo",
+  sans-serif;
+}
+.rtl [data-type=toggle] .formkit-wrapper label,
+.rtl .formkit-track {
+  overflow: auto !important;
+}
+.rtl .formkit-input,
+.rtl .p-dropdown {
+  border-radius: 6px 0 0 6px !important;
+}
+.rtl .submenu-icon {
+  transform: rotate(180deg);
 }
 .rtl [data-type=toggle] .formkit-wrapper label,
 .rtl .formkit-track {
@@ -332,19 +393,18 @@ nav a span {
   margin-right: 0;
   margin-left: 0.5rem;
 }
-.rtl .layout-sidebar-active .p-panelmenu .p-menuitem .material-symbols-outlined {
-  margin-inline-end: 0px;
-  margin-inline-start: 15px;
+.rtl .app-panel .p-panel-header .p-panel-icons .pi-filter-slash {
+  right: auto !important;
+  left: 50px;
 }
-.rtl .layout-sidebar-active .p-panelmenu .p-panelmenu-header .material-symbols-outlined {
-  margin-inline-end: 0px;
-  margin-inline-start: 20px;
+.rtl .app-layout:not(.active-menu) .p-panelmenu .p-menuitem .material-symbols-outlined {
+  margin-inline-end: 0;
 }
 .rtl .app-table .p-panel-icons {
   transform: translateX(20px) !important;
 }
 .rtl .p-datatable .p-datatable-tbody > tr > td {
-  text-align: right;
+  text-align: center;
 }
 .rtl .formkit-label,
 .rtl .formkit-value-label {
@@ -354,11 +414,6 @@ nav a span {
 
 .p-breadcrumb-list .p-menuitem-link.router-link-active {
   background-color: transparent !important;
-}
-
-.app-table .empty-table p {
-  background: none;
-  color: var(--color-text);
 }
 
 .p-sidebar {
@@ -375,6 +430,59 @@ nav a span {
 }
 .p-sidebar .p-sidebar-header button {
   display: none;
+}
+
+.p-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  padding-left: 0px;
+}
+
+nav a {
+  margin-right: 15px !important;
+}
+
+.app-layout .desktop-menu .sidebar-label {
+  opacity: 0;
+}
+
+.app-layout .desktop-menu:hover .sidebar-label {
+  opacity: 1;
+}
+
+.p-menuitem {
+  margin: 0 5px !important;
+}
+
+.p-menuitem-separator .p-icon {
+  margin-top: 3px;
+  width: auto !important;
+  height: auto !important;
+}
+
+.p-breadcrumb .p-breadcrumb-list li .p-menuitem-link .p-menuitem-icon {
+  font-size: 20px;
+}
+
+.desktop-menu .p-panelmenu .p-panelmenu-panel .p-panelmenu-header .p-panelmenu-header-content {
+  cursor: pointer;
+}
+
+.p-panelmenu .p-panelmenu-content .p-panelmenu-root-list {
+  padding: 0;
+}
+
+.p-menuitem {
+  cursor: pointer;
+}
+
+.app-layout .desktop-menu .p-menuitem-text {
+  opacity: 0;
+}
+
+.p-menuitem-link {
+  display: flex;
+  align-items: center;
 }
 
 .p-sidebar.filter-sidebar-right {
@@ -539,7 +647,7 @@ nav a span {
 
 .p-accordion-header,
 .p-panel .p-panel-header {
-  background-color: var(--color-card);
+  background: var(--color-card);
 }
 
 .p-panelmenu .p-panelmenu-header .material-symbols-outlined {
@@ -623,8 +731,25 @@ nav a span {
   color: rgba(255, 255, 255, 0.6);
 }
 
+[data-type=dropdownCustom] .formkit-wrapper {
+  height: 100%;
+}
+[data-type=dropdownCustom] .formkit-wrapper .formkit-inner {
+  height: 100%;
+}
+[data-type=dropdownCustom] .formkit-wrapper .formkit-inner .p-dropdown.p-component {
+  height: 100%;
+  border-radius: 6px 0 0 6px;
+  background-color: var(--color-card);
+}
+
 .formkit-outer .formkit-icon.formkit-prefix-icon {
-  background: var(--color-background);
+  background: var(--color-card);
+  box-shadow: none;
+}
+
+.formkit-selector {
+  color: var(--color-white);
 }
 
 .p-panel .p-panel-header .p-panel-header-icon {
@@ -643,7 +768,7 @@ nav a span {
 }
 
 .formkit-open-button {
-  background: var(--color-background);
+  background: var(--color-card);
 }
 
 .p-menu-end {
@@ -694,8 +819,51 @@ nav a span {
     transform: translateX(100%);
   }
 }
-.p-menu.p-menu-overlay {
-  background: var(--color-background);
+.p-datatable .p-column-title {
+  margin: auto;
+}
+
+[data-type=toggle] input:checked ~ .formkit-track {
+  background: var(--color-primary) !important;
+}
+
+.active-menu .sidebar-label {
+  opacity: 1 !important;
+}
+
+.desktop-menu .p-panelmenu .p-panelmenu-panel .p-panelmenu-header .p-panelmenu-header-content {
+  cursor: pointer;
+}
+
+.p-panelmenu .p-panelmenu-content .p-panelmenu-root-list {
+  padding: 0;
+}
+
+.p-menuitem {
+  cursor: pointer;
+}
+
+.app-layout .desktop-menu .sidebar-label {
+  opacity: 0;
+}
+
+.app-layout .desktop-menu:hover .sidebar-label {
+  opacity: 1;
+}
+
+.p-menuitem-link {
+  display: flex;
+  align-items: center;
+}
+
+.p-dropdown-label,
+.p-dropdown-filter {
+  width: 100%;
+}
+
+.p-dropdown-items-wrapper {
+  overflow: scroll;
+  max-height: 400px !important;
 }
 
 .success {
@@ -747,20 +915,6 @@ nav a span {
   border: 1px solid var(--color-border);
 }
 
-:root {
-  --fk-margin-help: 15px 0;
-  --fk-color-help: var(--color-white);
-  --fk-bg-input: rgba(108, 117, 125, 0.2);
-  --fk-padding-label: 15px 0;
-  --fk-max-width-input: 100%;
-  --fk-font-size-message: 16px;
-  --fk-font-size-label: 16px;
-  --fk-color-tag: #256029;
-  --fk-day-bg: var(--color-card);
-  --fk-day-bg-hover: rgba(23, 255, 255, 1);
-  --fk-border-width: 0;
-}
-
 .app-btn {
   background: var(--color-card);
   border: none;
@@ -769,7 +923,6 @@ nav a span {
   margin: 0 0.2rem;
 }
 .app-btn.p-button.p-button-icon-only {
-  width: 2rem;
   padding: 0;
   height: 1.5rem;
 }

@@ -5,13 +5,17 @@ const themeStore = useThemeStore()
 const appBtnComponent = resolveComponent('app-btn')
 
 const renderThemeToggler = () => {
-    return h(appBtnComponent, {
-
+    return themeStore.isDark ? h(appBtnComponent, {
         onClick: () => {
             themeStore.changeTheme()
         },
-        icon: 'moon'
+        icon: 'sun'
 
+    }) : h(appBtnComponent, {
+        onClick: () => {
+            themeStore.changeTheme()
+        },
+        icon: 'night'
     })
 }
 </script>

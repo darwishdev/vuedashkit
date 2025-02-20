@@ -5,7 +5,9 @@ import { ObjectKeys } from "@/utils/object/object";
 
 export interface IDropDownInputMethods {
     loadInputOptions: (inputName: string) => Promise<DependentDropdownInutData>
-    setInputValue: (inputName: string, value: number, nodeElements: any) => Promise<void>
+    setInputValue: (inputName: string, value: number, nodeElements: any) => Promise<{
+        childInputName?: string
+    }>
     resetChildInputs: (parentInputName: string, nodeElements: any[]) => void
     getIndexByValue: (options: any[], id: number) => number
     loadRootData: () => void
@@ -88,6 +90,10 @@ export class DependentDropdownMethodsNetwork extends DependentDropdownMethodsBas
         this.setChildInputOptions(childInputName, nodeElements)
         if (childInputName) this.resetChildInputs(childInputName, nodeElements)
 
+        return {
+            childInputName
+        }
+
     }
     loadInputOptions = async (inputName: string): Promise<DependentDropdownInutData> => {
         return new Promise(async (resolve: Function) => {
@@ -115,14 +121,18 @@ export class DependentDropdownMethodsLocal extends DependentDropdownMethodsBase 
         const parentInputName = this.levelsKeys[levelIndex - 1]
         const childInputName = this.levelsKeys[levelIndex + 1]
         const searchableList = levelIndex == 0 ? this.rootData.options : this.activeInputs[parentInputName] ? this.activeInputs[parentInputName].children : undefined
-        if (!searchableList) return
+        if (!searchableList) return {}
         const optionsIndex = this.getIndexByValue(searchableList, value)
-        if (optionsIndex == -1) return
+        if (optionsIndex == -1) return {}
         const childInputOptions = searchableList[optionsIndex].children
-        if (!childInputOptions) return
+        if (!childInputOptions) return {}
         this.activeInputs[inputName] = { value, children: childInputOptions }
         this.setChildInputOptions(childInputName, nodeElements)
         if (childInputName) this.resetChildInputs(childInputName, nodeElements)
+        return {
+            levelIndex,
+            childInputName
+        }
     }
     loadInputOptions = async (inputName: string): Promise<DependentDropdownInutData> => {
         return new Promise(async (resolve: Function) => {

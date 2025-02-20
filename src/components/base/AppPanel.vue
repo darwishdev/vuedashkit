@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { h } from 'vue';
 import type { AppPanelProps } from '@/types/types'
@@ -34,7 +33,7 @@ const renderPanel = () => {
             class: 'app-panel-header'
         }, [
             slots.icon ? slots.icon() : h('i', { class: `pi pi-${[props.icon]}` }),
-            slots.title ? slots.title() : h("span", t(props.header)),
+            slots.title ? slots.title() : h("span", t(props.header || '')),
             slots.headerStart ? slots.headerStart() : null
         ]),
         icons: () => slots.headerEnd ? slots.headerEnd() : null,
@@ -55,7 +54,7 @@ const renderPanel = () => {
 
     & .p-panel-header,
     .p-panel-content {
-        background-color: transparent;
+        background: var(--color-card);
         border: none;
     }
 
@@ -63,8 +62,12 @@ const renderPanel = () => {
         & .app-panel-header {
             display: flex;
             align-items: center;
-            z-index: 2;
             gap: 10px;
+
+            & .active-filter {
+                z-index: 5;
+
+            }
 
         }
 
@@ -80,9 +83,10 @@ const renderPanel = () => {
             justify-content: flex-end;
             text-align: end;
             align-items: center;
-            z-index: 1;
+            z-index: 3;
             transform: translateX(-20px);
             height: 100%;
+            top: 0;
 
             .pi-filter-slash {
                 position: absolute;
@@ -102,7 +106,7 @@ const renderPanel = () => {
                 height: 100%;
 
                 &:hover {
-                    background-color: var(--color-card);
+                    background: var(--color-card);
                     transition: all 0.3s;
                 }
             }
@@ -115,4 +119,4 @@ const renderPanel = () => {
 
     }
 }
-</style>
+</style>@/types/types

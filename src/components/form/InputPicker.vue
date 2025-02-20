@@ -15,5 +15,3 @@ const onInputChange = async (value: any) => {
 <template>
     <FormKit :ignore="true" outerClass="w-full" type="datepicker" name="custom-picker" @input="onInputChange" />
 </template>
-
- @/types/types

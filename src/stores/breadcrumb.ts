@@ -8,7 +8,7 @@ export const useBreadcrumbStore = defineStore('breadcrumb', () => {
   const route = useRoute()
   const { t } = useI18n()
   const breadcrumbHome = {
-    icon: 'pi pi-home',
+    icon: 'house',
     to: { name: "home_view" },
   }
   const breadcrumbs = computed(() => {
@@ -16,8 +16,11 @@ export const useBreadcrumbStore = defineStore('breadcrumb', () => {
     if (!route.meta.breadcrumbs) return []
 
     const breacrumbs = route.meta.breadcrumbs as MenuItem[]
+
+    console.log("bredstore", route.meta.breadcrumbs)
     return breacrumbs.map((item) => {
-      item.label = t(item.label)
+      console.log("bredstoreitem", item)
+      item.label = t(item.label as string)
       return item
     })
 

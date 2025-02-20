@@ -1,5 +1,5 @@
-
 <script setup lang="ts">
+import { useTableStore } from '@/stores/table';
 import { h, computed, resolveComponent, ref } from 'vue';
 import type { TableFilterProps, AppPanelProps } from '@/types/types'
 import { useI18n } from 'vue-i18n'
@@ -9,10 +9,8 @@ import { ObjectKeys } from '@/utils/object/object';
 import AppPanel from '../base/AppPanel.vue';
 import type { DataTableFilterMetaData } from 'primevue/datatable';
 import type { VNode } from 'vue';
+const tableStore = useTableStore()
 const props = defineProps<TableFilterProps>();
-const emit = defineEmits<{
-    (e: 'update:tableFilters', value: Record<string, DataTableFilterMetaData>): void
-}>();
 
 
 
@@ -38,10 +36,17 @@ const activeFiltersRef = ref<Record<string, (string | number | Date)>>(activeFil
 // computed  to toggle showing clear icon while no active filters
 const hasActiveFilters = computed(() => ObjectKeys(activeFiltersRef.value).length > 0)
 
+
+
+const onFiltersFormUpdated = (val: any) => {
+    if (!tableStore.tableFiltersRef) return
+    console.log('filter', val)
+    tableStore.tableFiltersRef = { ...val }
+}
 // debounced emit used here to add some delay on the emit that will apply the filter
 // to avoid making unneccessary work
 const debouncedTableFiltersEmit = Debounce((value: Record<string, DataTableFilterMetaData>) => {
-    emit('update:tableFilters', value);
+    onFiltersFormUpdated(value)
     // tableFiltersRef.value = { ...value }
 
 }, 500);
@@ -60,6 +65,7 @@ const removeFilter = (filter: string) => {
         node._value[filter] = null
     }
     node.input(node?._value)
+    console.log("renmoveing filter", filterFormNodeRef.value, filterFormNodeRef)
 }
 // the entry point for the component while we render the panel
 const renderFiltersPanel = () => {
@@ -96,7 +102,7 @@ const renderActiveFilters = () => {
             }
         }, [
             h("i", { class: 'pi pi-filter-slash' }),
-            h("span", `${t(key)} : ${activeFiltersRef.value[key]}`),
+            h("span", `${t(key)} : ${typeof activeFiltersRef.value[key] == 'string' ? t(activeFiltersRef.value[key] as string) : activeFiltersRef.value[key]}`),
             h("i", { class: 'pi pi-times' }),
         ]))
     }
@@ -112,7 +118,7 @@ const renderActiveFilters = () => {
 const renderFiltersFormSchema = () => {
     return h(formkitComp, {
         id: "filter-form",
-        ref: "filterFormNodeRef",
+        ref: (el) => filterFormNodeRef.value = el,
         type: "form",
         value: filterFormValue,
         actions: false,
@@ -142,16 +148,20 @@ const onFormInput = async (formValue: Record<string, any>) => {
     const urlQuery = {}
     for (const key of keys) {
         const currentInputValue = formValue[key]
+        if (!ObjectKeys(tableFilters).includes(key)) {
+            continue
+        }
         if (currentInputValue) {
-            urlQuery[key] = currentInputValue
             tableFilters[key].value = currentInputValue
+            urlQuery[key] = currentInputValue.toString()
             activeFiltersRef.value[key] = currentInputValue
         } else {
-            delete activeFiltersRef.value[key]
+            if (activeFiltersRef.value[key]) delete activeFiltersRef.value[key]
             tableFilters[key].value = undefined
-
         }
+
     }
+
     const formValueString = JSON.stringify(urlQuery)
     formValueString == "{}" ?
         RouteQueryRemove('filterForm') :
@@ -187,7 +197,7 @@ const onFormInput = async (formValue: Record<string, any>) => {
                 gap: 10px;
 
                 & .active-filter {
-                    background-color: var(--color-card);
+                    background: var(--color-card);
                     cursor: pointer;
                     padding: 5px 20px;
                     border-radius: 25px;
@@ -197,4 +207,4 @@ const onFormInput = async (formValue: Record<string, any>) => {
         }
     }
 }
-</style>
+</style>@/types/types

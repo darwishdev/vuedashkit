@@ -1,30 +1,37 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { useTableNewStore } from "@/stores/tablenew";
+import { useTableStore } from "@/stores/table";
 import { useNotificationStore } from "@/stores/notification";
-import apiClient from "@/api/ApiClient";
 
 
 // const props = defineProps<TableHeaderProps>();
 const dialogRef = inject("dialogRef") as any;
-const tableStore = useTableNewStore()
+const apiClient = inject("apiClient") as any;
+const tableStore = useTableStore()
 const notificationStore = useNotificationStore()
 const close = (e: any) => {
     dialogRef.value.close(e);
 };
 const confirm = () => {
-    const func = apiClient['roleDeleteRestore']
 
+    if (!tableStore.deleteRestoreHandler || tableStore.selectedIds.length == 0) {
+        notificationStore.showError("deleted_error_summary", 'cant_reach_delete_restore_handler')
+        dialogRef.value.close()
+        return
+    }
+    const func = typeof tableStore.deleteRestoreHandler.endpoint == 'string' ? apiClient[tableStore.deleteRestoreHandler.endpoint] : tableStore.deleteRestoreHandler.endpoint
 
-    func({ roleIds: tableStore.selectedIds }).then((_) => {
+    const req: any = {}
+    req[tableStore.deleteRestoreHandler.requestProperty] = tableStore.selectedIds
+    func(req).then((_) => {
         tableStore.deleteSelectedRows()
         dialogRef.value.close()
         notificationStore.showSuccess("deleted_summary", "deleted_detail")
     }).catch(e => {
         console.log("eerrror", e)
-        notificationStore.showError("deleted_summary", e)
-
+        notificationStore.showError("deleted_error_summary", e)
     })
+    return
 };
 </script>
 
@@ -53,7 +60,6 @@ const confirm = () => {
 
     & .p-dialog-header {
         background: transparent;
-        display: none;
     }
 
     & .p-dialog-content {
@@ -63,7 +69,6 @@ const confirm = () => {
 
 .delete-restore-dialog {
     text-align: center;
-    padding-top: 1.5rem;
 
     & i {
         font-size: 1.5rem;
@@ -92,4 +97,4 @@ const confirm = () => {
         }
     }
 }
-</style>
+</style>@/stores/table

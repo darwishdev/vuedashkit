@@ -1,8 +1,6 @@
- 
 <script setup lang="ts">
 import AppForm from '@/components/form/AppForm.vue';
-import type { AppFormProps, LoginHandler } from '@/types/types';
-import type { UserLoginResponse } from '@buf/ahmeddarwish_mln-rms-core.bufbuild_es/rms/v1/users_user_definitions_pb'
+import type { AppFormProps, LoginHandler, UserLoginResponse } from '@/types/types';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/stores/auth';
 import { useFormStore } from "@/stores/form";
@@ -29,7 +27,7 @@ onMounted(() => {
 
 const signInWithOTP = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.senedOTPEndpoint({ email: formStore.formValue.email }).then(_ => {
+        loginHandler.sendOTPEndpoint({ email: formStore.defaultFormValue.loginCode }).then(_ => {
             notificationStore.showSuccess("otp_email_sent", "otp_email_sent_detail")
             resolve()
         }).catch(e => {
@@ -42,7 +40,7 @@ const signInWithOTP = async (): Promise<void> => {
 
 const resetPasswordForEmail = async (): Promise<void> => {
     return new Promise((resolve, reject) => {
-        loginHandler.sendResetLinkEndpoint({ email: formStore.formValue.email }).then(_ => {
+        loginHandler.sendResetLinkEndpoint({ email: formStore.defaultFormValue.loginCode }).then(_ => {
             notificationStore.showSuccess("reset_email_sent", "reset_email_sent_detail")
             resolve()
         }).catch(e => {
@@ -74,82 +72,86 @@ const toggleResetPasswordForm = () => {
 }
 
 const formProps: AppFormProps<any, any> = {
-    title: 'login',
-    options: {
-        isBulkCreateHidden: true,
-        isFormTransparent: false,
-        isSuccessNotificationHidden: false,
-        successMessageSummary: 'logged_in',
-        successMessageDetail: 'logged_in_details',
-        isHeaderSubmitHidden: true
-    },
-    submitHandler: {
-        endpoint: loginHandler.loginEndpoint,
-        callback: handleLoginCallback,
-        redirectRoute: loginHandler.redirectRoute || "home_view"
-    },
-    sections: {
-        'login': {
-            isTitleHidden: true,
-            isTransparent: true,
-            inputs: [
-                {
-                    $formkit: 'text',
-                    prefixIcon: "email",
-                    outerClass: "col-12",
-                    validation: "required:email",
-                    name: "email",
-                    placeholder: t("email"),
-                    label: t("email")
-                },
-                {
-                    $formkit: 'password',
-                    prefixIcon: "password",
-                    if: "$isResetPassword == false",
-                    outerClass: "col-12",
-                    validation: "required",
-                    name: "password",
-                    placeholder: t("password"),
-                    label: t("password")
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword == false",
-                    props: {
-                        class: "w-full forgot-password",
-                        label: t('forgot_password'),
-                        onClick: toggleResetPasswordForm
-                    }
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full success",
-                        label: t('login_with_otp'),
-                        onClick: signInWithOTP
-                    }
-                },
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full primary",
-                        label: t('send_reset_link'),
-                        onClick: resetPasswordForEmail
-                    }
-                },
+    context: {
 
-                {
-                    $cmp: 'AppBtn',
-                    if: "$isResetPassword",
-                    props: {
-                        class: "mt-3 w-full danger",
-                        label: t('back_to_login'),
-                        onClick: toggleResetPasswordForm
+        title: 'login',
+        options: {
+            isBulkCreateHidden: true,
+            isFormTransparent: true,
+            isSuccessNotificationHidden: false,
+            successMessageSummary: 'logged_in',
+            successMessageDetail: 'logged_in_details',
+            isHeaderSubmitHidden: true,
+            isFormHeaderHidden: true
+        },
+        submitHandler: {
+            endpoint: loginHandler.loginEndpoint,
+            callback: handleLoginCallback,
+            redirectRoute: loginHandler.redirectRoute || "home_view"
+        },
+        sections: {
+            'login': {
+                isTitleHidden: true,
+                isTransparent: true,
+                inputs: [
+                    {
+                        $formkit: 'text',
+                        prefixIcon: "email",
+                        outerClass: "col-12",
+                        validation: "required:email",
+                        name: "loginCode",
+                        placeholder: t("email"),
+                        label: t("email")
+                    },
+                    {
+                        $formkit: 'password',
+                        prefixIcon: "password",
+                        if: "$isResetPassword == false",
+                        outerClass: "col-12",
+                        validation: "required",
+                        name: "userPassword",
+                        placeholder: t("password"),
+                        label: t("password")
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword == false",
+                        props: {
+                            class: "w-full forgot-password",
+                            label: t('forgot_password'),
+                            onClick: toggleResetPasswordForm
+                        }
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full success",
+                            label: t('login_with_otp'),
+                            onClick: signInWithOTP
+                        }
+                    },
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full primary",
+                            label: t('send_reset_link'),
+                            onClick: resetPasswordForEmail
+                        }
+                    },
+
+                    {
+                        $cmp: 'AppBtn',
+                        if: "$isResetPassword",
+                        props: {
+                            class: "mt-3 w-full danger",
+                            label: t('back_to_login'),
+                            onClick: toggleResetPasswordForm
+                        }
                     }
-                }
-            ]
+                ]
+            }
         }
     }
 }
@@ -160,33 +162,37 @@ const formProps: AppFormProps<any, any> = {
     <div class="login-wrapper">
         <div class="login-image"></div>
         <div class="login-form">
-            <h2>
-                <Suspense>
-                    <template #default>
+            <Suspense>
+                <template #default>
 
-                        <app-form ref="appFormElementRef" :options="formProps.options" :title="formProps.title"
-                            :sections="formProps.sections" :submitHandler="formProps.submitHandler">
-                            <template #prepend>
-                                <div class="flex justify-content-center">
-                                    <LanguageToggler />
-                                    <ThemeToggler />
-                                </div>
-                            </template>
-                        </app-form>
-                    </template>
-                    <template #fallback>
-                        <h2>loading from login</h2>
-                    </template>
-                </Suspense>
+                    <app-form ref="appFormElementRef" :context="formProps.context">
+                        <template #prepend>
+                            <div class="flex justify-content-center">
+                                <LanguageToggler />
+                                <ThemeToggler />
+                            </div>
+                            <app-logo class="all-logo" />
 
-            </h2>
+                        </template>
+                    </app-form>
+                </template>
+                <template #fallback>
+                    <h2>loading from login</h2>
+                </template>
+            </Suspense>
+
         </div>
+        <footer>
+            <app-logo iconOnly class="icon-logo" />
+            | {{ t('copyrights') }} - {{ new Date().getFullYear() }}
+        </footer>
     </div>
 </template>
 <style lang="scss">
 .login-wrapper {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
+    min-height: 12rem;
 
     & .login-image {
         width: 30%;
@@ -201,7 +207,7 @@ const formProps: AppFormProps<any, any> = {
         width: 70%;
         margin-left: 30%;
         display: flex;
-        justify-content: center;
+        padding-left: 10%;
         align-items: center;
         height: 100%;
 
@@ -216,9 +222,19 @@ const formProps: AppFormProps<any, any> = {
             margin: 20px 10px;
 
             &:hover {
-                color: var(--color-secondary);
+                color: #fff;
             }
         }
+    }
+
+    & footer {
+        position: absolute;
+        bottom: 50px;
+        left: 40%;
+        display: flex;
+        align-items: center;
+        font-size: 2rem;
+        color: var(--color-white);
     }
 
 

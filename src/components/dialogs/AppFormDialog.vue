@@ -1,37 +1,61 @@
 <script setup lang="ts">
 import { inject } from "vue";
-import { useTableNewStore } from "@/stores/tablenew";
-import { useNotificationStore } from "@/stores/notification";
-import apiClient from "@/api/ApiClient";
-import type { AppFormDialogProps, AppFormProps } from "@/types/types";
+import { useTableStore } from "@/stores/table";
+import type { ApiFormError, AppFormDialogProps, AppFormProps } from "@/types/types";
 import AppForm from '@/components/form/AppForm.vue';
 import { useI18n } from 'vue-i18n';
+import AppLoading from '@/components/loading/AppLoading.vue';
+import { ObjectKeys } from "@/utils/object/object";
+
+
 const { t } = useI18n()
 const props = defineProps<AppFormDialogProps>();
+const apiClient = inject("apiClient") as any;
+const tableStore = useTableStore()
+type styleSizeObj = { width: string, minHeight?: string }
+const defailSizeObj: styleSizeObj = { width: '800px', minHeight: 'auto' }
+const sizeObj: styleSizeObj | undefined = typeof props.size == 'undefined' ? defailSizeObj : typeof props.size === 'number' ?
+    { width: `${props.size}px`, minHeight: `${props.size}px` } :
+    { width: `${props.size.width}px`, minHeight: `${props.size.height}px` }
 
-// const props = defineProps<TableHeaderProps>();
 const dialogRef = inject("dialogRef") as any;
-const notificationStore = useNotificationStore()
-const close = (e: any) => {
-    dialogRef.value.close(e);
-};
 
-const testFn = (req) => {
-    console.log(req);
-}
+
+const submitHandler = (req: any) => {
+    return new Promise((resolve, reject) => {
+        const func = apiClient[props.handler.endpoint]
+
+        if (typeof func == 'function') {
+            func(req).then((resp: any) => {
+                dialogRef.value.close()
+                tableStore.refetchData()
+                resolve(resp)
+            }).catch((e: any) => {
+                reject(e)
+            })
+        }
+        else {
+            const error: ApiFormError = { globalErrors: ["no api function with this endpoint"], fieldErrors: {} }
+            reject(error)
+        }
+    })
+
+};
 
 const formProps: AppFormProps<any, any> = {
     context: {
-        title: "role_create",
+        title: t(props.handler.title),
         options: {
             isBulkCreateHidden: true,
             isHeaderSubmitHidden: true,
             isFormTransparent: true,
         },
         submitHandler: {
-            endpoint: testFn,
-            redirectRoute: "roles_list"
+            endpoint: submitHandler,
+            redirectRoute: props.handler.redirectRoute,
+            redirectRouteParam: props.handler.redirectRouteParam,
         },
+        findHandler: props.findForUpdateHandler,
         sections: props.sections
     }
 
@@ -39,19 +63,15 @@ const formProps: AppFormProps<any, any> = {
 </script>
 
 <template>
-    <div class="form-dialog">
+    <div class="form-dialog" :style="sizeObj">
         <Suspense timeout="0">
             <template #default>
                 <app-form :context="formProps.context" />
             </template>
             <template #fallback>
-                <div class="loading">
-                    loo
-                </div>
+                <AppLoading type="form" />
             </template>
         </Suspense>
-
-
     </div>
 </template>
 
